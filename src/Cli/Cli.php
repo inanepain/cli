@@ -13,8 +13,15 @@
 
 namespace Inane\Cli;
 
+/**
+ * Cli
+ * 
+ * @version 0.1.0
+ * @package Inane\Console
+ */
 class Cli
 {
+    public const VERSION = '0.10.0';
 
     /**
      * Handles rendering strings. If extra scalar arguments are given after the `$msg`
