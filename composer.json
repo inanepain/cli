@@ -2,6 +2,7 @@
     "name": "inanepain/inane-cli",
     "type": "library",
     "description": "Console utilities for PHP",
+    "readme": "README.md",
     "keywords": [
         "console",
         "cli"
