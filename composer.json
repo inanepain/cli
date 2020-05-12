@@ -6,7 +6,7 @@
         "console",
         "cli"
     ],
-    "homepage": "https://git.inane.co.za:3000/Inane/inane-console",
+    "homepage": "https://git.inane.co.za:3000/Inane/inane-cli",
     "license": "MIT",
     "authors": [
         {

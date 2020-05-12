@@ -12,10 +12,10 @@
 
 namespace Inane\Cli;
 
-use Inane\Cli\arguments\Argument;
-use Inane\Cli\arguments\HelpScreen;
-use Inane\Cli\arguments\InvalidArguments;
-use Inane\Cli\arguments\Lexer;
+use Inane\Cli\Arguments\Argument;
+use Inane\Cli\Arguments\HelpScreen;
+use Inane\Cli\Arguments\InvalidArguments;
+use Inane\Cli\Arguments\Lexer;
 
 /**
  * Parses command line arguments.
