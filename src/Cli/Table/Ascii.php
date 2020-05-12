@@ -10,21 +10,21 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli\table;
+namespace Inane\Cli\Table;
 
-use cli\Colors;
-use cli\Shell;
+use Inane\Cli\Colors;
+use Inane\Cli\Shell;
 
 /**
  * The ASCII renderer renders tables with ASCII borders.
  */
 class Ascii extends Renderer {
-	protected $_characters = array(
+	protected $_characters = [
 		'corner'  => '+',
 		'line'    => '-',
 		'border'  => '|',
 		'padding' => ' ',
-	);
+	];
 	protected $_border = null;
 	protected $_constraintWidth = null;
 	protected $_pre_colorized = false;
@@ -55,7 +55,7 @@ class Ascii extends Renderer {
 		if ( $widths && $max_width && array_sum( $widths ) > $max_width ) {
 
 			$avg = floor( $max_width / count( $widths ) );
-			$resize_widths = array();
+			$resize_widths = [];
 			$extra_width = 0;
 			foreach( $widths as $width ) {
 				if ( $width > $avg ) {
@@ -134,25 +134,25 @@ class Ascii extends Renderer {
 		$extra_row_count = 0;
 
 		if ( count( $row ) > 0 ) {
-			$extra_rows = array_fill( 0, count( $row ), array() );
+			$extra_rows = array_fill( 0, count( $row ), [] );
 
 			foreach( $row as $col => $value ) {
 
-				$value = str_replace( array( "\r\n", "\n" ), ' ', $value );
+				$value = str_replace( [ "\r\n", "\n" ], ' ', $value );
 
 				$col_width = $this->_widths[ $col ];
 				$encoding = function_exists( 'mb_detect_encoding' ) ? mb_detect_encoding( $value, null, true /*strict*/ ) : false;
 				$original_val_width = Colors::width( $value, self::isPreColorized( $col ), $encoding );
 				if ( $col_width && $original_val_width > $col_width ) {
-					$row[ $col ] = \cli\safe_substr( $value, 0, $col_width, true /*is_width*/, $encoding );
-					$value = \cli\safe_substr( $value, \cli\safe_strlen( $row[ $col ], $encoding ), null /*length*/, false /*is_width*/, $encoding );
+					$row[ $col ] = \Inane\Cli\Cli::safe_substr( $value, 0, $col_width, true /*is_width*/, $encoding );
+					$value = \Inane\Cli\Cli::safe_substr( $value, \Inane\Cli\Cli::safe_strlen( $row[ $col ], $encoding ), null /*length*/, false /*is_width*/, $encoding );
 					$i = 0;
 					do {
-						$extra_value = \cli\safe_substr( $value, 0, $col_width, true /*is_width*/, $encoding );
+						$extra_value = \Inane\Cli\Cli::safe_substr( $value, 0, $col_width, true /*is_width*/, $encoding );
 						$val_width = Colors::width( $extra_value, self::isPreColorized( $col ), $encoding );
 						if ( $val_width ) {
 							$extra_rows[ $col ][] = $extra_value;
-							$value = \cli\safe_substr( $value, \cli\safe_strlen( $extra_value, $encoding ), null /*length*/, false /*is_width*/, $encoding );
+							$value = \Inane\Cli\Cli::safe_substr( $value, \Inane\Cli\Cli::safe_strlen( $extra_value, $encoding ), null /*length*/, false /*is_width*/, $encoding );
 							$i++;
 							if ( $i > $extra_row_count ) {
 								$extra_row_count = $i;
@@ -164,7 +164,7 @@ class Ascii extends Renderer {
 			}
 		}
 
-		$row = array_map(array($this, 'padColumn'), $row, array_keys($row));
+		$row = array_map([$this, 'padColumn'], $row, array_keys($row));
 		array_unshift($row, ''); // First border
 		array_push($row, ''); // Last border
 
@@ -177,7 +177,7 @@ class Ascii extends Renderer {
 			}
 
 			do {
-				$row_values = array();
+				$row_values = [];
 				$has_more = false;
 				foreach( $extra_rows as $col => &$col_values ) {
 					$row_values[ $col ] = array_shift( $col_values );
@@ -186,7 +186,7 @@ class Ascii extends Renderer {
 					}
 				}
 
-				$row_values = array_map(array($this, 'padColumn'), $row_values, array_keys($row_values));
+				$row_values = array_map([$this, 'padColumn'], $row_values, array_keys($row_values));
 				array_unshift($row_values, ''); // First border
 				array_push($row_values, ''); // Last border
 

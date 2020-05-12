@@ -10,10 +10,10 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli;
+namespace Inane\Cli;
 
 abstract class Memoize {
-	protected $_memoCache = array();
+	protected $_memoCache = [];
 
 	public function __get($name) {
 		if (isset($this->_memoCache[$name])) {
@@ -29,14 +29,14 @@ abstract class Memoize {
 			return ($this->_memoCache[$name] = null);
 		}
 
-		$method = array($this, $name);
+		$method = [$this, $name];
 		($this->_memoCache[$name] = call_user_func($method));
 		return $this->_memoCache[$name];
 	}
 
 	protected function _unmemo($name) {
 		if ($name === true) {
-			$this->_memoCache = array();
+			$this->_memoCache = [];
 		} else {
 			unset($this->_memoCache[$name]);
 		}

@@ -10,10 +10,10 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli\notify;
+namespace Inane\Cli\Notify;
 
-use cli\Notify;
-use cli\Streams;
+use Inane\Cli\Notify;
+use Inane\Cli\Streams;
 
 /**
  * The `Spinner` Notifier displays an ASCII spinner.

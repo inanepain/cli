@@ -1,6 +1,6 @@
 <?php
 
-use cli\Colors;
+use Inane\Cli\Colors;
 
 class testsColors extends PHPUnit_Framework_TestCase {
 
@@ -21,9 +21,9 @@ class testsColors extends PHPUnit_Framework_TestCase {
 	}
 
 	function dataColors() {
-		$ret = array();
+		$ret = [];
 		foreach ( Colors::getColors() as $str => $color ) {
-			$ret[] = array( $str, $color );
+			$ret[] = [ $str, $color ];
 		}
 		return $ret;
 	}

@@ -10,23 +10,23 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli;
+namespace Inane\Cli;
 
-use cli\Shell;
-use cli\Streams;
-use cli\table\Ascii;
-use cli\table\Renderer;
-use cli\table\Tabular;
+use Inane\Cli\Shell;
+use Inane\Cli\Streams;
+use Inane\Cli\table\Ascii;
+use Inane\Cli\table\Renderer;
+use Inane\Cli\table\Tabular;
 
 /**
  * The `Table` class is used to display data in a tabular format.
  */
 class Table {
 	protected $_renderer;
-	protected $_headers = array();
-	protected $_footers = array();
-	protected $_width = array();
-	protected $_rows = array();
+	protected $_headers = [];
+	protected $_footers = [];
+	protected $_width = [];
+	protected $_rows = [];
 
 	/**
 	 * Initializes the `Table` class.
@@ -51,7 +51,7 @@ class Table {
 			if ($rows === null) {
 				$rows = $headers;
 				$keys = array_keys(array_shift($headers));
-				$headers = array();
+				$headers = [];
 
 				foreach ($keys as $header) {
 					$headers[$header] = $header;
@@ -75,10 +75,10 @@ class Table {
 
 	public function resetTable()
 	{
-		$this->_headers = array();
-		$this->_width = array();
-		$this->_rows = array();
-		$this->_footers = array();
+		$this->_headers = [];
+		$this->_width = [];
+		$this->_rows = [];
+		$this->_footers = [];
 		return $this;
 	}
 
@@ -139,7 +139,7 @@ class Table {
 		$this->_renderer->setWidths($this->_width, $fallback = true);
 		$border = $this->_renderer->border();
 
-		$out = array();
+		$out = [];
 		if (isset($border)) {
 			$out[] = $border;
 		}
@@ -219,7 +219,7 @@ class Table {
 	 * @see cli\Table::addRow()
 	 */
 	public function setRows(array $rows) {
-		$this->_rows = array();
+		$this->_rows = [];
 		foreach ($rows as $row) {
 			$this->addRow($row);
 		}

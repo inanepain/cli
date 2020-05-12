@@ -1,6 +1,6 @@
 <?php
 
-use cli\Colors, cli\Table, cli\Table\Ascii;
+use Inane\Cli\Colors, cli\Table, cli\Table\Ascii;
 
 /**
  * Tests for cli\Table
@@ -15,9 +15,9 @@ class Test_Table extends PHPUnit_Framework_TestCase {
 		$renderer = new cli\Table\Ascii;
 		$renderer->setConstraintWidth( $constraint_width );
 		$table->setRenderer( $renderer );
-		$table->setHeaders( array( 'Field', 'Value' ) );
-		$table->addRow( array( 'description', 'The 2012 theme for WordPress is a fully responsive theme that looks great on any device. Features include a front page template with its own widgets, an optional display font, styling for post formats on both index and single views, and an optional no-sidebar page template. Make it yours with a custom menu, header image, and background.' ) );
-		$table->addRow( array( 'author', '<a href="http://wordpress.org/" title="Visit author homepage">the WordPress team</a>' ) );
+		$table->setHeaders( [ 'Field', 'Value' ] );
+		$table->addRow( [ 'description', 'The 2012 theme for WordPress is a fully responsive theme that looks great on any device. Features include a front page template with its own widgets, an optional display font, styling for post formats on both index and single views, and an optional no-sidebar page template. Make it yours with a custom menu, header image, and background.' ] );
+		$table->addRow( [ 'author', '<a href="http://wordpress.org/" title="Visit author homepage">the WordPress team</a>' ] );
 
 		$out = $table->getDisplayLines();
 		$this->assertCount( 12, $out );
@@ -54,13 +54,13 @@ class Test_Table extends PHPUnit_Framework_TestCase {
 		$renderer = new cli\Table\Ascii;
 		$renderer->setConstraintWidth( $constraint_width );
 		$table->setRenderer( $renderer );
-		$table->setHeaders( array( 'Field', 'Value' ) );
-		$table->addRow( array( '1この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。2この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。', 'こんにちは' ) );
-		$table->addRow( array( 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'Hello' ) );
+		$table->setHeaders( [ 'Field', 'Value' ] );
+		$table->addRow( [ '1この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。2この文章はダミーです。文字の大きさ、量、字間、行間等を確認するために入れています。', 'こんにちは' ] );
+		$table->addRow( [ 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.', 'Hello' ] );
 
 		$out = $table->getDisplayLines();
 		for ( $i = 0; $i < count( $out ); $i++ ) {
-			$this->assertEquals( $constraint_width, \cli\strwidth( $out[$i] ) );
+			$this->assertEquals( $constraint_width, \Inane\Cli\strwidth( $out[$i] ) );
 		}
 
 		$constraint_width = 81;
@@ -71,7 +71,7 @@ class Test_Table extends PHPUnit_Framework_TestCase {
 
 		$out = $table->getDisplayLines();
 		for ( $i = 0; $i < count( $out ); $i++ ) {
-			$this->assertEquals( $constraint_width, \cli\strwidth( $out[$i] ) );
+			$this->assertEquals( $constraint_width, \Inane\Cli\strwidth( $out[$i] ) );
 		}
 	}
 
@@ -86,10 +86,10 @@ class Test_Table extends PHPUnit_Framework_TestCase {
 			}, $a );
 		};
 
-		$renderer->setWidths( array( 10 ) );
+		$renderer->setWidths( [ 10 ] );
 
 		// 1 single-width, 6 double-width, 1 single-width, 2 double-width, 1 half-width, 2 double-width.
-		$out = $renderer->row( array( '1あいうえおか2きくｶけこ' ) );
+		$out = $renderer->row( [ '1あいうえおか2きくｶけこ' ] );
 		$result = $strip_borders( explode( "\n", $out ) );
 
 		$this->assertSame( 3, count( $result ) );
@@ -99,9 +99,9 @@ class Test_Table extends PHPUnit_Framework_TestCase {
 
 		// Minimum width 1.
 
-		$renderer->setWidths( array( 1 ) );
+		$renderer->setWidths( [ 1 ] );
 
-		$out = $renderer->row( array( '1あいうえおか2きくｶけこ' ) );
+		$out = $renderer->row( [ '1あいうえおか2きくｶけこ' ] );
 		$result = $strip_borders( explode( "\n", $out ) );
 
 		$this->assertSame( 13, count( $result ) );
@@ -111,9 +111,9 @@ class Test_Table extends PHPUnit_Framework_TestCase {
 
 		// Zero width does no wrapping.
 
-		$renderer->setWidths( array( 0 ) );
+		$renderer->setWidths( [ 0 ] );
 
-		$out = $renderer->row( array( '1あいうえおか2きくｶけこ' ) );
+		$out = $renderer->row( [ '1あいうえおか2きくｶけこ' ] );
 		$result = $strip_borders( explode( "\n", $out ) );
 
 		$this->assertSame( 1, count( $result ) );
@@ -127,11 +127,11 @@ class Test_Table extends PHPUnit_Framework_TestCase {
 		$renderer = new cli\Table\Ascii;
 		$renderer->setConstraintWidth( $constraint_width );
 		$table->setRenderer( $renderer );
-		$table->setHeaders( array( 'Field', 'Value' ) );
-		$table->addRow( array( 'ID', 2151 ) );
-		$table->addRow( array( 'post_author', 1 ) );
-		$table->addRow( array( 'post_title', 'only-english-lorem-ipsum-dolor-sit-amet-consectetur-adipisicing-elit-sed-do-eiusmod-tempor-incididunt-ut-labore' ) );
-		$table->addRow( array( 'post_content',
+		$table->setHeaders( [ 'Field', 'Value' ] );
+		$table->addRow( [ 'ID', 2151 ] );
+		$table->addRow( [ 'post_author', 1 ] );
+		$table->addRow( [ 'post_title', 'only-english-lorem-ipsum-dolor-sit-amet-consectetur-adipisicing-elit-sed-do-eiusmod-tempor-incididunt-ut-labore' ] );
+		$table->addRow( [ 'post_content',
 			//'ให้รู้จัก ให้หาหนทางใหม่' .
 			'♫ มีอีกหลายต่อหลายคน เขาอดทนก็เพื่อรัก' . "\n" .
 			'รักผลักดันให้รู้จัก ให้หาหนทางใหม่' . "\r\n" .
@@ -144,11 +144,11 @@ class Test_Table extends PHPUnit_Framework_TestCase {
 			' ジョバンニはまっ赤になってうなずきました。けれどもいつかジョバンニの眼のなかには涙がいっぱいになりました。そうだ僕は知っていたのだ、もちろんカムパネルラも知っている。' ."\r\n" .
 			'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore' . "\n" .
 			''
-		) );
+		] );
 
 		$out = $table->getDisplayLines();
 		for ( $i = 0; $i < count( $out ); $i++ ) {
-			$this->assertEquals( $constraint_width, \cli\strwidth( $out[$i] ) );
+			$this->assertEquals( $constraint_width, \Inane\Cli\strwidth( $out[$i] ) );
 		}
 
 		$constraint_width = 81;
@@ -159,7 +159,7 @@ class Test_Table extends PHPUnit_Framework_TestCase {
 
 		$out = $table->getDisplayLines();
 		for ( $i = 0; $i < count( $out ); $i++ ) {
-			$this->assertEquals( $constraint_width, \cli\strwidth( $out[$i] ) );
+			$this->assertEquals( $constraint_width, \Inane\Cli\strwidth( $out[$i] ) );
 		}
 
 		$constraint_width = 200;
@@ -170,7 +170,7 @@ class Test_Table extends PHPUnit_Framework_TestCase {
 
 		$out = $table->getDisplayLines();
 		for ( $i = 0; $i < count( $out ); $i++ ) {
-			$this->assertEquals( $constraint_width, \cli\strwidth( $out[$i] ) );
+			$this->assertEquals( $constraint_width, \Inane\Cli\strwidth( $out[$i] ) );
 		}
 	}
 
@@ -178,13 +178,13 @@ class Test_Table extends PHPUnit_Framework_TestCase {
 
 		Colors::enable( true );
 
-		$headers = array( 'package', 'version', 'result' );
-		$items = array(
-			array( Colors::colorize( '%ygaa/gaa-kabes%n' ), 'dev-master', Colors::colorize( "%rx%n" ) ),
-			array( Colors::colorize( '%ygaa/gaa-log%n' ), '*', Colors::colorize( "%gok%n" ) ),
-			array( Colors::colorize( '%ygaa/gaa-nonsense%n' ), 'v3.0.11', Colors::colorize( "%rx%n" ) ),
-			array( Colors::colorize( '%ygaa/gaa-100%%new%n' ), 'v100%new', Colors::colorize( "%gok%n" ) ),
-		);
+		$headers = [ 'package', 'version', 'result' ];
+		$items = [
+			[ Colors::colorize( '%ygaa/gaa-kabes%n' ), 'dev-master', Colors::colorize( "%rx%n" ) ],
+			[ Colors::colorize( '%ygaa/gaa-log%n' ), '*', Colors::colorize( "%gok%n" ) ],
+			[ Colors::colorize( '%ygaa/gaa-nonsense%n' ), 'v3.0.11', Colors::colorize( "%rx%n" ) ],
+			[ Colors::colorize( '%ygaa/gaa-100%%new%n' ), 'v100%new', Colors::colorize( "%gok%n" ) ],
+		];
 
 		// Disable colorization, as `\WP_CLI\Formatter::show_table()` does for Ascii tables.
 		Colors::disable( true );
@@ -195,7 +195,7 @@ class Test_Table extends PHPUnit_Framework_TestCase {
 		$table = new Table;
 		$renderer = new Ascii;
 		$table->setRenderer( $renderer );
-		$table->setAsciiPreColorized( array( true, false, true ) );
+		$table->setAsciiPreColorized( [ true, false, true ] );
 		$table->setHeaders( $headers );
 		$table->setRows( $items );
 

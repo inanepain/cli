@@ -14,19 +14,19 @@
 require 'common.php';
 
 $strict = in_array('--strict', $_SERVER['argv']);
-$arguments = new \cli\Arguments(compact('strict'));
+$arguments = new \Inane\Cli\Arguments(compact('strict'));
 
-$arguments->addFlag(array('verbose', 'v'), 'Turn on verbose output');
+$arguments->addFlag(['verbose', 'v'], 'Turn on verbose output');
 $arguments->addFlag('version', 'Display the version');
-$arguments->addFlag(array('quiet', 'q'), 'Disable all output');
-$arguments->addFlag(array('help', 'h'), 'Show this help screen');
+$arguments->addFlag(['quiet', 'q'], 'Disable all output');
+$arguments->addFlag(['help', 'h'], 'Show this help screen');
 
-$arguments->addOption(array('cache', 'C'), array(
+$arguments->addOption(['cache', 'C'], [
 	'default'     => getcwd(),
-	'description' => 'Set the cache directory'));
-$arguments->addOption(array('name', 'n'), array(
+	'description' => 'Set the cache directory']);
+$arguments->addOption(['name', 'n'], [
 	'default'     => 'James',
-	'description' => 'Set a name with a really long description and a default so we can see what line wrapping looks like which is probably a goo idea'));
+	'description' => 'Set a name with a really long description and a default so we can see what line wrapping looks like which is probably a goo idea']);
 
 $arguments->parse();
 if ($arguments['help']) {

@@ -10,15 +10,15 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli\table;
+namespace Inane\Cli\Table;
 
 /**
  * Table renderers are used to change how a table is displayed.
  */
 abstract class Renderer {
-	protected $_widths = array();
+	protected $_widths = [];
 
-	public function __construct(array $widths = array()) {
+	public function __construct(array $widths = []) {
 		$this->setWidths($widths);
 	}
 

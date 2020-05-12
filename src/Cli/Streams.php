@@ -1,6 +1,6 @@
 <?php
 
-namespace cli;
+namespace Inane\Cli;
 
 class Streams {
 
@@ -62,7 +62,7 @@ class Streams {
 	 * @param string  $msg  The message to output in `printf` format.
 	 * @param mixed   ...   Either scalar arguments or a single array argument.
 	 * @return void
-	 * @see \cli\render()
+	 * @see \Inane\Cli\render()
 	 */
 	public static function out( $msg ) {
 		fwrite( static::$out, self::_call( 'render', func_get_args() ) );
@@ -78,18 +78,18 @@ class Streams {
 	 */
 	public static function out_padded( $msg ) {
 		$msg = self::_call( 'render', func_get_args() );
-		self::out( str_pad( $msg, \cli\Shell::columns() ) );
+		self::out( str_pad( $msg, \Inane\Cli\Shell::columns() ) );
 	}
 
 	/**
-	 * Prints a message to `STDOUT` with a newline appended. See `\cli\out` for
+	 * Prints a message to `STDOUT` with a newline appended. See `\Inane\Cli\Cli::out` for
 	 * more documentation.
 	 *
 	 * @see cli\out()
 	 */
 	public static function line( $msg = '' ) {
 		// func_get_args is empty if no args are passed even with the default above.
-		$args = array_merge( func_get_args(), array( '' ) );
+		$args = array_merge( func_get_args(), [ '' ] );
 		$args[0] .= "\n";
 
 		self::_call( 'out', $args );
@@ -106,7 +106,7 @@ class Streams {
 	 */
 	public static function err( $msg = '' ) {
 		// func_get_args is empty if no args are passed even with the default above.
-		$args = array_merge( func_get_args(), array( '' ) );
+		$args = array_merge( func_get_args(), [ '' ] );
 		$args[0] .= "\n";
 		fwrite( static::$err, self::_call( 'render', $args ) );
 	}

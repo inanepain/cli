@@ -1,37 +1,36 @@
 {
-    "name":        "inanepain/inane-console",
-    "type":        "library",
+    "name": "inanepain/inane-console",
+    "type": "library",
     "description": "Console utilities for PHP",
-    "keywords":    ["console", "cli"],
-    "homepage":    "https://git.inane.co.za:3000/Inane/inane-console",
-    "license":     "MIT",
+    "keywords": [
+        "console",
+        "cli"
+    ],
+    "homepage": "https://git.inane.co.za:3000/Inane/inane-console",
+    "license": "MIT",
     "authors": [
-		
-		        {
-		            "name":  "Philip Raab",
-		            "email": "peep@inane.co.za",
-		            "role":  "Developer"
-		        },
         {
-            "name":  "Daniel Bachhuber",
-            "email": "daniel@handbuilt.co",
-            "role":  "Maintainer"
+            "name": "Philip Raab",
+            "email": "peep@inane.co.za",
+            "role": "Developer"
         },
         {
-            "name":  "James Logsdon",
+            "name": "Daniel Bachhuber",
+            "email": "daniel@handbuilt.co",
+            "role": "Maintainer"
+        },
+        {
+            "name": "James Logsdon",
             "email": "jlogsdon@php.net",
-            "role":  "Developer"
+            "role": "Developer"
         }
     ],
     "require": {
         "php": ">= 5.3.0"
     },
     "autoload": {
-        "psr-0": {
-            "cli": "lib/"
-        },
-        "files": [
-            "lib/cli/cli.php"
-        ]
+        "psr-4": {
+            "Inane\\Cli\\": "./src/Cli"
+        }
     }
 }

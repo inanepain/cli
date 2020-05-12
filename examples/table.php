@@ -6,37 +6,37 @@ require_once 'common.php';
  * not an associative one if you intend to work with custom
  * column widths.
  */
-$headers = array('First Name', 'Last Name', 'City', 'State');
-$data = array(
-	array('Maryam',   'Elliott',    'Elizabeth City',   'SD'),
-	array('Jerry',    'Washington', 'Bessemer',         'ME'),
-	array('Allegra',  'Hopkins',    'Altoona',          'ME'),
-	array('Audrey',   'Oneil',      'Dalton',           'SK'),
-	array('Ruth',     'Mcpherson',  'San Francisco',    'ID'),
-	array('Odessa',   'Tate',       'Chattanooga',      'FL'),
-	array('Violet',   'Nielsen',    'Valdosta',         'AB'),
-	array('Summer',   'Rollins',    'Revere',           'SK'),
-	array('Mufutau',  'Bowers',     'Scottsbluff',      'WI'),
-	array('Grace',    'Rosario',    'Garden Grove',     'KY'),
-	array('Amanda',   'Berry',      'La Habra',         'AZ'),
-	array('Cassady',  'York',       'Fulton',           'BC'),
-	array('Heather',  'Terrell',    'Statesboro',       'SC'),
-	array('Dominic',  'Jimenez',    'West Valley City', 'ME'),
-	array('Rhonda',   'Potter',     'Racine',           'BC'),
-	array('Nathan',   'Velazquez',  'Cedarburg',        'BC'),
-	array('Richard',  'Fletcher',   'Corpus Christi',   'BC'),
-	array('Cheyenne', 'Rios',       'Broken Arrow',     'VA'),
-	array('Velma',    'Clemons',    'Helena',           'IL'),
-	array('Samuel',   'Berry',      'Lawrenceville',    'NU'),
-	array('Marcia',   'Swanson',    'Fontana',          'QC'),
-	array('Zachary',  'Silva',      'Port Washington',  'MB'),
-	array('Hilary',   'Chambers',   'Suffolk',          'HI'),
-	array('Idola',    'Carroll',    'West Sacramento',  'QC'),
-	array('Kirestin', 'Stephens',   'Fitchburg',        'AB'),
-);
+$headers = ['First Name', 'Last Name', 'City', 'State'];
+$data = [
+	['Maryam',   'Elliott',    'Elizabeth City',   'SD'],
+	['Jerry',    'Washington', 'Bessemer',         'ME'],
+	['Allegra',  'Hopkins',    'Altoona',          'ME'],
+	['Audrey',   'Oneil',      'Dalton',           'SK'],
+	['Ruth',     'Mcpherson',  'San Francisco',    'ID'],
+	['Odessa',   'Tate',       'Chattanooga',      'FL'],
+	['Violet',   'Nielsen',    'Valdosta',         'AB'],
+	['Summer',   'Rollins',    'Revere',           'SK'],
+	['Mufutau',  'Bowers',     'Scottsbluff',      'WI'],
+	['Grace',    'Rosario',    'Garden Grove',     'KY'],
+	['Amanda',   'Berry',      'La Habra',         'AZ'],
+	['Cassady',  'York',       'Fulton',           'BC'],
+	['Heather',  'Terrell',    'Statesboro',       'SC'],
+	['Dominic',  'Jimenez',    'West Valley City', 'ME'],
+	['Rhonda',   'Potter',     'Racine',           'BC'],
+	['Nathan',   'Velazquez',  'Cedarburg',        'BC'],
+	['Richard',  'Fletcher',   'Corpus Christi',   'BC'],
+	['Cheyenne', 'Rios',       'Broken Arrow',     'VA'],
+	['Velma',    'Clemons',    'Helena',           'IL'],
+	['Samuel',   'Berry',      'Lawrenceville',    'NU'],
+	['Marcia',   'Swanson',    'Fontana',          'QC'],
+	['Zachary',  'Silva',      'Port Washington',  'MB'],
+	['Hilary',   'Chambers',   'Suffolk',          'HI'],
+	['Idola',    'Carroll',    'West Sacramento',  'QC'],
+	['Kirestin', 'Stephens',   'Fitchburg',        'AB'],
+];
 
-$table = new \cli\Table();
+$table = new \Inane\Cli\Table();
 $table->setHeaders($headers);
 $table->setRows($data);
-$table->setRenderer(new \cli\table\Ascii([10, 10, 20, 5]));
+$table->setRenderer(new \Inane\Cli\table\Ascii([10, 10, 20, 5]));
 $table->display();

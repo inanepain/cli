@@ -10,13 +10,12 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli\progress;
+namespace Inane\Cli\Progress;
 
-use cli;
-use cli\Notify;
-use cli\Progress;
-use cli\Shell;
-use cli\Streams;
+use Inane\Cli\Notify;
+use Inane\Cli\Progress;
+use Inane\Cli\Shell;
+use Inane\Cli\Streams;
 
 /**
  * Displays a progress bar spanning the entire shell.

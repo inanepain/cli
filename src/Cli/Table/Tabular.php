@@ -10,7 +10,7 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli\table;
+namespace Inane\Cli\Table;
 
 /**
  * The tabular renderer is used for displaying data in a tabular format.

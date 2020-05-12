@@ -10,7 +10,7 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli;
+namespace Inane\Cli;
 
 /**
  * The `Tree` class is used to display data in a tree-like format.
@@ -18,7 +18,7 @@ namespace cli;
 class Tree {
 
     protected $_renderer;
-    protected $_data = array();
+    protected $_data = [];
 
     /**
      * Sets the renderer used by this tree.

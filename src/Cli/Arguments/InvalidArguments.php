@@ -10,7 +10,7 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli\arguments;
+namespace Inane\Cli\Arguments;
 
 /**
  * Thrown when undefined arguments are detected in strict mode.

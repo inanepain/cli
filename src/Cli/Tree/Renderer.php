@@ -10,7 +10,7 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli\tree;
+namespace Inane\Cli\Tree;
 
 /**
  * Tree renderers are used to change how a tree is displayed.

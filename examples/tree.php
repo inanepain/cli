@@ -2,26 +2,26 @@
 
 require_once 'common.php';
 
-$data = array(
-    'Test' => array(
-        'Something Cool' => array(
+$data = [
+    'Test' => [
+        'Something Cool' => [
             'This is a 3rd layer',
-        ),
+        ],
         'This is a 2nd layer',
-    ),
-    'Other test' => array(
-        'This is awesome' => array(
+    ],
+    'Other test' => [
+        'This is awesome' => [
             'This is also cool',
             'This is even cooler',
-            'Wow like what is this' => array(
+            'Wow like what is this' => [
                 'Awesome eh?',
-                'Totally' => array(
+                'Totally' => [
                     'Yep!'
-                ),
-            ),
-        ),
-    ),
-);
+                ],
+            ],
+        ],
+    ],
+];
 
 printf("ASCII:\n");
 
@@ -42,9 +42,9 @@ printf("ASCII:\n");
  *     \-Yep!
  */
 
-$tree = new \cli\Tree;
+$tree = new \Inane\Cli\Tree;
 $tree->setData($data);
-$tree->setRenderer(new \cli\tree\Ascii);
+$tree->setRenderer(new \Inane\Cli\tree\Ascii);
 $tree->display();
 
 printf("\nMarkdown:\n");
@@ -66,7 +66,7 @@ printf("\nMarkdown:\n");
  *                 - Yep!
  */
 
-$tree = new \cli\Tree;
+$tree = new \Inane\Cli\Tree;
 $tree->setData($data);
-$tree->setRenderer(new \cli\tree\Markdown(4));
+$tree->setRenderer(new \Inane\Cli\tree\Markdown(4));
 $tree->display();

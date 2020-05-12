@@ -10,9 +10,9 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli\arguments;
+namespace Inane\Cli\Arguments;
 
-use cli\Memoize;
+use Inane\Cli\Memoize;
 
 /**
  * Represents an Argument or a value and provides several helpers related to parsing an argument list.
@@ -124,7 +124,7 @@ class Argument extends Memoize {
 	 * @return array
 	 */
 	public function exploded() {
-		$exploded = array();
+		$exploded = [];
 
 		for ($i = strlen($this->_argument); $i > 0; $i--) {
 			array_push($exploded, $this->_argument[$i - 1]);

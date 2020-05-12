@@ -2,23 +2,23 @@
 
 require_once 'common.php';
 
-$menu = array(
+$menu = [
 	'output' => 'Output Examples',
 	'notify' => 'cli\Notify Examples',
 	'progress' => 'cli\Progress Examples',
 	'table' => 'cli\Table Example',
 	'colors' => 'cli\Colors example',
 	'quit' => 'Quit',
-);
+];
 
 while (true) {
-	$choice = \cli\menu($menu, null, 'Choose an example');
-	\cli\line();
+	$choice = \Inane\Cli\Cli::menu($menu, null, 'Choose an example');
+	\Inane\Cli\Cli::line();
 
 	if ($choice == 'quit') {
 		break;
 	}
 
 	include "${choice}.php";
-	\cli\line();
+	\Inane\Cli\Cli::line();
 }

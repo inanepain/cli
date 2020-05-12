@@ -10,7 +10,7 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli;
+namespace Inane\Cli;
 
 /**
  * Change the color of text.
@@ -18,8 +18,8 @@ namespace cli;
  * Reference: http://graphcomp.com/info/specs/ansi_col.html#colors
  */
 class Colors {
-	static protected $_colors = array(
-		'color' => array(
+	static protected $_colors = [
+		'color' => [
 			'black'   => 30,
 			'red'	 => 31,
 			'green'   => 32,
@@ -28,16 +28,16 @@ class Colors {
 			'magenta' => 35,
 			'cyan'	=> 36,
 			'white'   => 37
-		),
-		'style' => array(
+		],
+		'style' => [
 			'bright'	 => 1,
 			'dim'		=> 2,
 			'underline' => 4,
 			'blink'	  => 5,
 			'reverse'	=> 7,
 			'hidden'	 => 8
-		),
-		'background' => array(
+		],
+		'background' => [
 			'black'   => 40,
 			'red'	 => 41,
 			'green'   => 42,
@@ -46,11 +46,11 @@ class Colors {
 			'magenta' => 45,
 			'cyan'	=> 46,
 			'white'   => 47
-		)
-	);
+		]
+	];
 	static protected $_enabled = null;
 
-	static protected $_string_cache = array();
+	static protected $_string_cache = [];
 
 	static public function enable($force = true) {
 		self::$_enabled = $force === true ? true : null;
@@ -83,14 +83,14 @@ class Colors {
 			$color = compact('color');
 		}
 
-		$color += array('color' => null, 'style' => null, 'background' => null);
+		$color += ['color' => null, 'style' => null, 'background' => null];
 
 		if ($color['color'] == 'reset') {
 			return "\033[0m";
 		}
 
-		$colors = array();
-		foreach (array('color', 'style', 'background') as $type) {
+		$colors = [];
+		foreach (['color', 'style', 'background'] as $type) {
 			$code = $color[$type];
 			if (isset(self::$_colors[$type][$code])) {
 				$colors[] = self::$_colors[$type][$code];
@@ -171,11 +171,11 @@ class Colors {
 	 * @param string $deprecated Optional. Not used. Default null.
 	 */
 	static public function cacheString( $passed, $colorized, $deprecated = null ) {
-		self::$_string_cache[md5($passed)] = array(
+		self::$_string_cache[md5($passed)] = [
 			'passed'      => $passed,
 			'colorized'   => $colorized,
 			'decolorized' => self::decolorize($passed), // Not very useful but keep for BC.
-		);
+		];
 	}
 
 	/**
@@ -224,41 +224,41 @@ class Colors {
 	 * @return array Array of color tokens mapped to colors and styles.
 	 */
 	static public function getColors() {
-		return array(
-			'%y' => array('color' => 'yellow'),
-			'%g' => array('color' => 'green'),
-			'%b' => array('color' => 'blue'),
-			'%r' => array('color' => 'red'),
-			'%p' => array('color' => 'magenta'),
-			'%m' => array('color' => 'magenta'),
-			'%c' => array('color' => 'cyan'),
-			'%w' => array('color' => 'white'),
-			'%k' => array('color' => 'black'),
-			'%n' => array('color' => 'reset'),
-			'%Y' => array('color' => 'yellow', 'style' => 'bright'),
-			'%G' => array('color' => 'green', 'style' => 'bright'),
-			'%B' => array('color' => 'blue', 'style' => 'bright'),
-			'%R' => array('color' => 'red', 'style' => 'bright'),
-			'%P' => array('color' => 'magenta', 'style' => 'bright'),
-			'%M' => array('color' => 'magenta', 'style' => 'bright'),
-			'%C' => array('color' => 'cyan', 'style' => 'bright'),
-			'%W' => array('color' => 'white', 'style' => 'bright'),
-			'%K' => array('color' => 'black', 'style' => 'bright'),
-			'%N' => array('color' => 'reset', 'style' => 'bright'),
-			'%3' => array('background' => 'yellow'),
-			'%2' => array('background' => 'green'),
-			'%4' => array('background' => 'blue'),
-			'%1' => array('background' => 'red'),
-			'%5' => array('background' => 'magenta'),
-			'%6' => array('background' => 'cyan'),
-			'%7' => array('background' => 'white'),
-			'%0' => array('background' => 'black'),
-			'%F' => array('style' => 'blink'),
-			'%U' => array('style' => 'underline'),
-			'%8' => array('style' => 'reverse'),
-			'%9' => array('style' => 'bright'),
-			'%_' => array('style' => 'bright')
-		);
+		return [
+			'%y' => ['color' => 'yellow'],
+			'%g' => ['color' => 'green'],
+			'%b' => ['color' => 'blue'],
+			'%r' => ['color' => 'red'],
+			'%p' => ['color' => 'magenta'],
+			'%m' => ['color' => 'magenta'],
+			'%c' => ['color' => 'cyan'],
+			'%w' => ['color' => 'white'],
+			'%k' => ['color' => 'black'],
+			'%n' => ['color' => 'reset'],
+			'%Y' => ['color' => 'yellow', 'style' => 'bright'],
+			'%G' => ['color' => 'green', 'style' => 'bright'],
+			'%B' => ['color' => 'blue', 'style' => 'bright'],
+			'%R' => ['color' => 'red', 'style' => 'bright'],
+			'%P' => ['color' => 'magenta', 'style' => 'bright'],
+			'%M' => ['color' => 'magenta', 'style' => 'bright'],
+			'%C' => ['color' => 'cyan', 'style' => 'bright'],
+			'%W' => ['color' => 'white', 'style' => 'bright'],
+			'%K' => ['color' => 'black', 'style' => 'bright'],
+			'%N' => ['color' => 'reset', 'style' => 'bright'],
+			'%3' => ['background' => 'yellow'],
+			'%2' => ['background' => 'green'],
+			'%4' => ['background' => 'blue'],
+			'%1' => ['background' => 'red'],
+			'%5' => ['background' => 'magenta'],
+			'%6' => ['background' => 'cyan'],
+			'%7' => ['background' => 'white'],
+			'%0' => ['background' => 'black'],
+			'%F' => ['style' => 'blink'],
+			'%U' => ['style' => 'underline'],
+			'%8' => ['style' => 'reverse'],
+			'%9' => ['style' => 'bright'],
+			'%_' => ['style' => 'bright']
+		];
 	}
 
 	/**
@@ -274,6 +274,6 @@ class Colors {
 	 * Clear the string cache.
 	 */
 	static public function clearStringCache() {
-		self::$_string_cache = array();
+		self::$_string_cache = [];
 	}
 }

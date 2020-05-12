@@ -4,25 +4,25 @@ error_reporting(-1);
 require_once __DIR__ . '/vendor/autoload.php';
 
 
-$args = new cli\Arguments(array(
-	'flags' => array(
-		'verbose' => array(
+$args = new cli\Arguments([
+	'flags' => [
+		'verbose' => [
 			'description' => 'Turn on verbose mode',
-			'aliases'     => array('v')
-		),
-		'c' => array(
+			'aliases'     => ['v']
+		],
+		'c' => [
 			'description' => 'A counter to test stackable',
 			'stackable'   => true
-		)
-	),
-	'options' => array(
-		'user' => array(
+		]
+	],
+	'options' => [
+		'user' => [
 			'description' => 'Username for authentication',
-			'aliases'     => array('u')
-		)
-	),
+			'aliases'     => ['u']
+		]
+	],
 	'strict' => true
-));
+]);
 
 try {
     $args->parse();

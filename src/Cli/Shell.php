@@ -10,7 +10,7 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli;
+namespace Inane\Cli;
 
 /**
  * The `Shell` class is a utility class for shell related tasks such as
@@ -39,7 +39,7 @@ class Shell {
 					}
 					if ( ! $columns ) {
 						$return_var = -1;
-						$output = array();
+						$output = [];
 						exec( 'mode CON', $output, $return_var );
 						if ( 0 === $return_var && $output ) {
 							// Look for second line ending in ": <number>" (searching for "Columns:" will fail on non-English locales).

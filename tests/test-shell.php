@@ -1,6 +1,6 @@
 <?php
 
-use cli\Shell;
+use Inane\Cli\Shell;
 
 /**
  * Class TestShell

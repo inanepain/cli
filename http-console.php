@@ -30,14 +30,14 @@ class HttpConsole {
         // Display headers
         foreach ($response->getHeaders() as $i => $header) {
             if ($i == 0) {
-                \cli\line('%G{:header}%n', compact('header'));
+                \Inane\Cli\Cli::line('%G{:header}%n', compact('header'));
                 continue;
             }
 
             list($key, $value) = explode(': ', $header, 2);
-            \cli\line('%W{:key}%n: {:value}', compact('key', 'value'));
+            \Inane\Cli\Cli::line('%W{:key}%n: {:value}', compact('key', 'value'));
         }
-        \cli\line("\n");
+        \Inane\Cli\Cli::line("\n");
         print $response->getContent() . "\n";
 
         switch ($type) {
@@ -46,7 +46,7 @@ class HttpConsole {
 
     public function run() {
         while (true) {
-            $cmd = \cli\prompt($this->_prompt, false, null);
+            $cmd = \Inane\Cli\Cli::prompt($this->_prompt, false, null);
 
             if (preg_match('/^(HEAD|GET|POST|PUT|DELETE) (\S+)$/', $cmd, $matches)) {
                 $this->handleRequest($matches[1], $matches[2]);
@@ -64,7 +64,7 @@ try {
     $console = new HttpConsole(array_shift($argv) ?: '127.0.0.1:80');
     $console->run();
 } catch (\Exception $e) {
-    \cli\err("\n\n%R" . $e->getMessage() . "%n\n");
+    \Inane\Cli\Cli::err("\n\n%R" . $e->getMessage() . "%n\n");
 }
 
 ?>

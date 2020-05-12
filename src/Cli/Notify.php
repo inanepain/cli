@@ -10,9 +10,9 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli;
+namespace Inane\Cli;
 
-use cli\Streams;
+use Inane\Cli\Streams;
 
 /**
  * The `Notify` class is the basis of all feedback classes, such as Indicators

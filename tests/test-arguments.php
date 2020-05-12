@@ -1,6 +1,6 @@
 <?php
 
-use cli\Arguments;
+use Inane\Cli\Arguments;
 
 /**
  * Class TestArguments
@@ -33,7 +33,7 @@ class TestArguments extends PHPUnit_Framework_TestCase
      */
     public static function clearArgv()
     {
-        $_SERVER['argv'] = array();
+        $_SERVER['argv'] = [];
         $_SERVER['argc'] = 0;
     }
 
@@ -63,33 +63,33 @@ class TestArguments extends PHPUnit_Framework_TestCase
         self::clearArgv();
         self::pushToArgv('my_script.php');
 
-        $this->flags = array(
-            'flag1' => array(
+        $this->flags = [
+            'flag1' => [
                 'aliases' => 'f',
                 'description' => 'Test flag 1'
-            ),
-            'flag2' => array(
+            ],
+            'flag2' => [
                 'description' => 'Test flag 2'
-            )
-        );
+            ]
+        ];
 
-        $this->options = array(
-            'option1' => array(
+        $this->options = [
+            'option1' => [
                 'aliases' => 'o',
                 'description' => 'Test option 1'
-            ),
-            'option2' => array(
-                'aliases' => array('x', 'y'),
+            ],
+            'option2' => [
+                'aliases' => ['x', 'y'],
                 'description' => 'Test option 2 with default',
                 'default' => 'some default value'
-            )
-        );
+            ]
+        ];
 
-        $this->settings = array(
+        $this->settings = [
             'strict' => true,
             'flags' => $this->flags,
             'options' => $this->options
-        );
+        ];
     }
 
     /**
@@ -115,7 +115,7 @@ class TestArguments extends PHPUnit_Framework_TestCase
         $expectedFlags['flag1']['stackable'] = false;
         $expectedFlags['flag2']['default'] = false;
         $expectedFlags['flag2']['stackable'] = false;
-        $expectedFlags['flag2']['aliases'] = array();
+        $expectedFlags['flag2']['aliases'] = [];
 
         $this->assertSame($expectedFlags, $args->getFlags());
 
@@ -152,20 +152,20 @@ class TestArguments extends PHPUnit_Framework_TestCase
      */
     public function settingsWithValidOptions()
     {
-        return array(
-            array(
-                array('-o', 'option_value', '-f'),
-                array('option1' => 'option_value', 'flag1' => true)
-            ),
-            array(
-                array('--option1', 'option_value', '--flag1'),
-                array('option1' => 'option_value', 'flag1' => true)
-            ),
-            array(
-                array('-f', '--option1', 'option_value'),
-                array('flag1' => true, 'option1' => 'option_value')
-            )
-        );
+        return [
+            [
+                ['-o', 'option_value', '-f'],
+                ['option1' => 'option_value', 'flag1' => true]
+            ],
+            [
+                ['--option1', 'option_value', '--flag1'],
+                ['option1' => 'option_value', 'flag1' => true]
+            ],
+            [
+                ['-f', '--option1', 'option_value'],
+                ['flag1' => true, 'option1' => 'option_value']
+            ]
+        ];
     }
 
     /**
@@ -175,16 +175,16 @@ class TestArguments extends PHPUnit_Framework_TestCase
      */
     public function settingsWithMissingOptions()
     {
-        return array(
-            array(
-                array('-f', '--option1'),
-                array('flag1' => true, 'option1' => 'Error should be triggered')
-            ),
-            array(
-                array('--option1', '-f'),
-                array('option1' => 'Error should be triggered', 'flag1' => true)
-            )
-        );
+        return [
+            [
+                ['-f', '--option1'],
+                ['flag1' => true, 'option1' => 'Error should be triggered']
+            ],
+            [
+                ['--option1', '-f'],
+                ['option1' => 'Error should be triggered', 'flag1' => true]
+            ]
+        ];
     }
 
     /**
@@ -194,26 +194,26 @@ class TestArguments extends PHPUnit_Framework_TestCase
      */
     public function settingsWithMissingOptionsWithDefault()
     {
-        return array(
-            array(
-                array('-f', '--option2'),
-                array('flag1' => true, 'option2' => 'some default value')
-            ),
-            array(
-                array('--option2', '-f'),
-                array('option2' => 'some default value', 'flag1' => true)
-            )
-        );
+        return [
+            [
+                ['-f', '--option2'],
+                ['flag1' => true, 'option2' => 'some default value']
+            ],
+            [
+                ['--option2', '-f'],
+                ['option2' => 'some default value', 'flag1' => true]
+            ]
+        ];
     }
 
     public function settingsWithNoOptionsWithDefault()
     {
-        return array(
-            array(
-                array(),
-                array('flag1' => false, 'flag2' => false, 'option2' => 'some default value')
-            )
-        );
+        return [
+            [
+                [],
+                ['flag1' => false, 'flag2' => false, 'option2' => 'some default value']
+            ]
+        ];
     }
 
     /**

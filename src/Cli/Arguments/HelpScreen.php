@@ -10,17 +10,17 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli\arguments;
+namespace Inane\Cli\Arguments;
 
-use cli\Arguments;
+use Inane\Cli\Arguments;
 
 /**
  * Arguments help screen renderer
  */
 class HelpScreen {
-	protected $_flags = array();
+	protected $_flags = [];
 	protected $_maxFlag = 0;
-	protected $_options = array();
+	protected $_options = [];
 	protected $_maxOption = 0;
 
 	public function __construct(Arguments $arguments) {
@@ -51,7 +51,7 @@ class HelpScreen {
 	}
 
 	public function render() {
-		$help = array();
+		$help = [];
 
 		array_push($help, $this->_renderFlags());
 		array_push($help, $this->_renderOptions());
@@ -76,7 +76,7 @@ class HelpScreen {
 	}
 
 	private function _renderScreen($options, $max) {
-		$help = array();
+		$help = [];
 		foreach ($options as $option => $settings) {
 			$formatted = '  ' . str_pad($option, $max);
 
@@ -102,10 +102,10 @@ class HelpScreen {
 
 	private function _consume($options) {
 		$max = 0;
-		$out = array();
+		$out = [];
 
 		foreach ($options as $option => $settings) {
-			$names = array('--' . $option);
+			$names = ['--' . $option];
 
 			foreach ($settings['aliases'] as $alias) {
 				array_push($names, '-' . $alias);
@@ -116,7 +116,7 @@ class HelpScreen {
 			$out[$names] = $settings;
 		}
 
-		return array($out, $max);
+		return [$out, $max];
 	}
 }
 

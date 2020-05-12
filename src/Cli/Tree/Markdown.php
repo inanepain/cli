@@ -10,7 +10,7 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli\tree;
+namespace Inane\Cli\Tree;
 
 /**
  * The ASCII renderer renders trees with ASCII lines.

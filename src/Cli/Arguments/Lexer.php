@@ -10,12 +10,12 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli\arguments;
+namespace Inane\Cli\Arguments;
 
-use cli\Memoize;
+use Inane\Cli\Memoize;
 
 class Lexer extends Memoize implements \Iterator {
-	private $_items = array();
+	private $_items = [];
 	private $_index = 0;
 	private $_length = 0;
 	private $_first = true;

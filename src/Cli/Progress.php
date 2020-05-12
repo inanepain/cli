@@ -10,7 +10,7 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli;
+namespace Inane\Cli;
 
 /**
  * A more complex type of Notifier, `Progress` Notifiers always have a maxim
@@ -19,7 +19,7 @@ namespace cli;
  *
  * @see cli\Notify
  */
-abstract class Progress extends \cli\Notify {
+abstract class Progress extends \Inane\Cli\Notify {
 	protected $_total = 0;
 
 	/**

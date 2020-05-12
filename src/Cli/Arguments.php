@@ -10,22 +10,22 @@
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 
-namespace cli;
+namespace Inane\Cli;
 
-use cli\arguments\Argument;
-use cli\arguments\HelpScreen;
-use cli\arguments\InvalidArguments;
-use cli\arguments\Lexer;
+use Inane\Cli\arguments\Argument;
+use Inane\Cli\arguments\HelpScreen;
+use Inane\Cli\arguments\InvalidArguments;
+use Inane\Cli\arguments\Lexer;
 
 /**
  * Parses command line arguments.
  */
 class Arguments implements \ArrayAccess {
-	protected $_flags = array();
-	protected $_options = array();
+	protected $_flags = [];
+	protected $_options = [];
 	protected $_strict = false;
-	protected $_input = array();
-	protected $_invalid = array();
+	protected $_input = [];
+	protected $_invalid = [];
 	protected $_parsed;
 	protected $_lexer;
 
@@ -38,11 +38,11 @@ class Arguments implements \ArrayAccess {
 	 *
 	 * @param  array  $options  An array of options for this parser.
 	 */
-	public function __construct($options = array()) {
-		$options += array(
+	public function __construct($options = []) {
+		$options += [
 			'strict' => false,
 			'input'  => array_slice($_SERVER['argv'], 1)
-		);
+		];
 
 		$this->_input = $options['input'];
 		$this->setStrict($options['strict']);
@@ -148,9 +148,9 @@ class Arguments implements \ArrayAccess {
 	 * @setting array   aliases  Other ways to trigger this flag.
 	 * @return $this
 	 */
-	public function addFlag($flag, $settings = array()) {
+	public function addFlag($flag, $settings = []) {
 		if (is_string($settings)) {
-			$settings = array('description' => $settings);
+			$settings = ['description' => $settings];
 		}
 		if (is_array($flag)) {
 			$settings['aliases'] = $flag;
@@ -161,12 +161,12 @@ class Arguments implements \ArrayAccess {
 			return $this;
 		}
 
-		$settings += array(
+		$settings += [
 			'default'     => false,
 			'stackable'   => false,
 			'description' => null,
-			'aliases'     => array()
-		);
+			'aliases'     => []
+		];
 
 		$this->_flags[$flag] = $settings;
 		return $this;
@@ -203,9 +203,9 @@ class Arguments implements \ArrayAccess {
 	 * @setting array   aliases  Other ways to trigger this option.
 	 * @return $this
 	 */
-	public function addOption($option, $settings = array()) {
+	public function addOption($option, $settings = []) {
 		if (is_string($settings)) {
-			$settings = array('description' => $settings);
+			$settings = ['description' => $settings];
 		}
 		if (is_array($option)) {
 			$settings['aliases'] = $option;
@@ -216,11 +216,11 @@ class Arguments implements \ArrayAccess {
 			return $this;
 		}
 
-		$settings += array(
+		$settings += [
 			'default'     => null,
 			'description' => null,
-			'aliases'     => array()
-		);
+			'aliases'     => []
+		];
 
 		$this->_options[$option] = $settings;
 		return $this;
@@ -388,8 +388,8 @@ class Arguments implements \ArrayAccess {
 	 * @throws arguments\InvalidArguments
 	 */
 	public function parse() {
-		$this->_invalid = array();
-		$this->_parsed = array();
+		$this->_invalid = [];
+		$this->_parsed = [];
 		$this->_lexer = new Lexer($this->_input);
 
 		$this->_applyDefaults();
@@ -471,7 +471,7 @@ class Arguments implements \ArrayAccess {
 		}
 
 		// Store as array and join to string after looping for values
-		$values = array();
+		$values = [];
 
 		// Loop until we find a flag in peak-ahead
 		foreach ($this->_lexer as $value) {
