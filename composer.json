@@ -1,11 +1,17 @@
 {
-    "name":        "wp-cli/php-cli-tools",
+    "name":        "inanepain/inane-console",
     "type":        "library",
     "description": "Console utilities for PHP",
     "keywords":    ["console", "cli"],
-    "homepage":    "http://github.com/wp-cli/php-cli-tools",
+    "homepage":    "https://git.inane.co.za:3000/Inane/inane-console",
     "license":     "MIT",
     "authors": [
+		
+		        {
+		            "name":  "Philip Raab",
+		            "email": "peep@inane.co.za",
+		            "role":  "Developer"
+		        },
         {
             "name":  "Daniel Bachhuber",
             "email": "daniel@handbuilt.co",
