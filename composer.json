@@ -12,7 +12,8 @@
     "readme": "README.md",
     "keywords": [
         "console",
-        "cli"
+        "cli",
+        "utility"
     ],
     "homepage": "https://git.inane.co.za:3000/Inane/inane-cli",
     "license": "MIT",
