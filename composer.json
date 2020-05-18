@@ -2,6 +2,13 @@
     "name": "inanepain/inane-cli",
     "type": "library",
     "description": "Console utilities for PHP",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packer.inane.co.za",
+            "name": "Inane Packer"
+        }
+    ],
     "readme": "README.md",
     "keywords": [
         "console",
