@@ -16,12 +16,12 @@ namespace Inane\Cli;
 /**
  * Cli
  * 
- * @version 0.1.0.1
+ * @version 0.10.2
  * @package Inane\Console
  */
 class Cli
 {
-    public const VERSION = '0.10.0.1';
+    public const VERSION = '0.10.2';
 
     /**
      * Handles rendering strings. If extra scalar arguments are given after the `$msg`
@@ -162,14 +162,15 @@ class Cli
      * @param array  $items   The list of items the user can choose from.
      * @param string $default The index of the default item.
      * @param string $title   The message displayed to the user when prompted.
+     * @param int     $start    Optional start value for menu. default 0, some people prefer 1.
      * @return string  The index of the chosen item.
      * @see cli\line()
      * @see cli\input()
      * @see cli\err()
      */
-    public static function menu($items, $default = null, $title = 'Choose an item')
+    public static function menu(array $items, ?string $default = null, string $title = 'Choose an item', int $start = 0): string
     {
-        return Streams::menu($items, $default, $title);
+        return Streams::menu($items, $default, $title, $start);
     }
 
     /**
