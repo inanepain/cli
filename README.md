@@ -5,7 +5,7 @@ A collection of functions and classes to assist with command line development.
 
 Requirements
 
- * PHP >= 5.3
+ * PHP >= 7.1
 
 Suggested PHP extensions
  

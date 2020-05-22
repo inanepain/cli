@@ -212,20 +212,22 @@ class Streams {
 	 * @param array   $items    The list of items the user can choose from.
 	 * @param string  $default  The index of the default item.
 	 * @param string  $title    The message displayed to the user when prompted.
+     * @param int     $start    Optional start value for menu. default 0, some people prefer 1.
 	 * @return string  The index of the chosen item.
 	 * @see cli\line()
 	 * @see cli\input()
 	 * @see cli\err()
 	 */
-	public static function menu( $items, $default = null, $title = 'Choose an item' ) {
+	public static function menu(array $items, ?string $default = null, string $title = 'Choose an item', int $start = 0): string {
 		$map = array_values( $items );
 
-		if( $default && strpos( $title, '[' ) === false && isset( $items[$default] ) ) {
+		// if( $default && strpos( $title, '[' ) === false && isset( $items[$default] ) ) {
+		if( $default && isset( $items[$default] ) ) {
 			$title .= ' [' . $items[$default] . ']';
 		}
 
 		foreach( $map as $idx => $item ) {
-			self::line( '  %d. %s', $idx + 1, (string)$item );
+			self::line( '  %d. %s', $idx + $start, (string)$item );
 		}
 		self::line();
 
@@ -234,7 +236,7 @@ class Streams {
 			$line = self::input();
 
 			if( is_numeric( $line ) ) {
-				$line--;
+				$line -= $start;
 				if( isset( $map[$line] ) ) {
 					return array_search( $map[$line], $items );
 				}
