@@ -40,6 +40,6 @@ class Spinner extends Notify {
 		$speed = number_format(round($this->speed()));
 		$elapsed = $this->formatTime($this->elapsed());
 
-		Streams::out_padded($this->_format, compact('msg', 'char', 'elapsed', 'speed'));
+		Streams::outPadded($this->_format, compact('msg', 'char', 'elapsed', 'speed'));
 	}
 }

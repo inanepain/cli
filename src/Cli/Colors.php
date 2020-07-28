@@ -79,7 +79,7 @@ class Colors {
      * @return string
 	 */
 	static public function color($color) {
-		if (!is_array($color)) {
+		if (! is_array($color)) {
 			$color = compact('color');
 		}
 
@@ -115,7 +115,7 @@ class Colors {
 	static public function colorize($string, $colored = null) {
 		$passed = $string;
 
-		if (!self::shouldColorize($colored)) {
+		if (! self::shouldColorize($colored)) {
 			$return = self::decolorize( $passed, 2 /*keep_encodings*/ );
 			self::cacheString($passed, $return);
 			return $return;

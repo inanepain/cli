@@ -77,7 +77,7 @@ abstract class Notify {
 	 * @return int  The elapsed time in seconds.
 	 */
 	public function elapsed() {
-		if (!$this->_start) {
+		if (! $this->_start) {
 			return 0;
 		}
 
@@ -94,9 +94,9 @@ abstract class Notify {
 	public function speed() {
 		static $tick, $iteration = 0, $speed = 0;
 
-		if (!$this->_start) {
+		if (! $this->_start) {
 			return 0;
-		} else if (!$tick) {
+		} else if (! $tick) {
 			$tick = $this->_start;
 		}
 

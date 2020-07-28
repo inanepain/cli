@@ -25,7 +25,7 @@ abstract class Memoize {
 			return ($this->_memoCache[$name] = null);
 		}
 
-		if (!method_exists($this, $name)) {
+		if (! method_exists($this, $name)) {
 			return ($this->_memoCache[$name] = null);
 		}
 

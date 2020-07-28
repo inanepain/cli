@@ -52,7 +52,7 @@ class Dots extends Notify {
 	 */
 	public function display($finish = false) {
 		$repeat = $this->_dots;
-		if (!$finish) {
+		if (! $finish) {
 			$repeat = $this->_iteration++ % $repeat;
 		}
 
@@ -61,6 +61,6 @@ class Dots extends Notify {
 		$speed = number_format(round($this->speed()));
 		$elapsed = $this->formatTime($this->elapsed());
 
-		Streams::out_padded($this->_format, compact('msg', 'dots', 'speed', 'elapsed'));
+		Streams::outPadded($this->_format, compact('msg', 'dots', 'speed', 'elapsed'));
 	}
 }

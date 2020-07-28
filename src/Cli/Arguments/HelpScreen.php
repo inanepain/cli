@@ -83,7 +83,7 @@ class HelpScreen {
 			$dlen = 80 - 4 - $max;
 
 			$description = str_split($settings['description'], $dlen);
-			$formatted.= '  ' . array_shift($description);
+			$formatted .= '  ' . array_shift($description);
 
 			if ($settings['default']) {
 				$formatted .= ' [default: ' . $settings['default'] . ']';

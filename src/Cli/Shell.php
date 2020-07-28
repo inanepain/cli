@@ -32,7 +32,7 @@ class Shell {
 		}
 		if ( null === $columns ) {
 			if ( function_exists( 'exec' ) ) {
-				if ( self::is_windows() ) {
+				if ( self::isWindows() ) {
 					// Cater for shells such as Cygwin and Git bash where `mode CON` returns an incorrect value for columns.
 					if ( ( $shell = getenv( 'SHELL' ) ) && preg_match( '/(?:bash|zsh)(?:\.exe)?$/', $shell ) && getenv( 'TERM' ) ) {
 						$columns = (int) exec( 'tput cols' );
@@ -91,7 +91,7 @@ class Shell {
 		if ($shellPipe !== false) {
 			return filter_var($shellPipe, FILTER_VALIDATE_BOOLEAN);
 		} else {
-			return (function_exists('posix_isatty') && !posix_isatty(STDOUT));
+			return (function_exists('posix_isatty') && ! posix_isatty(STDOUT));
 		}
 	}
 
@@ -100,7 +100,7 @@ class Shell {
 	 * @param boolean $hidden Will hide/show the next data. Defaults to true.
 	 */
 	static public function hide($hidden = true) {
-		system( 'stty ' . ( $hidden? '-echo' : 'echo' ) );
+		system( 'stty ' . ( $hidden ? '-echo' : 'echo' ) );
 	}
 
 	/**
@@ -108,7 +108,7 @@ class Shell {
 	 *
 	 * @return bool
 	 */
-	static private function is_windows() {
+	static private function isWindows() {
 		return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
 	}
 

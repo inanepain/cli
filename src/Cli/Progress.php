@@ -92,7 +92,7 @@ abstract class Progress extends \Inane\Cli\Notify {
 	 */
 	public function estimated() {
 		$speed = $this->speed();
-		if (!$speed || !$this->elapsed()) {
+		if (! $speed || ! $this->elapsed()) {
 			return 0;
 		}
 

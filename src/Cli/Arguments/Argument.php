@@ -86,7 +86,7 @@ class Argument extends Memoize {
 	 * @return bool
 	 */
 	public function isShort() {
-		return !$this->isLong && (0 == strncmp($this->_raw, '-', 1));
+		return ! $this->isLong && (0 == strncmp($this->_raw, '-', 1));
 	}
 
 	/**
@@ -104,7 +104,7 @@ class Argument extends Memoize {
 	 * @return bool
 	 */
 	public function isValue() {
-		return !$this->isArgument;
+		return ! $this->isArgument;
 	}
 
 	/**

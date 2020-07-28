@@ -45,7 +45,7 @@ class Table {
 	 * @param array  $footers  Footers used in this table. Optional.
 	 */
 	public function __construct(array $headers = null, array $rows = null, array $footers = null) {
-		if (!empty($headers)) {
+		if (! empty($headers)) {
 			// If all the rows is given in $headers we use the keys from the
 			// first row for the header values
 			if ($rows === null) {
@@ -62,7 +62,7 @@ class Table {
 			$this->setRows($rows);
 		}
 
-		if (!empty($footers)) {
+		if (! empty($footers)) {
 			$this->setFooters($footers);
 		}
 
@@ -103,7 +103,7 @@ class Table {
 	protected function checkRow(array $row) {
 		foreach ($row as $column => $str) {
 			$width = Colors::width( $str, $this->isAsciiPreColorized( $column ) );
-			if (!isset($this->_width[$column]) || $width > $this->_width[$column]) {
+			if (! isset($this->_width[$column]) || $width > $this->_width[$column]) {
 				$this->_width[$column] = $width;
 			}
 		}
@@ -173,7 +173,7 @@ class Table {
 	 * @param int  $column  The index of the column to sort by.
 	 */
 	public function sort($column) {
-		if (!isset($this->_headers[$column])) {
+		if (! isset($this->_headers[$column])) {
 			trigger_error('No column with index ' . $column, E_USER_NOTICE);
 			return;
 		}
