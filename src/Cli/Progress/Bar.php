@@ -37,11 +37,11 @@ class Bar extends Progress {
 	 * @param boolean  $finish  `true` if this was called from
 	 *                          `cli\Notify::finish()`, `false` otherwise.
 	 * @see cli\out()
-	 * @see cli\Notify::formatTime()
-	 * @see cli\Notify::elapsed()
-	 * @see cli\Progress::estimated();
-	 * @see cli\Progress::percent()
-	 * @see cli\Shell::columns()
+	 * @see Notify::formatTime()
+	 * @see Notify::elapsed()
+	 * @see Progress::estimated();
+	 * @see Progress::percent()
+	 * @see Shell::columns()
 	 */
 	public function display($finish = false) {
 		$_percent = $this->percent();
@@ -73,7 +73,7 @@ class Bar extends Progress {
 	 *
 	 * @param int    $increment The amount to increment by.
 	 * @param string $msg       The text to display next to the Notifier. (optional)
-	 * @see cli\Notify::tick()
+	 * @see Notify::tick()
 	 */
 	public function tick($increment = 1, $msg = null) {
 		if ($msg) {

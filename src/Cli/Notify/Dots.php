@@ -47,8 +47,8 @@ class Dots extends Notify {
 	 * @param boolean  $finish  `true` if this was called from
 	 *                          `cli\Notify::finish()`, `false` otherwise.
 	 * @see cli\out_padded()
-	 * @see cli\Notify::formatTime()
-	 * @see cli\Notify::speed()
+	 * @see Notify::formatTime()
+	 * @see Notify::speed()
 	 */
 	public function display($finish = false) {
 		$repeat = $this->_dots;

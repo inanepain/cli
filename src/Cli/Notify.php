@@ -48,7 +48,7 @@ abstract class Notify {
 	 *
 	 * @abstract
 	 * @param boolean  $finish
-	 * @see cli\Notify::tick()
+	 * @see Notify::tick()
 	 */
 	abstract public function display($finish = false);
 
@@ -126,7 +126,7 @@ abstract class Notify {
 	 * Finish our Notification display. Should be called after the Notifier is
 	 * no longer needed.
 	 *
-	 * @see cli\Notify::display()
+	 * @see Notify::display()
 	 */
 	public function finish() {
 		Streams::out("\r");
@@ -170,9 +170,9 @@ abstract class Notify {
 	 * and then update the display if enough time has passed since our last tick.
 	 *
 	 * @param int  $increment  The amount to increment by.
-	 * @see cli\Notify::increment()
-	 * @see cli\Notify::shouldUpdate()
-	 * @see cli\Notify::display()
+	 * @see Notify::increment()
+	 * @see Notify::shouldUpdate()
+	 * @see Notify::display()
 	 */
 	public function tick($increment = 1) {
 		$this->increment($increment);

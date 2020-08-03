@@ -117,9 +117,9 @@ class Table {
 	 * If STDOUT is a pipe or redirected to a file, should output simple
 	 * tab-separated text. Otherwise, renders table with ASCII table borders
 	 *
-	 * @uses cli\Shell::isPiped() Determine what format to output
+	 * @uses Shell::isPiped() Determine what format to output
 	 *
-	 * @see cli\Table::renderRow()
+	 * @see Table::renderRow()
 	 */
 	public function display() {
 		foreach( $this->getDisplayLines() as $line ) {
@@ -130,8 +130,8 @@ class Table {
 	/**
 	 * Get the table lines to output.
 	 *
-	 * @see cli\Table::display()
-	 * @see cli\Table::renderRow()
+	 * @see Table::display()
+	 * @see Table::renderRow()
 	 *
 	 * @return array
 	 */
@@ -206,7 +206,7 @@ class Table {
 	 * Add a row to the table.
 	 *
 	 * @param array  $row  The row data.
-	 * @see cli\Table::checkRow()
+	 * @see Table::checkRow()
 	 */
 	public function addRow(array $row) {
 		$this->_rows[] = $this->checkRow($row);
@@ -216,7 +216,7 @@ class Table {
 	 * Clears all previous rows and adds the given rows.
 	 *
 	 * @param array  $rows  A 2-dimensional array of row data.
-	 * @see cli\Table::addRow()
+	 * @see Table::addRow()
 	 */
 	public function setRows(array $rows) {
 		$this->_rows = [];
@@ -233,7 +233,7 @@ class Table {
 	 * Set whether items in an Ascii table are pre-colorized.
 	 *
 	 * @param bool|array $precolorized A boolean to set all columns in the table as pre-colorized, or an array of booleans keyed by column index (number) to set individual columns as pre-colorized.
-	 * @see cli\Ascii::setPreColorized()
+	 * @see Ascii::setPreColorized()
 	 */
 	public function setAsciiPreColorized( $pre_colorized ) {
 		if ( $this->_renderer instanceof Ascii ) {
@@ -246,7 +246,7 @@ class Table {
 	 *
 	 * @param int $column Column index to check.
 	 * @return bool True if whole Ascii table is marked as pre-colorized, or if the individual column is pre-colorized; else false.
-	 * @see cli\Ascii::isPreColorized()
+	 * @see Ascii::isPreColorized()
 	 */
 	private function isAsciiPreColorized( $column ) {
 		if ( $this->_renderer instanceof Ascii ) {
