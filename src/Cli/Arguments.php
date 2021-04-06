@@ -17,8 +17,12 @@ use Inane\Cli\Arguments\HelpScreen;
 use Inane\Cli\Arguments\InvalidArguments;
 use Inane\Cli\Arguments\Lexer;
 
+use function implode;
+
 /**
  * Parses command line arguments.
+ * 
+ * @version 1.0.1
  */
 class Arguments implements \ArrayAccess {
 	protected $_flags = [];
@@ -61,7 +65,7 @@ class Arguments implements \ArrayAccess {
 	 * @return array
 	 */
 	public function getArguments() {
-		if (!isset($this->_parsed)) {
+		if (! isset($this->_parsed)) {
 			$this->parse();
 		}
 		return $this->_parsed;
@@ -305,7 +309,7 @@ class Arguments implements \ArrayAccess {
 	}
 
 	public function hasFlags() {
-		return !empty($this->_flags);
+		return ! empty($this->_flags);
 	}
 
 	/**
@@ -365,7 +369,7 @@ class Arguments implements \ArrayAccess {
 	}
 
 	public function hasOptions() {
-		return !empty($this->_options);
+		return ! empty($this->_options);
 	}
 
 	/**
@@ -405,7 +409,7 @@ class Arguments implements \ArrayAccess {
 			array_push($this->_invalid, $argument->raw);
 		}
 
-		if ($this->_strict && !empty($this->_invalid)) {
+		if ($this->_strict && ! empty($this->_invalid)) {
 			throw new InvalidArguments($this->_invalid);
 		}
 	}
@@ -422,7 +426,7 @@ class Arguments implements \ArrayAccess {
 
 		foreach($this->_options as $option => $settings) {
 			// If the default is 0 we should still let it be set.
-			if (!empty($settings['default']) || $settings['default'] === 0) {
+			if (! empty($settings['default']) || $settings['default'] === 0) {
 				$this[$option] = $settings['default'];
 			}
 		}
@@ -433,12 +437,12 @@ class Arguments implements \ArrayAccess {
 	}
 
 	private function _parseFlag($argument) {
-		if (!$this->isFlag($argument)) {
+		if (! $this->isFlag($argument)) {
 			return false;
 		}
 
 		if ($this->isStackable($argument)) {
-			if (!isset($this[$argument])) {
+			if (! isset($this[$argument])) {
 				$this[$argument->key] = 0;
 			}
 
@@ -451,12 +455,12 @@ class Arguments implements \ArrayAccess {
 	}
 
 	private function _parseOption($option) {
-		if (!$this->isOption($option)) {
+		if (! $this->isOption($option)) {
 			return false;
 		}
 
 		// Peak ahead to make sure we get a value.
-		if ($this->_lexer->end() || !$this->_lexer->peek->isValue) {
+		if ($this->_lexer->end() || ! $this->_lexer->peek->isValue) {
 			$optionSettings = $this->getOption($option->key);
 
 			if (empty($optionSettings['default']) && $optionSettings !== 0) {
@@ -477,12 +481,12 @@ class Arguments implements \ArrayAccess {
 		foreach ($this->_lexer as $value) {
 			array_push($values, $value->raw);
 
-			if (!$this->_lexer->end() && !$this->_lexer->peek->isValue) {
+			if (! $this->_lexer->end() && ! $this->_lexer->peek->isValue) {
 				break;
 			}
 		}
 
-		$this[$option->key] = join($values, ' ');
+		$this[$option->key] = implode(' ', $values);
 		return true;
 	}
 }

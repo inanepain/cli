@@ -85,14 +85,14 @@ class testsCli extends PHPUnit_Framework_TestCase {
 
 	function test_encoded_substr() {
 
-		$this->assertEquals( \Inane\Cli\Cli::safe_substr( \Inane\Cli\Colors::pad( 'hello', 6), 0, 2 ), 'he' );
-		$this->assertEquals( \Inane\Cli\Cli::safe_substr( \Inane\Cli\Colors::pad( 'óra', 6), 0, 2 ), 'ór'  );
-		$this->assertEquals( \Inane\Cli\Cli::safe_substr( \Inane\Cli\Colors::pad( '日本語', 6), 0, 2 ), '日本'  );
+		$this->assertEquals( \Inane\Cli\Cli::safeSubstr( \Inane\Cli\Colors::pad( 'hello', 6), 0, 2 ), 'he' );
+		$this->assertEquals( \Inane\Cli\Cli::safeSubstr( \Inane\Cli\Colors::pad( 'óra', 6), 0, 2 ), 'ór'  );
+		$this->assertEquals( \Inane\Cli\Cli::safeSubstr( \Inane\Cli\Colors::pad( '日本語', 6), 0, 2 ), '日本'  );
 
-		$this->assertSame( 'el', \Inane\Cli\Cli::safe_substr( Colors::pad( 'hello', 6 ), 1, 2 ) );
+		$this->assertSame( 'el', \Inane\Cli\Cli::safeSubstr( Colors::pad( 'hello', 6 ), 1, 2 ) );
 
-		$this->assertSame( 'a ', \Inane\Cli\Cli::safe_substr( Colors::pad( 'óra', 6 ), 2, 2 ) );
-		$this->assertSame( ' ', \Inane\Cli\Cli::safe_substr( Colors::pad( 'óra', 6 ), 5, 2 ) );
+		$this->assertSame( 'a ', \Inane\Cli\Cli::safeSubstr( Colors::pad( 'óra', 6 ), 2, 2 ) );
+		$this->assertSame( ' ', \Inane\Cli\Cli::safeSubstr( Colors::pad( 'óra', 6 ), 5, 2 ) );
 
 		$this->assertSame( '本�\Inane\Cli\cli\safe_substr( Colors::pad( '日本語', 8 ), 1, 2 ) );
 		$this->assertSame( '語 '\Inane\Clili\safe_substr( Colors::pad( '日本語', 8 ), 2, 2 ) );
@@ -129,10 +129,10 @@ class testsCli extends PHPUnit_Framework_TestCase {
 			$this->assertSame( 'lムnöม\Inane\Cli', \cli\safe_substr( $str, 0, 6 ) );
 			$this->assertSame( 'lムnöม�\Inane\Cli��', \cli\safe_substr( $str, 0, 7 ) );
 			$this->assertSame( 'lムnöม�\Inane\Cli��', \cli\safe_substr( $str, 0, 8 ) );
-			$this->assertSame( '', \Inane\Cli\Cli::safe_substr( $str, 19 ) ); // Start too large.
-			$this->assertSame( '', \Inane\Cli\Cli::safe_substr( $str, 19, 7 ) ); // Start too large, with length.
-			$this->assertSame( '', \Inane\Cli\Cli::safe_substr( $str, 8 ) ); // Start same as length.
-			$this->assertSame( '', \Inane\Cli\Cli::safe_substr( $str, 8, 0 ) ); // Start same as length, with zero length.
+			$this->assertSame( '', \Inane\Cli\Cli::safeSubstr( $str, 19 ) ); // Start too large.
+			$this->assertSame( '', \Inane\Cli\Cli::safeSubstr( $str, 19, 7 ) ); // Start too large, with length.
+			$this->assertSame( '', \Inane\Cli\Cli::safeSubstr( $str, 8 ) ); // Start same as length.
+			$this->assertSame( '', \Inane\Cli\Cli::safeSubstr( $str, 8, 0 ) ); // Start same as length, with zero length.
 			$this->assertSame( '를'\Inane\Clili\safe_substr( $str, -1 ) );
 			$this->assertSame( 'p를'\Inane\Clili\safe_substr( $str, -2 ) );
 			$this->assertSame( 'ม้p\Inane\Cli, \cli\safe_substr( $str, -3 ) );
@@ -164,10 +164,10 @@ class testsCli extends PHPUnit_Framework_TestCase {
 			$this->assertSame( 'lムnöม\Inane\Cli', \cli\safe_substr( $str, 0, 6 ) );
 			$this->assertSame( 'lムnöม�\Inane\Cli��', \cli\safe_substr( $str, 0, 7 ) );
 			$this->assertSame( 'lムnöม�\Inane\Cli��', \cli\safe_substr( $str, 0, 8 ) );
-			$this->assertSame( '', \Inane\Cli\Cli::safe_substr( $str, 19 ) ); // Start too large.
-			$this->assertSame( '', \Inane\Cli\Cli::safe_substr( $str, 19, 7 ) ); // Start too large, with length.
-			$this->assertSame( '', \Inane\Cli\Cli::safe_substr( $str, 8 ) ); // Start same as length.
-			$this->assertSame( '', \Inane\Cli\Cli::safe_substr( $str, 8, 0 ) ); // Start same as length, with zero length.
+			$this->assertSame( '', \Inane\Cli\Cli::safeSubstr( $str, 19 ) ); // Start too large.
+			$this->assertSame( '', \Inane\Cli\Cli::safeSubstr( $str, 19, 7 ) ); // Start too large, with length.
+			$this->assertSame( '', \Inane\Cli\Cli::safeSubstr( $str, 8 ) ); // Start same as length.
+			$this->assertSame( '', \Inane\Cli\Cli::safeSubstr( $str, 8, 0 ) ); // Start same as length, with zero length.
 			$this->assertSame( '를'\Inane\Clili\safe_substr( $str, -1 ) );
 			$this->assertSame( 'p를'\Inane\Clili\safe_substr( $str, -2 ) );
 			$this->assertSame( 'ม้p\Inane\Cli, \cli\safe_substr( $str, -3 ) );
@@ -232,14 +232,14 @@ class testsCli extends PHPUnit_Framework_TestCase {
 		$this->assertSame( '日本\Inane\Cli, \cli\safe_substr( Colors::pad( '日本語', 8 ), 0, 6, true /*is_width*/ ) );
 		$this->assertSame( '日本�\Inane\Cli, \cli\safe_substr( Colors::pad( '日本語', 8 ), 0, 7, true /*is_width*/ ) );
 
-		$this->assertSame( 'el', \Inane\Cli\Cli::safe_substr( Colors::pad( 'hello', 6 ), 1, 2, true /*is_width*/ ) );
+		$this->assertSame( 'el', \Inane\Cli\Cli::safeSubstr( Colors::pad( 'hello', 6 ), 1, 2, true /*is_width*/ ) );
 
-		$this->assertSame( 'a ', \Inane\Cli\Cli::safe_substr( Colors::pad( 'óra', 6 ), 2, 2, true /*is_width*/ ) );
-		$this->assertSame( ' ', \Inane\Cli\Cli::safe_substr( Colors::pad( 'óra', 6 ), 5, 2, true /*is_width*/ ) );
+		$this->assertSame( 'a ', \Inane\Cli\Cli::safeSubstr( Colors::pad( 'óra', 6 ), 2, 2, true /*is_width*/ ) );
+		$this->assertSame( ' ', \Inane\Cli\Cli::safeSubstr( Colors::pad( 'óra', 6 ), 5, 2, true /*is_width*/ ) );
 
-		$this->assertSame( '', \Inane\Cli\Cli::safe_substr( '1日4本語90', 0, 0, true /*is_width*/ ) );
-		$this->assertSame( '1', \Inane\Cli\Cli::safe_substr( '1日4本語90', 0, 1, true /*is_width*/ ) );
-		$this->assertSame( '1', \Inane\Cli\Cli::safe_substr( '1日4本語90', 0, 2, true /*is_width*/ ) );
+		$this->assertSame( '', \Inane\Cli\Cli::safeSubstr( '1日4本語90', 0, 0, true /*is_width*/ ) );
+		$this->assertSame( '1', \Inane\Cli\Cli::safeSubstr( '1日4本語90', 0, 1, true /*is_width*/ ) );
+		$this->assertSame( '1', \Inane\Cli\Cli::safeSubstr( '1日4本語90', 0, 2, true /*is_width*/ ) );
 		$this->assertSame( '1日'\Inane\Clili\safe_substr( '1日4本語90', 0, 3, true /*is_width*/ ) );
 		$this->assertSame( '1日4'\Inane\Clili\safe_substr( '1日4本語90', 0, 4, true /*is_width*/ ) );
 		$this->assertSame( '1日4'\Inane\Clili\safe_substr( '1日4本語90', 0, 5, true /*is_width*/ ) );
@@ -512,23 +512,23 @@ class testsCli extends PHPUnit_Framework_TestCase {
 
 		if ( \Inane\Cli\can_use_icu() ) {
 			putenv( 'PHP_CLI_TOOLS_TEST_SAFE_STRLEN' ); // Test grapheme_strlen().
-			$this->assertSame( 7, \Inane\Cli\Cli::safe_strlen( $str ) );
+			$this->assertSame( 7, \Inane\Cli\Cli::safeStrlen( $str ) );
 			if ( \Inane\Cli\can_use_pcre_x() ) {
 				putenv( 'PHP_CLI_TOOLS_TEST_SAFE_STRLEN=2' ); // Test preg_split( '/\X/u' ).
-				$this->assertSame( 7, \Inane\Cli\Cli::safe_strlen( $str ) );
+				$this->assertSame( 7, \Inane\Cli\Cli::safeStrlen( $str ) );
 			}
 		} elseif ( \Inane\Cli\can_use_pcre_x() ) {
-			$this->assertSame( 7, \Inane\Cli\Cli::safe_strlen( $str ) ); // Tests preg_split( '/\X/u' ).
+			$this->assertSame( 7, \Inane\Cli\Cli::safeStrlen( $str ) ); // Tests preg_split( '/\X/u' ).
 		} else {
 			putenv( 'PHP_CLI_TOOLS_TEST_SAFE_STRLEN=8' ); // Test strlen().
-			$this->assertSame( 18, \Inane\Cli\Cli::safe_strlen( $str ) ); // strlen() - no. of bytes.
+			$this->assertSame( 18, \Inane\Cli\Cli::safeStrlen( $str ) ); // strlen() - no. of bytes.
 			$this->assertSame( 18, strlen( $str ) );
 		}
 
 		if ( function_exists( 'mb_strlen' ) && function_exists( 'mb_detect_order' ) ) {
 			putenv( 'PHP_CLI_TOOLS_TEST_SAFE_STRLEN=4' ); // Test mb_strlen().
 			mb_detect_order( [ 'UTF-8', 'ISO-8859-1' ] );
-			$this->assertSame( 7, \Inane\Cli\Cli::safe_strlen( $str ) );
+			$this->assertSame( 7, \Inane\Cli\Cli::safeStrlen( $str ) );
 			$this->assertSame( 9, mb_strlen( $str, 'UTF-8' ) ); // mb_strlen() - counts the 2 combining chars.
 		}
 
@@ -540,7 +540,7 @@ class testsCli extends PHPUnit_Framework_TestCase {
 			// Latin-1
 			mb_detect_order( [ 'UTF-8', 'ISO-8859-1' ] );
 			$str = "\xe0b\xe7"; // "àbç" in ISO-8859-1
-			$this->assertSame( 3, \Inane\Cli\Cli::safe_strlen( $str ) ); // Test mb_strlen().
+			$this->assertSame( 3, \Inane\Cli\Cli::safeStrlen( $str ) ); // Test mb_strlen().
 			$this->assertSame( 3, mb_strlen( $str, 'ISO-8859-1' ) );
 		}
 

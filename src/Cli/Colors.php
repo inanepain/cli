@@ -12,10 +12,13 @@
 
 namespace Inane\Cli;
 
+use function implode;
+
 /**
  * Change the color of text.
  *
  * Reference: http://graphcomp.com/info/specs/ansi_col.html#colors
+ * @version 1.0.1
  */
 class Colors {
 	static protected $_colors = [
@@ -79,7 +82,7 @@ class Colors {
      * @return string
 	 */
 	static public function color($color) {
-		if (!is_array($color)) {
+		if (! is_array($color)) {
 			$color = compact('color');
 		}
 
@@ -101,7 +104,7 @@ class Colors {
 			$colors[] = 0;
 		}
 
-		return "\033[" . join(';', $colors) . "m";
+		return "\033[" . implode(';', $colors) . "m";
 	}
 
 	/**
@@ -115,7 +118,7 @@ class Colors {
 	static public function colorize($string, $colored = null) {
 		$passed = $string;
 
-		if (!self::shouldColorize($colored)) {
+		if (! self::shouldColorize($colored)) {
 			$return = self::decolorize( $passed, 2 /*keep_encodings*/ );
 			self::cacheString($passed, $return);
 			return $return;

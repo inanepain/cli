@@ -30,8 +30,8 @@ class Spinner extends Notify {
 	 * @param boolean  $finish  `true` if this was called from
 	 *                          `cli\Notify::finish()`, `false` otherwise.
 	 * @see cli\out_padded()
-	 * @see cli\Notify::formatTime()
-	 * @see cli\Notify::speed()
+	 * @see Notify::formatTime()
+	 * @see Notify::speed()
 	 */
 	public function display($finish = false) {
 		$msg = $this->_message;
@@ -40,6 +40,6 @@ class Spinner extends Notify {
 		$speed = number_format(round($this->speed()));
 		$elapsed = $this->formatTime($this->elapsed());
 
-		Streams::out_padded($this->_format, compact('msg', 'char', 'elapsed', 'speed'));
+		Streams::outPadded($this->_format, compact('msg', 'char', 'elapsed', 'speed'));
 	}
 }

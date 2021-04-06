@@ -28,7 +28,7 @@ abstract class Progress extends \Inane\Cli\Notify {
 	 * @param string  $msg       The text to display next to the Notifier.
 	 * @param int     $total     The total number of ticks we will be performing.
 	 * @param int     $interval  The interval in milliseconds between updates.
-	 * @see cli\Progress::setTotal()
+	 * @see Progress::setTotal()
 	 */
 	public function __construct($msg, $total, $interval = 100) {
 		parent::__construct($msg, $interval);
@@ -65,7 +65,7 @@ abstract class Progress extends \Inane\Cli\Notify {
 	 * is padded to match the length of `cli\Progress::total()`.
 	 *
 	 * @return string  The formatted and padded tick count.
-	 * @see cli\Progress::total()
+	 * @see Progress::total()
 	 */
 	public function current() {
 		$size = strlen($this->total());
@@ -87,12 +87,12 @@ abstract class Progress extends \Inane\Cli\Notify {
 	 *
 	 * @return int  The estimated total number of seconds for all ticks to be
 	 *              completed. This is not the estimated time left, but total.
-	 * @see cli\Notify::speed()
-	 * @see cli\Notify::elapsed()
+	 * @see Notify::speed()
+	 * @see Notify::elapsed()
 	 */
 	public function estimated() {
 		$speed = $this->speed();
-		if (!$speed || !$this->elapsed()) {
+		if (! $speed || ! $this->elapsed()) {
 			return 0;
 		}
 

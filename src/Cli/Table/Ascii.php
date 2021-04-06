@@ -15,8 +15,12 @@ namespace Inane\Cli\Table;
 use Inane\Cli\Colors;
 use Inane\Cli\Shell;
 
+use function implode;
+
 /**
  * The ASCII renderer renders tables with ASCII borders.
+ * 
+ * @version 1.0.1
  */
 class Ascii extends Renderer {
 	protected $_characters = [
@@ -112,7 +116,7 @@ class Ascii extends Renderer {
 	 * @return string  The table border.
 	 */
 	public function border() {
-		if (!isset($this->_border)) {
+		if (! isset($this->_border)) {
 			$this->_border = $this->_characters['corner'];
 			foreach ($this->_widths as $width) {
 				$this->_border .= str_repeat($this->_characters['line'], $width + 2);
@@ -144,15 +148,15 @@ class Ascii extends Renderer {
 				$encoding = function_exists( 'mb_detect_encoding' ) ? mb_detect_encoding( $value, null, true /*strict*/ ) : false;
 				$original_val_width = Colors::width( $value, self::isPreColorized( $col ), $encoding );
 				if ( $col_width && $original_val_width > $col_width ) {
-					$row[ $col ] = \Inane\Cli\Cli::safe_substr( $value, 0, $col_width, true /*is_width*/, $encoding );
-					$value = \Inane\Cli\Cli::safe_substr( $value, \Inane\Cli\Cli::safe_strlen( $row[ $col ], $encoding ), null /*length*/, false /*is_width*/, $encoding );
+					$row[ $col ] = \Inane\Cli\Cli::safeSubstr( $value, 0, $col_width, true /*is_width*/, $encoding );
+					$value = \Inane\Cli\Cli::safeSubstr( $value, \Inane\Cli\Cli::safeStrlen( $row[ $col ], $encoding ), null /*length*/, false /*is_width*/, $encoding );
 					$i = 0;
 					do {
-						$extra_value = \Inane\Cli\Cli::safe_substr( $value, 0, $col_width, true /*is_width*/, $encoding );
+						$extra_value = \Inane\Cli\Cli::safeSubstr( $value, 0, $col_width, true /*is_width*/, $encoding );
 						$val_width = Colors::width( $extra_value, self::isPreColorized( $col ), $encoding );
 						if ( $val_width ) {
 							$extra_rows[ $col ][] = $extra_value;
-							$value = \Inane\Cli\Cli::safe_substr( $value, \Inane\Cli\Cli::safe_strlen( $extra_value, $encoding ), null /*length*/, false /*is_width*/, $encoding );
+							$value = \Inane\Cli\Cli::safeSubstr( $value, \Inane\Cli\Cli::safeStrlen( $extra_value, $encoding ), null /*length*/, false /*is_width*/, $encoding );
 							$i++;
 							if ( $i > $extra_row_count ) {
 								$extra_row_count = $i;
@@ -168,7 +172,7 @@ class Ascii extends Renderer {
 		array_unshift($row, ''); // First border
 		array_push($row, ''); // Last border
 
-		$ret = join($this->_characters['border'], $row);
+		$ret = implode($this->_characters['border'], $row);
 		if ( $extra_row_count ) {
 			foreach( $extra_rows as $col => $col_values ) {
 				while( count( $col_values ) < $extra_row_count ) {
@@ -190,7 +194,7 @@ class Ascii extends Renderer {
 				array_unshift($row_values, ''); // First border
 				array_push($row_values, ''); // Last border
 
-				$ret .= PHP_EOL . join($this->_characters['border'], $row_values);
+				$ret .= PHP_EOL . implode($this->_characters['border'], $row_values);
 			} while( $has_more );
 		}
 		return $ret;

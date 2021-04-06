@@ -2,6 +2,13 @@
 
 namespace Inane\Cli;
 
+use function implode;
+
+/**
+ * Streams
+ *
+ * @version 1.0.1
+ */
 class Streams {
 
 	protected static $out = STDOUT;
@@ -36,7 +43,7 @@ class Streams {
 		}
 
 		// If the first argument is not an array just pass to sprintf
-		if( !is_array( $args[1] ) ) {
+		if( ! is_array( $args[1] ) ) {
 			// Colorize the message first so sprintf doesn't bitch at us
 			if ( Colors::shouldColorize() ) {
 				$args[0] = Colors::colorize( $args[0] );
@@ -76,7 +83,7 @@ class Streams {
 	 * @return void
 	 * @see cli\out()
 	 */
-	public static function out_padded( $msg ) {
+	public static function outPadded( $msg ) {
 		$msg = self::_call( 'render', func_get_args() );
 		self::out( str_pad( $msg, \Inane\Cli\Shell::columns() ) );
 	}
@@ -183,14 +190,12 @@ class Streams {
 	 * @see cli\prompt()
 	 */
 	public static function choose( $question, $choice = 'yn', $default = 'n' ) {
-		if( !is_string( $choice ) ) {
-			$choice = join( '', $choice );
-		}
+		if( ! is_string( $choice ) ) $choice = implode('', $choice);
 
 		// Make every choice character lowercase except the default
 		$choice = str_ireplace( $default, strtoupper( $default ), strtolower( $choice ) );
 		// Seperate each choice with a forward-slash
-		$choices = trim( join( '/', preg_split( '//', $choice ) ), '/' );
+		$choices = trim( implode( '/', preg_split( '//', $choice ) ), '/' );
 
 		while( true ) {
 			$line = self::prompt( sprintf( '%s? [%s]', $question, $choices ), $default, '' );
@@ -198,7 +203,7 @@ class Streams {
 			if( stripos( $choice, $line ) !== false ) {
 				return strtolower( $line );
 			}
-			if( !empty( $default ) ) {
+			if( ! empty( $default ) ) {
 				return strtolower( $default );
 			}
 		}
@@ -267,7 +272,7 @@ class Streams {
 	 * @throws \Exception Thrown if $stream is not a resource of the 'stream' type.
 	 */
 	public static function setStream( $whichStream, $stream ) {
-		if( !is_resource( $stream ) || get_resource_type( $stream ) !== 'stream' ) {
+		if( ! is_resource( $stream ) || get_resource_type( $stream ) !== 'stream' ) {
 			throw new \Exception( 'Invalid resource type!' );
 		}
 		if( property_exists( __CLASS__, $whichStream ) ) {

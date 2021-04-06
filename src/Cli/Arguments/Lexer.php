@@ -112,7 +112,7 @@ class Lexer extends Memoize implements \Iterator {
 	}
 
 	private function _explode() {
-		if (!$this->_item->canExplode) {
+		if (! $this->_item->canExplode) {
 			return false;
 		}
 
