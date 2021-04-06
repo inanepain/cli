@@ -13,15 +13,17 @@
 
 namespace Inane\Cli;
 
+use function implode;
+
 /**
  * Cli
  *
- * @version 0.10.2
+ * @version 0.11.0
  * @package Inane\Console
  */
 class Cli
 {
-    public const VERSION = '0.10.2';
+    public const VERSION = '0.11.0';
 
     /**
      * Handles rendering strings. If extra scalar arguments are given after the `$msg`
@@ -313,7 +315,7 @@ class Cli
                 if ($width < 0 && $length > 1) {
                     $length--;
                 }
-                return join('', array_slice($chars, 0, $length));
+                return implode(array_slice($chars, 0, $length), '');
             }
         }
         return $str;

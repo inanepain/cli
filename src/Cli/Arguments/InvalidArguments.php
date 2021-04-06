@@ -14,6 +14,8 @@ namespace Inane\Cli\Arguments;
 
 /**
  * Thrown when undefined arguments are detected in strict mode.
+ * 
+ * @version 1.0.1
  */
 class InvalidArguments extends \InvalidArgumentException {
 	protected $arguments;
@@ -38,6 +40,6 @@ class InvalidArguments extends \InvalidArgumentException {
 	private function _generateMessage() {
 		return 'unknown argument' .
 			(count($this->arguments) > 1 ? 's' : '') .
-			': ' . join($this->arguments, ', ');
+			': ' . implode(', ', $this->arguments);
 	}
 }

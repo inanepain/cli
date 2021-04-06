@@ -17,8 +17,12 @@ use Inane\Cli\Arguments\HelpScreen;
 use Inane\Cli\Arguments\InvalidArguments;
 use Inane\Cli\Arguments\Lexer;
 
+use function implode;
+
 /**
  * Parses command line arguments.
+ * 
+ * @version 1.0.1
  */
 class Arguments implements \ArrayAccess {
 	protected $_flags = [];
@@ -482,7 +486,7 @@ class Arguments implements \ArrayAccess {
 			}
 		}
 
-		$this[$option->key] = join($values, ' ');
+		$this[$option->key] = implode(' ', $values);
 		return true;
 	}
 }

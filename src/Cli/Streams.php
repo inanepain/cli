@@ -2,6 +2,13 @@
 
 namespace Inane\Cli;
 
+use function implode;
+
+/**
+ * Streams
+ *
+ * @version 1.0.1
+ */
 class Streams {
 
 	protected static $out = STDOUT;
@@ -183,14 +190,12 @@ class Streams {
 	 * @see cli\prompt()
 	 */
 	public static function choose( $question, $choice = 'yn', $default = 'n' ) {
-		if( ! is_string( $choice ) ) {
-			$choice = join( '', $choice );
-		}
+		if( ! is_string( $choice ) ) $choice = implode('', $choice);
 
 		// Make every choice character lowercase except the default
 		$choice = str_ireplace( $default, strtoupper( $default ), strtolower( $choice ) );
 		// Seperate each choice with a forward-slash
-		$choices = trim( join( '/', preg_split( '//', $choice ) ), '/' );
+		$choices = trim( implode( '/', preg_split( '//', $choice ) ), '/' );
 
 		while( true ) {
 			$line = self::prompt( sprintf( '%s? [%s]', $question, $choices ), $default, '' );

@@ -15,8 +15,12 @@ namespace Inane\Cli\Table;
 use Inane\Cli\Colors;
 use Inane\Cli\Shell;
 
+use function implode;
+
 /**
  * The ASCII renderer renders tables with ASCII borders.
+ * 
+ * @version 1.0.1
  */
 class Ascii extends Renderer {
 	protected $_characters = [
@@ -168,7 +172,7 @@ class Ascii extends Renderer {
 		array_unshift($row, ''); // First border
 		array_push($row, ''); // Last border
 
-		$ret = join($this->_characters['border'], $row);
+		$ret = implode($this->_characters['border'], $row);
 		if ( $extra_row_count ) {
 			foreach( $extra_rows as $col => $col_values ) {
 				while( count( $col_values ) < $extra_row_count ) {
@@ -190,7 +194,7 @@ class Ascii extends Renderer {
 				array_unshift($row_values, ''); // First border
 				array_push($row_values, ''); // Last border
 
-				$ret .= PHP_EOL . join($this->_characters['border'], $row_values);
+				$ret .= PHP_EOL . implode($this->_characters['border'], $row_values);
 			} while( $has_more );
 		}
 		return $ret;
