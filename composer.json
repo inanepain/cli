@@ -15,7 +15,7 @@
         "cli",
         "utility"
     ],
-    "homepage": "https://git.inane.co.za:3000/Inane/inane-cli",
+    "homepage": "https://git.inane.co.za:3000/inane/inane-cli",
     "license": "MIT",
     "authors": [
         {
