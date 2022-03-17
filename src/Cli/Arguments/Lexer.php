@@ -49,7 +49,7 @@ class Lexer extends Memoize implements \Iterator {
 	/**
 	 * Move the cursor forward 1 element if it is valid.
 	 */
-	public function next() {
+	public function next(): void {
 		if ($this->valid()) {
 			$this->_shift();
 		}
@@ -68,7 +68,7 @@ class Lexer extends Memoize implements \Iterator {
 	 * Move forward 1 element and, if the method hasn't been called before, reset
 	 * the cursor's position to 0.
 	 */
-	public function rewind() {
+	public function rewind(): void {
 		$this->_shift();
 		if ($this->_first) {
 			$this->_index = 0;
@@ -81,7 +81,7 @@ class Lexer extends Memoize implements \Iterator {
 	 *
 	 * @return bool
 	 */
-	public function valid() {
+	public function valid(): bool {
 		return ($this->_index < $this->_length);
 	}
 

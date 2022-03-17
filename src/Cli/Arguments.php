@@ -1,42 +1,57 @@
 <?php
 /**
- * PHP Command Line Tools
+ * Inane
  *
- * This source file is subject to the MIT license that is bundled
- * with this package in the file LICENSE.
+ * Cli
  *
+ * PHP version 8.1
+ *
+ * @author    Philip Michael Raab <peep@inane.co.za>
  * @author    James Logsdon <dwarf@girsbrain.org>
- * @copyright 2010 James Logsdom (http://girsbrain.org)
- * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @license   http://www.opensource.org/licenses/mit-license.php UNLICENSE
  */
 
 namespace Inane\Cli;
 
+use ArrayAccess;
 use Inane\Cli\Arguments\Argument;
 use Inane\Cli\Arguments\HelpScreen;
 use Inane\Cli\Arguments\InvalidArguments;
 use Inane\Cli\Arguments\Lexer;
 
+use function is_array;
 use function implode;
+use function array_slice;
+use function array_key_exists;
+use function json_encode;
+use function is_string;
+use function is_numeric;
+use function array_shift;
+use function in_array;
+use function array_push;
+use function trigger_error;
 
 /**
  * Parses command line arguments.
- * 
+ *
  * @version 1.0.1
  */
-class Arguments implements \ArrayAccess {
-	protected $_flags = [];
-	protected $_options = [];
-	protected $_strict = false;
-	protected $_input = [];
-	protected $_invalid = [];
-	protected $_parsed;
-	protected $_lexer;
+class Arguments implements ArrayAccess {
+	protected bool $_strict = false;
+	protected array $_flags = [];
+	protected array $_options = [];
+	// protected array $_input = [];
+	protected array $_invalid = [];
+	protected array $_parsed = [];
+	protected Lexer $_lexer;
 
 	/**
 	 * Initializes the argument parser. If you wish to change the default behaviour
 	 * you may pass an array of options as the first argument. Valid options are
 	 * `'help'` and `'strict'`, each a boolean.
+	 *
+	 * - help  :
+	 * - strict: throws error
 	 *
 	 * `'help'` is `true` by default, `'strict'` is false by default.
 	 *
@@ -45,18 +60,16 @@ class Arguments implements \ArrayAccess {
 	public function __construct($options = []) {
 		$options += [
 			'strict' => false,
-			'input'  => array_slice($_SERVER['argv'], 1)
+			// 'input'  => array_slice($_SERVER['argv'], 1)
 		];
 
-		$this->_input = $options['input'];
+		$this->_lexer = new Lexer(array_slice($_SERVER['argv'], 1));
+
+		// $this->_input = $options['input'];
 		$this->setStrict($options['strict']);
 
-		if (isset($options['flags'])) {
-			$this->addFlags($options['flags']);
-		}
-		if (isset($options['options'])) {
-			$this->addOptions($options['options']);
-		}
+		if (isset($options['flags'])) $this->addFlags($options['flags']);
+		if (isset($options['options'])) $this->addOptions($options['options']);
 	}
 
 	/**
@@ -65,9 +78,7 @@ class Arguments implements \ArrayAccess {
 	 * @return array
 	 */
 	public function getArguments() {
-		if (! isset($this->_parsed)) {
-			$this->parse();
-		}
+		if (! isset($this->_parsed)) $this->parse();
 		return $this->_parsed;
 	}
 
@@ -88,12 +99,11 @@ class Arguments implements \ArrayAccess {
 	 * Returns true if a given argument was parsed.
 	 *
 	 * @param mixed  $offset  An Argument object or the name of the argument.
+	 *
 	 * @return bool
 	 */
-	public function offsetExists($offset) {
-		if ($offset instanceOf Argument) {
-			$offset = $offset->key;
-		}
+	public function offsetExists($offset): bool {
+		if ($offset instanceOf Argument) $offset = $offset->key;
 
 		return array_key_exists($offset, $this->_parsed);
 	}
@@ -105,13 +115,9 @@ class Arguments implements \ArrayAccess {
 	 * @return mixed
 	 */
 	public function offsetGet($offset) {
-		if ($offset instanceOf Argument) {
-			$offset = $offset->key;
-		}
+		if ($offset instanceOf Argument) $offset = $offset->key;
 
-		if (isset($this->_parsed[$offset])) {
-			return $this->_parsed[$offset];
-		}
+		if (isset($this->_parsed[$offset])) return $this->_parsed[$offset];
 	}
 
 	/**
@@ -120,10 +126,8 @@ class Arguments implements \ArrayAccess {
 	 * @param mixed  $offset  An Argument object or the name of the argument.
 	 * @param mixed  $value   The value to set
 	 */
-	public function offsetSet($offset, $value) {
-		if ($offset instanceOf Argument) {
-			$offset = $offset->key;
-		}
+	public function offsetSet($offset, $value): void {
+		if ($offset instanceOf Argument) $offset = $offset->key;
 
 		$this->_parsed[$offset] = $value;
 	}
@@ -133,10 +137,8 @@ class Arguments implements \ArrayAccess {
 	 *
 	 * @param mixed  $offset  An Argument object or the name of the argument.
 	 */
-	public function offsetUnset($offset) {
-		if ($offset instanceOf Argument) {
-			$offset = $offset->key;
-		}
+	public function offsetUnset($offset): void {
+		if ($offset instanceOf Argument) $offset = $offset->key;
 
 		unset($this->_parsed[$offset]);
 	}
@@ -150,16 +152,17 @@ class Arguments implements \ArrayAccess {
 	 * @setting bool    default  The default value for this flag.
 	 * @setting bool    stackable  Whether the flag is repeatable to increase the value.
 	 * @setting array   aliases  Other ways to trigger this flag.
-	 * @return $this
+	 *
+	 * @return self
 	 */
-	public function addFlag($flag, $settings = []) {
-		if (is_string($settings)) {
-			$settings = ['description' => $settings];
-		}
+	public function addFlag($flag, $settings = []): self {
+		if (is_string($settings)) $settings = ['description' => $settings];
+
 		if (is_array($flag)) {
 			$settings['aliases'] = $flag;
 			$flag = array_shift($settings['aliases']);
 		}
+
 		if (isset($this->_flags[$flag])) {
 			$this->_warn('flag already exists: ' . $flag);
 			return $this;
@@ -182,9 +185,10 @@ class Arguments implements \ArrayAccess {
 	 * used by {addFlag}.
 	 *
 	 * @param array  $flags  An array of flags to add
-	 * @return $this
+	 *
+	 * @return self
 	 */
-	public function addFlags($flags) {
+	public function addFlags($flags): self {
 		foreach ($flags as $flag => $settings) {
 			if (is_numeric($flag)) {
 				$this->_warn('No flag character given');
@@ -205,12 +209,12 @@ class Arguments implements \ArrayAccess {
 	 * @setting string  description  A description to be shown in --help.
 	 * @setting bool    default  The default value for this option.
 	 * @setting array   aliases  Other ways to trigger this option.
-	 * @return $this
+	 *
+	 * @return self
 	 */
-	public function addOption($option, $settings = []) {
-		if (is_string($settings)) {
-			$settings = ['description' => $settings];
-		}
+	public function addOption($option, $settings = []): self {
+		if (is_string($settings)) $settings = ['description' => $settings];
+
 		if (is_array($option)) {
 			$settings['aliases'] = $option;
 			$option = array_shift($settings['aliases']);
@@ -231,16 +235,23 @@ class Arguments implements \ArrayAccess {
 	}
 
 	/**
-	 * Add multiple options at once. The input array should be keyed with the
+	 * Add multiple options at once
+	 *
+	 * The input array should be keyed with the
 	 * primary option string, and the values should be the settings array
 	 * used by {addOption}.
 	 *
 	 * @param array  $options  An array of options to add
-	 * @return $this
+	 *
+	 * @return self
 	 */
-	public function addOptions($options) {
+	public function addOptions(array $options): self {
 		foreach ($options as $option => $settings) {
-			if (is_numeric($option)) {
+			if (array_key_exists('name', $settings)) {
+				$option = array_filter([$settings['name'], $settings['short'] ?? '']);
+				unset($settings['name']);
+				unset($settings['short']);
+			} else if (is_numeric($option)) {
 				$this->_warn('No option string given');
 				continue;
 			}
@@ -252,17 +263,20 @@ class Arguments implements \ArrayAccess {
 	}
 
 	/**
-	 * Enable or disable strict mode. If strict mode is active any invalid
-	 * arguments found by the parser will throw `cli\arguments\InvalidArguments`.
+	 * Enable or disable strict mode.
 	 *
-	 * Even if strict is disabled, invalid arguments are logged and can be
-	 * retrieved with `cli\Arguments::getInvalidArguments()`.
+	 * Strict mode sets how invalid arguments should be handled.
+	 *
+	 *  - true : invalid arguments throw `cli\arguments\InvalidArguments`
+	 *  - false: invalid arguments logged and retrievable with `\Inane\Cli\Arguments::getInvalidArguments()`
 	 *
 	 * @param bool  $strict  True to enable, false to disable.
-	 * @return $this
+	 *
+	 * @return self
 	 */
-	public function setStrict($strict) {
+	public function setStrict($strict): self {
 		$this->_strict = (bool)$strict;
+
 		return $this;
 	}
 
@@ -288,19 +302,13 @@ class Arguments implements \ArrayAccess {
 			$flag = $flag->value;
 		}
 
-		if (isset($this->_flags[$flag])) {
-			return $this->_flags[$flag];
-		}
+		if (isset($this->_flags[$flag])) return $this->_flags[$flag];
 
-		foreach ($this->_flags as $master => $settings) {
-			if (in_array($flag, (array)$settings['aliases'])) {
-				if (isset($obj)) {
-					$obj->key = $master;
-				}
+		foreach ($this->_flags as $master => $settings) if (in_array($flag, (array)$settings['aliases'])) {
+			if (isset($obj)) $obj->key = $master;
 
-				$cache[$flag] =& $settings;
-				return $settings;
-			}
+			$cache[$flag] = &$settings;
+			return $settings;
 		}
 	}
 
@@ -309,7 +317,7 @@ class Arguments implements \ArrayAccess {
 	}
 
 	public function hasFlags() {
-		return ! empty($this->_flags);
+		return !empty($this->_flags);
 	}
 
 	/**
@@ -349,18 +357,12 @@ class Arguments implements \ArrayAccess {
 			$option = $option->value;
 		}
 
-		if (isset($this->_options[$option])) {
-			return $this->_options[$option];
-		}
+		if (isset($this->_options[$option])) return $this->_options[$option];
 
-		foreach ($this->_options as $master => $settings) {
-			if (in_array($option, (array)$settings['aliases'])) {
-				if (isset($obj)) {
-					$obj->key = $master;
-				}
+		foreach ($this->_options as $master => $settings) if (in_array($option, (array)$settings['aliases'])) {
+			if (isset($obj)) $obj->key = $master;
 
-				return $settings;
-			}
+			return $settings;
 		}
 	}
 
@@ -384,34 +386,23 @@ class Arguments implements \ArrayAccess {
 	}
 
 	/**
-	 * Parses the argument list with the given options. The returned argument list
-	 * will use either the first long name given or the first name in the list
-	 * if a long name is not given.
+	 * Parses arguments
 	 *
-	 * @return array
+	 * @return array arguments by long name
+	 *
 	 * @throws arguments\InvalidArguments
 	 */
 	public function parse() {
-		$this->_invalid = [];
-		$this->_parsed = [];
-		$this->_lexer = new Lexer($this->_input);
-
 		$this->_applyDefaults();
 
 		foreach ($this->_lexer as $argument) {
-			if ($this->_parseFlag($argument)) {
-				continue;
-			}
-			if ($this->_parseOption($argument)) {
-				continue;
-			}
+			if ($this->_parseFlag($argument)) continue;
+			if ($this->_parseOption($argument)) continue;
 
 			array_push($this->_invalid, $argument->raw);
 		}
 
-		if ($this->_strict && ! empty($this->_invalid)) {
-			throw new InvalidArguments($this->_invalid);
-		}
+		if ($this->_strict && ! empty($this->_invalid)) throw new InvalidArguments($this->_invalid);
 	}
 
 	/**
@@ -420,16 +411,12 @@ class Arguments implements \ArrayAccess {
 	 * it will be available.
 	 */
 	private function _applyDefaults() {
-		foreach($this->_flags as $flag => $settings) {
-			$this[$flag] = $settings['default'];
-		}
+		foreach($this->_flags as $flag => $settings) $this[$flag] = $settings['default'];
 
-		foreach($this->_options as $option => $settings) {
-			// If the default is 0 we should still let it be set.
-			if (! empty($settings['default']) || $settings['default'] === 0) {
+		// If the default is 0 we should still let it be set.
+		foreach($this->_options as $option => $settings)
+			if (!empty($settings['default']) || $settings['default'] === 0)
 				$this[$option] = $settings['default'];
-			}
-		}
 	}
 
 	private function _warn($message) {
@@ -437,27 +424,19 @@ class Arguments implements \ArrayAccess {
 	}
 
 	private function _parseFlag($argument) {
-		if (! $this->isFlag($argument)) {
-			return false;
-		}
+		if (! $this->isFlag($argument)) return false;
 
 		if ($this->isStackable($argument)) {
-			if (! isset($this[$argument])) {
-				$this[$argument->key] = 0;
-			}
+			if (! isset($this[$argument])) $this[$argument->key] = 0;
 
 			$this[$argument->key] += 1;
-		} else {
-			$this[$argument->key] = true;
-		}
+		} else $this[$argument->key] = true;
 
 		return true;
 	}
 
 	private function _parseOption($option) {
-		if (! $this->isOption($option)) {
-			return false;
-		}
+		if (! $this->isOption($option)) return false;
 
 		// Peak ahead to make sure we get a value.
 		if ($this->_lexer->end() || ! $this->_lexer->peek->isValue) {
@@ -481,9 +460,7 @@ class Arguments implements \ArrayAccess {
 		foreach ($this->_lexer as $value) {
 			array_push($values, $value->raw);
 
-			if (! $this->_lexer->end() && ! $this->_lexer->peek->isValue) {
-				break;
-			}
+			if (! $this->_lexer->end() && ! $this->_lexer->peek->isValue) break;
 		}
 
 		$this[$option->key] = implode(' ', $values);
