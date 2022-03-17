@@ -1,5 +1,5 @@
 {
-    "name": "inanepain/inane-cli",
+    "name": "inanepain/cli",
     "type": "library",
     "description": "Console utilities for PHP",
     "repositories": [
