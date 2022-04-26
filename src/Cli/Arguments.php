@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Inane
  *
@@ -8,28 +9,31 @@
  *
  * @author    Philip Michael Raab <peep@inane.co.za>
  * @author    James Logsdon <dwarf@girsbrain.org>
- * @license   http://www.opensource.org/licenses/mit-license.php UNLICENSE
+ * @license   https://unlicense.org/UNLICENSE UNLICENSE
  */
 
 namespace Inane\Cli;
 
 use ArrayAccess;
-use Inane\Cli\Arguments\Argument;
-use Inane\Cli\Arguments\HelpScreen;
-use Inane\Cli\Arguments\InvalidArguments;
-use Inane\Cli\Arguments\Lexer;
 
-use function is_array;
-use function implode;
-use function array_slice;
 use function array_key_exists;
-use function json_encode;
-use function is_string;
-use function is_numeric;
-use function array_shift;
-use function in_array;
 use function array_push;
+use function array_shift;
+use function array_slice;
+use function implode;
+use function in_array;
+use function is_array;
+use function is_numeric;
+use function is_string;
+use function json_encode;
 use function trigger_error;
+
+use Inane\Cli\Arguments\{
+	Argument,
+	HelpScreen,
+	InvalidArguments,
+	Lexer
+};
 
 /**
  * Parses command line arguments.
