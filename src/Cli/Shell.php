@@ -1,14 +1,17 @@
 <?php
+
 /**
  * PHP Command Line Tools
  *
- * This source file is subject to the MIT license that is bundled
- * with this package in the file LICENSE.
+ * PHP version 8.1
  *
  * @author    James Logsdon <dwarf@girsbrain.org>
- * @copyright 2010 James Logsdom (http://girsbrain.org)
+ * @author    Philip Michael Raab <peep@inane.co.za>
+ *
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+
+declare(strict_types=1);
 
 namespace Inane\Cli;
 
@@ -27,43 +30,43 @@ class Shell {
 	static public function columns() {
 		static $columns;
 
-		if ( getenv( 'PHP_CLI_TOOLS_TEST_SHELL_COLUMNS_RESET' ) ) {
+		if (getenv('PHP_CLI_TOOLS_TEST_SHELL_COLUMNS_RESET')) {
 			$columns = null;
 		}
-		if ( null === $columns ) {
-			if ( function_exists( 'exec' ) ) {
-				if ( self::isWindows() ) {
+		if (null === $columns) {
+			if (function_exists('exec')) {
+				if (self::isWindows()) {
 					// Cater for shells such as Cygwin and Git bash where `mode CON` returns an incorrect value for columns.
-					if ( ( $shell = getenv( 'SHELL' ) ) && preg_match( '/(?:bash|zsh)(?:\.exe)?$/', $shell ) && getenv( 'TERM' ) ) {
-						$columns = (int) exec( 'tput cols' );
+					if (($shell = getenv('SHELL')) && preg_match('/(?:bash|zsh)(?:\.exe)?$/', $shell) && getenv('TERM')) {
+						$columns = (int) exec('tput cols');
 					}
-					if ( ! $columns ) {
+					if (!$columns) {
 						$return_var = -1;
 						$output = [];
-						exec( 'mode CON', $output, $return_var );
-						if ( 0 === $return_var && $output ) {
+						exec('mode CON', $output, $return_var);
+						if (0 === $return_var && $output) {
 							// Look for second line ending in ": <number>" (searching for "Columns:" will fail on non-English locales).
-							if ( preg_match( '/:\s*[0-9]+\n[^:]+:\s*([0-9]+)\n/', implode( "\n", $output ), $matches ) ) {
+							if (preg_match('/:\s*[0-9]+\n[^:]+:\s*([0-9]+)\n/', implode("\n", $output), $matches)) {
 								$columns = (int) $matches[1];
 							}
 						}
 					}
 				} else {
-					if ( ! ( $columns = (int) getenv( 'COLUMNS' ) ) ) {
-						$size = exec( '/usr/bin/env stty size 2>/dev/null' );
-						if ( '' !== $size && preg_match( '/[0-9]+ ([0-9]+)/', $size, $matches ) ) {
+					if (!($columns = (int) getenv('COLUMNS'))) {
+						$size = exec('/usr/bin/env stty size 2>/dev/null');
+						if ('' !== $size && preg_match('/[0-9]+ ([0-9]+)/', $size, $matches)) {
 							$columns = (int) $matches[1];
 						}
-						if ( ! $columns ) {
-							if ( getenv( 'TERM' ) ) {
-								$columns = (int) exec( '/usr/bin/env tput cols 2>/dev/null' );
+						if (!$columns) {
+							if (getenv('TERM')) {
+								$columns = (int) exec('/usr/bin/env tput cols 2>/dev/null');
 							}
 						}
 					}
 				}
 			}
 
-			if ( ! $columns ) {
+			if (!$columns) {
 				$columns = 80; // default width of cmd window on Windows OS
 			}
 		}
@@ -91,7 +94,7 @@ class Shell {
 		if ($shellPipe !== false) {
 			return filter_var($shellPipe, FILTER_VALIDATE_BOOLEAN);
 		} else {
-			return (function_exists('posix_isatty') && ! posix_isatty(STDOUT));
+			return (function_exists('posix_isatty') && !posix_isatty(STDOUT));
 		}
 	}
 
@@ -100,7 +103,7 @@ class Shell {
 	 * @param boolean $hidden Will hide/show the next data. Defaults to true.
 	 */
 	static public function hide($hidden = true) {
-		system( 'stty ' . ( $hidden ? '-echo' : 'echo' ) );
+		system('stty ' . ($hidden ? '-echo' : 'echo'));
 	}
 
 	/**
@@ -111,7 +114,4 @@ class Shell {
 	static private function isWindows() {
 		return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
 	}
-
 }
-
-?>

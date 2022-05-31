@@ -3,13 +3,15 @@
 /**
  * PHP Command Line Tools
  *
- * This source file is subject to the MIT license that is bundled
- * with this package in the file LICENSE.
+ * PHP version 8.1
  *
  * @author    James Logsdon <dwarf@girsbrain.org>
- * @copyright 2010 James Logsdom (http://girsbrain.org)
+ * @author    Philip Michael Raab <peep@inane.co.za>
+ *
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+
+declare(strict_types=1);
 
 namespace Inane\Cli;
 
@@ -18,12 +20,20 @@ use function implode;
 /**
  * Cli
  *
- * @version 0.11.0
+ * @version 0.11.1
  * @package Inane\Console
  */
-class Cli
-{
-    public const VERSION = '0.11.0';
+class Cli {
+    public const VERSION = '0.11.1';
+
+    /**
+     * Is shell environment
+     *
+     * @return bool
+     */
+    public static function isCli(): bool {
+        return (php_sapi_name() == 'cli');
+    }
 
     /**
      * Handles rendering strings. If extra scalar arguments are given after the `$msg`
@@ -35,8 +45,7 @@ class Cli
      * @param mixed    ...   Either scalar arguments or a single array argument.
      * @return string  The rendered string.
      */
-    public static function render($msg)
-    {
+    public static function render($msg) {
         return Streams::_call('render', func_get_args());
     }
 
@@ -49,8 +58,7 @@ class Cli
      * @return void
      * @see \Inane\Cli\render()
      */
-    public static function out($msg)
-    {
+    public static function out($msg) {
         Streams::_call('out', func_get_args());
     }
 
@@ -62,8 +70,7 @@ class Cli
      * @return void
      * @see cli\out()
      */
-    public static function outPadded($msg)
-    {
+    public static function outPadded($msg) {
         Streams::_call('outPadded', func_get_args());
     }
 
@@ -73,8 +80,7 @@ class Cli
      *
      * @see cli\out()
      */
-    public static function line($msg = '')
-    {
+    public static function line($msg = '') {
         Streams::_call('line', func_get_args());
     }
 
@@ -87,8 +93,7 @@ class Cli
      * @param mixed   ...   Either scalar arguments or a single array argument.
      * @return void
      */
-    public static function err($msg = '')
-    {
+    public static function err($msg = '') {
         Streams::_call('err', func_get_args());
     }
 
@@ -102,8 +107,7 @@ class Cli
      * @return string  The input with whitespace trimmed.
      * @throws \Exception  Thrown if ctrl-D (EOT) is sent as input.
      */
-    public static function input($format = null)
-    {
+    public static function input($format = null) {
         return Streams::input($format);
     }
 
@@ -118,8 +122,7 @@ class Cli
      * @return string  The users input.
      * @see cli\input()
      */
-    public static function prompt($question, $default = false, $marker = ': ', $hide = false)
-    {
+    public static function prompt($question, $default = false, $marker = ': ', $hide = false) {
         return Streams::prompt($question, $default, $marker, $hide);
     }
 
@@ -135,8 +138,7 @@ class Cli
      * @return string  The users choice.
      * @see      cli\prompt()
      */
-    public static function choose($question, $choice = 'yn', $default = 'n')
-    {
+    public static function choose($question, $choice = 'yn', $default = 'n') {
         return Streams::choose($question, $choice, $default);
     }
 
@@ -147,8 +149,7 @@ class Cli
      * @param bool|null $default   The default choice, in a boolean format.
      * @return bool
      */
-    public static function confirm($question, $default = false)
-    {
+    public static function confirm($question, $default = false) {
         if (is_bool($default)) {
             $default = $default ? 'y' : 'n';
         }
@@ -170,8 +171,7 @@ class Cli
      * @see cli\input()
      * @see cli\err()
      */
-    public static function menu(array $items, ?string $default = null, string $title = 'Choose an item', int $start = 0): string
-    {
+    public static function menu(array $items, ?string $default = null, string $title = 'Choose an item', int $start = 0): string {
         return Streams::menu($items, $default, $title, $start);
     }
 
@@ -183,26 +183,25 @@ class Cli
      * @param  string|bool $encoding Optional. The encoding of the string. Default false.
      * @return int  Numeric value that represents the string's length
      */
-    public static function safeStrlen($str, $encoding = false)
-    {
+    public static function safeStrlen($str, $encoding = false) {
         // Allow for selective testings - "1" bit set tests grapheme_strlen(), "2" preg_match_all( '/\X/u' ), "4" mb_strlen(), "other" strlen().
         $test_safe_strlen = getenv('PHP_CLI_TOOLS_TEST_SAFE_STRLEN');
 
         // Assume UTF-8 if no encoding given - `grapheme_strlen()` will return null if given non-UTF-8 string.
-        if ((! $encoding || 'UTF-8' === $encoding) && static::canUseIcu() && null !== ($length = grapheme_strlen($str))) {
-            if (! $test_safe_strlen || ($test_safe_strlen & 1)) {
+        if ((!$encoding || 'UTF-8' === $encoding) && static::canUseIcu() && null !== ($length = grapheme_strlen($str))) {
+            if (!$test_safe_strlen || ($test_safe_strlen & 1)) {
                 return $length;
             }
         }
         // Assume UTF-8 if no encoding given - `preg_match_all()` will return false if given non-UTF-8 string.
-        if ((! $encoding || 'UTF-8' === $encoding) && static::canUsePcreX() && false !== ($length = preg_match_all('/\X/u', $str, $dummy /*needed for PHP 5.3*/))) {
-            if (! $test_safe_strlen || ($test_safe_strlen & 2)) {
+        if ((!$encoding || 'UTF-8' === $encoding) && static::canUsePcreX() && false !== ($length = preg_match_all('/\X/u', $str, $dummy /*needed for PHP 5.3*/))) {
+            if (!$test_safe_strlen || ($test_safe_strlen & 2)) {
                 return $length;
             }
         }
         // Legacy encodings and old PHPs will reach here.
         if (function_exists('mb_strlen') && ($encoding || function_exists('mb_detect_encoding'))) {
-            if (! $encoding) {
+            if (!$encoding) {
                 $encoding = mb_detect_encoding($str, null, true /*strict*/);
             }
             $length = $encoding ? mb_strlen($str, $encoding) : mb_strlen($str); // mbstring funcs can fail if given `$encoding` arg that evals to false.
@@ -210,7 +209,7 @@ class Cli
                 // Subtract combining characters.
                 $length -= preg_match_all(static::getUnicodeRegexs('m'), $str, $dummy /*needed for PHP 5.3*/);
             }
-            if (! $test_safe_strlen || ($test_safe_strlen & 4)) {
+            if (!$test_safe_strlen || ($test_safe_strlen & 4)) {
                 return $length;
             }
         }
@@ -228,8 +227,7 @@ class Cli
      * @param  string|bool   $encoding Optional. The encoding of the string. Default false.
      * @return bool|string  False if given unsupported args, otherwise substring of string specified by start and length parameters
      */
-    public static function safeSubstr($str, $start, $length = false, $is_width = false, $encoding = false)
-    {
+    public static function safeSubstr($str, $start, $length = false, $is_width = false, $encoding = false) {
         // Negative $length or $is_width and $length not specified not supported.
         if ($length < 0 || ($is_width && (null === $length || false === $length))) {
             return false;
@@ -253,23 +251,23 @@ class Cli
         $test_safe_substr = getenv('PHP_CLI_TOOLS_TEST_SAFE_SUBSTR');
 
         // Assume UTF-8 if no encoding given - `grapheme_substr()` will return false (not null like `grapheme_strlen()`) if given non-UTF-8 string.
-        if ((! $encoding || 'UTF-8' === $encoding) && static::canUseIcu() && false !== ($try = grapheme_substr($str, $start, $length))) {
-            if (! $test_safe_substr || ($test_safe_substr & 1)) {
+        if ((!$encoding || 'UTF-8' === $encoding) && static::canUseIcu() && false !== ($try = grapheme_substr($str, $start, $length))) {
+            if (!$test_safe_substr || ($test_safe_substr & 1)) {
                 return $is_width ? static::_safeSubstrEaw($try, $length) : $try;
             }
         }
         // Assume UTF-8 if no encoding given - `preg_split()` returns a one element array if given non-UTF-8 string (PHP bug) so need to check `preg_last_error()`.
-        if ((! $encoding || 'UTF-8' === $encoding) && static::canUsePcreX()) {
-            if (false !== ($try = preg_split('/(\X)/u', $str, $safe_strlen + 1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY)) && ! preg_last_error()) {
+        if ((!$encoding || 'UTF-8' === $encoding) && static::canUsePcreX()) {
+            if (false !== ($try = preg_split('/(\X)/u', $str, $safe_strlen + 1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY)) && !preg_last_error()) {
                 $try = implode('', array_slice($try, $start, $length));
-                if (! $test_safe_substr || ($test_safe_substr & 2)) {
+                if (!$test_safe_substr || ($test_safe_substr & 2)) {
                     return $is_width ? static::_safeSubstrEaw($try, $length) : $try;
                 }
             }
         }
         // Legacy encodings and old PHPs will reach here.
         if (function_exists('mb_substr') && ($encoding || function_exists('mb_detect_encoding'))) {
-            if (! $encoding) {
+            if (!$encoding) {
                 $encoding = mb_detect_encoding($str, null, true /*strict*/);
             }
             // Bug: not adjusting for combining chars.
@@ -277,7 +275,7 @@ class Cli
             if ('UTF-8' === $encoding && $is_width) {
                 $try = static::_safeSubstrEaw($try, $length);
             }
-            if (! $test_safe_substr || ($test_safe_substr & 4)) {
+            if (!$test_safe_substr || ($test_safe_substr & 4)) {
                 return $try;
             }
         }
@@ -289,8 +287,7 @@ class Cli
      *
      * @return string
      */
-    public static function _safeSubstrEaw($str, $length)
-    {
+    public static function _safeSubstrEaw($str, $length) {
         // Set the East Asian Width regex.
         $eaw_regex = static::getUnicodeRegexs('eaw');
 
@@ -329,8 +326,7 @@ class Cli
      * @param  string|bool $encoding Optional. The encoding of the string. Default false.
      * @return string
      */
-    public static function safeStrPad($string, $length, $encoding = false)
-    {
+    public static function safeStrPad($string, $length, $encoding = false) {
         $real_length = static::strwidth($string, $encoding);
         $diff = strlen($string) - $real_length;
         $length += $diff;
@@ -345,8 +341,7 @@ class Cli
      * @param  string|bool $encoding Optional. The encoding of the string. Default false.
      * @return int  The string's width.
      */
-    public static function strwidth($string, $encoding = false)
-    {
+    public static function strwidth($string, $encoding = false) {
         // Set the East Asian Width and Mark regexs.
         list($eaw_regex, $m_regex) = static::getUnicodeRegexs();
 
@@ -354,20 +349,20 @@ class Cli
         $test_strwidth = getenv('PHP_CLI_TOOLS_TEST_STRWIDTH');
 
         // Assume UTF-8 if no encoding given - `grapheme_strlen()` will return null if given non-UTF-8 string.
-        if ((! $encoding || 'UTF-8' === $encoding) && static::canUseIcu() && null !== ($width = grapheme_strlen($string))) {
-            if (! $test_strwidth || ($test_strwidth & 1)) {
+        if ((!$encoding || 'UTF-8' === $encoding) && static::canUseIcu() && null !== ($width = grapheme_strlen($string))) {
+            if (!$test_strwidth || ($test_strwidth & 1)) {
                 return $width + preg_match_all($eaw_regex, $string, $dummy /*needed for PHP 5.3*/);
             }
         }
         // Assume UTF-8 if no encoding given - `preg_match_all()` will return false if given non-UTF-8 string.
-        if ((! $encoding || 'UTF-8' === $encoding) && static::canUsePcreX() && false !== ($width = preg_match_all('/\X/u', $string, $dummy /*needed for PHP 5.3*/))) {
-            if (! $test_strwidth || ($test_strwidth & 2)) {
+        if ((!$encoding || 'UTF-8' === $encoding) && static::canUsePcreX() && false !== ($width = preg_match_all('/\X/u', $string, $dummy /*needed for PHP 5.3*/))) {
+            if (!$test_strwidth || ($test_strwidth & 2)) {
                 return $width + preg_match_all($eaw_regex, $string, $dummy /*needed for PHP 5.3*/);
             }
         }
         // Legacy encodings and old PHPs will reach here.
         if (function_exists('mb_strwidth') && ($encoding || function_exists('mb_detect_encoding'))) {
-            if (! $encoding) {
+            if (!$encoding) {
                 $encoding = mb_detect_encoding($string, null, true /*strict*/);
             }
             $width = $encoding ? mb_strwidth($string, $encoding) : mb_strwidth($string); // mbstring funcs can fail if given `$encoding` arg that evals to false.
@@ -375,7 +370,7 @@ class Cli
                 // Subtract combining characters.
                 $width -= preg_match_all($m_regex, $string, $dummy /*needed for PHP 5.3*/);
             }
-            if (! $test_strwidth || ($test_strwidth & 4)) {
+            if (!$test_strwidth || ($test_strwidth & 4)) {
                 return $width;
             }
         }
@@ -387,8 +382,7 @@ class Cli
      *
      * @return bool
      */
-    public static function canUseIcu()
-    {
+    public static function canUseIcu() {
         static $can_use_icu = null;
 
         if (null === $can_use_icu) {
@@ -404,8 +398,7 @@ class Cli
      *
      * @return bool
      */
-    public static function canUsePcreX()
-    {
+    public static function canUsePcreX() {
         static $can_use_pcre_x = null;
 
         if (null === $can_use_pcre_x) {
@@ -424,8 +417,7 @@ class Cli
      * @param string $idx Optional. Return a specific regex only. Default null.
      * @return array|string  Returns keyed array if not given $idx or $idx doesn't exist, otherwise the specific regex string.
      */
-    public static function getUnicodeRegexs($idx = null)
-    {
+    public static function getUnicodeRegexs($idx = null) {
         static $eaw_regex; // East Asian Width regex. Characters that count as 2 characters as they're "wide" or "fullwidth". See http://www.unicode.org/reports/tr11/tr11-19.html
         static $m_regex; // Mark characters regex (Unicode property "M") - mark combining "Mc", mark enclosing "Me" and mark non-spacing "Mn" chars that should be ignored for spacing purposes.
         if (null === $eaw_regex) {

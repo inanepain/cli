@@ -1,16 +1,17 @@
 <?php
 
 /**
- * Inane
- *
- * Cli
+ * PHP Command Line Tools
  *
  * PHP version 8.1
  *
- * @author    Philip Michael Raab <peep@inane.co.za>
  * @author    James Logsdon <dwarf@girsbrain.org>
- * @license   https://unlicense.org/UNLICENSE UNLICENSE
+ * @author    Philip Michael Raab <peep@inane.co.za>
+ *
+ * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+
+declare(strict_types=1);
 
 namespace Inane\Cli;
 
@@ -82,7 +83,7 @@ class Arguments implements ArrayAccess {
 	 * @return array
 	 */
 	public function getArguments() {
-		if (! isset($this->_parsed)) $this->parse();
+		if (!isset($this->_parsed)) $this->parse();
 		return $this->_parsed;
 	}
 
@@ -107,7 +108,7 @@ class Arguments implements ArrayAccess {
 	 * @return bool
 	 */
 	public function offsetExists($offset): bool {
-		if ($offset instanceOf Argument) $offset = $offset->key;
+		if ($offset instanceof Argument) $offset = $offset->key;
 
 		return array_key_exists($offset, $this->_parsed);
 	}
@@ -119,7 +120,7 @@ class Arguments implements ArrayAccess {
 	 * @return mixed
 	 */
 	public function offsetGet($offset) {
-		if ($offset instanceOf Argument) $offset = $offset->key;
+		if ($offset instanceof Argument) $offset = $offset->key;
 
 		if (isset($this->_parsed[$offset])) return $this->_parsed[$offset];
 	}
@@ -131,7 +132,7 @@ class Arguments implements ArrayAccess {
 	 * @param mixed  $value   The value to set
 	 */
 	public function offsetSet($offset, $value): void {
-		if ($offset instanceOf Argument) $offset = $offset->key;
+		if ($offset instanceof Argument) $offset = $offset->key;
 
 		$this->_parsed[$offset] = $value;
 	}
@@ -142,7 +143,7 @@ class Arguments implements ArrayAccess {
 	 * @param mixed  $offset  An Argument object or the name of the argument.
 	 */
 	public function offsetUnset($offset): void {
-		if ($offset instanceOf Argument) $offset = $offset->key;
+		if ($offset instanceof Argument) $offset = $offset->key;
 
 		unset($this->_parsed[$offset]);
 	}
@@ -301,7 +302,7 @@ class Arguments implements ArrayAccess {
 	 * @return array
 	 */
 	public function getFlag($flag) {
-		if ($flag instanceOf Argument) {
+		if ($flag instanceof Argument) {
 			$obj  = $flag;
 			$flag = $flag->value;
 		}
@@ -356,7 +357,7 @@ class Arguments implements ArrayAccess {
 	 * @return array
 	 */
 	public function getOption($option) {
-		if ($option instanceOf Argument) {
+		if ($option instanceof Argument) {
 			$obj = $option;
 			$option = $option->value;
 		}
@@ -375,7 +376,7 @@ class Arguments implements ArrayAccess {
 	}
 
 	public function hasOptions() {
-		return ! empty($this->_options);
+		return !empty($this->_options);
 	}
 
 	/**
@@ -406,7 +407,7 @@ class Arguments implements ArrayAccess {
 			array_push($this->_invalid, $argument->raw);
 		}
 
-		if ($this->_strict && ! empty($this->_invalid)) throw new InvalidArguments($this->_invalid);
+		if ($this->_strict && !empty($this->_invalid)) throw new InvalidArguments($this->_invalid);
 	}
 
 	/**
@@ -415,23 +416,23 @@ class Arguments implements ArrayAccess {
 	 * it will be available.
 	 */
 	private function _applyDefaults() {
-		foreach($this->_flags as $flag => $settings) $this[$flag] = $settings['default'];
+		foreach ($this->_flags as $flag => $settings) $this[$flag] = $settings['default'];
 
 		// If the default is 0 we should still let it be set.
-		foreach($this->_options as $option => $settings)
+		foreach ($this->_options as $option => $settings)
 			if (!empty($settings['default']) || $settings['default'] === 0)
 				$this[$option] = $settings['default'];
 	}
 
 	private function _warn($message) {
-		trigger_error('[' . __CLASS__ .'] ' . $message, E_USER_WARNING);
+		trigger_error('[' . __CLASS__ . '] ' . $message, E_USER_WARNING);
 	}
 
 	private function _parseFlag($argument) {
-		if (! $this->isFlag($argument)) return false;
+		if (!$this->isFlag($argument)) return false;
 
 		if ($this->isStackable($argument)) {
-			if (! isset($this[$argument])) $this[$argument->key] = 0;
+			if (!isset($this[$argument])) $this[$argument->key] = 0;
 
 			$this[$argument->key] += 1;
 		} else $this[$argument->key] = true;
@@ -440,10 +441,10 @@ class Arguments implements ArrayAccess {
 	}
 
 	private function _parseOption($option) {
-		if (! $this->isOption($option)) return false;
+		if (!$this->isOption($option)) return false;
 
 		// Peak ahead to make sure we get a value.
-		if ($this->_lexer->end() || ! $this->_lexer->peek->isValue) {
+		if ($this->_lexer->end() || !$this->_lexer->peek->isValue) {
 			$optionSettings = $this->getOption($option->key);
 
 			if (empty($optionSettings['default']) && $optionSettings !== 0) {
@@ -464,7 +465,7 @@ class Arguments implements ArrayAccess {
 		foreach ($this->_lexer as $value) {
 			array_push($values, $value->raw);
 
-			if (! $this->_lexer->end() && ! $this->_lexer->peek->isValue) break;
+			if (!$this->_lexer->end() && !$this->_lexer->peek->isValue) break;
 		}
 
 		$this[$option->key] = implode(' ', $values);

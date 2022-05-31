@@ -1,14 +1,17 @@
 <?php
+
 /**
  * PHP Command Line Tools
  *
- * This source file is subject to the MIT license that is bundled
- * with this package in the file LICENSE.
+ * PHP version 8.1
  *
  * @author    James Logsdon <dwarf@girsbrain.org>
- * @copyright 2010 James Logsdom (http://girsbrain.org)
+ * @author    Philip Michael Raab <peep@inane.co.za>
+ *
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+
+declare(strict_types=1);
 
 namespace Inane\Cli;
 
@@ -79,10 +82,10 @@ class Colors {
 	 * Set the color.
 	 *
 	 * @param string  $color  The name of the color or style to set.
-     * @return string
+	 * @return string
 	 */
 	static public function color($color) {
-		if (! is_array($color)) {
+		if (!is_array($color)) {
 			$color = compact('color');
 		}
 
@@ -111,15 +114,15 @@ class Colors {
 	 * Colorize a string using helpful string formatters. If the `Streams::$out` points to a TTY coloring will be enabled,
 	 * otherwise disabled. You can control this check with the `$colored` parameter.
 	 *
-     * @param string   $string
+	 * @param string   $string
 	 * @param boolean  $colored  Force enable or disable the colorized output. If left as `null` the TTY will control coloring.
-     * @return string
+	 * @return string
 	 */
 	static public function colorize($string, $colored = null) {
 		$passed = $string;
 
-		if (! self::shouldColorize($colored)) {
-			$return = self::decolorize( $passed, 2 /*keep_encodings*/ );
+		if (!self::shouldColorize($colored)) {
+			$return = self::decolorize($passed, 2 /*keep_encodings*/);
 			self::cacheString($passed, $return);
 			return $return;
 		}
@@ -148,15 +151,15 @@ class Colors {
 	 * @param int    $keep   Optional. If the 1 bit is set, color tokens (eg "%n") won't be stripped. If the 2 bit is set, color encodings (ANSI escapes) won't be stripped. Default 0.
 	 * @return string A string with color information removed.
 	 */
-	static public function decolorize( $string, $keep = 0 ) {
-		if ( ! ( $keep & 1 ) ) {
+	static public function decolorize($string, $keep = 0) {
+		if (!($keep & 1)) {
 			// Get rid of color tokens if they exist
 			$string = str_replace('%%', '%¾', $string);
 			$string = str_replace(array_keys(self::getColors()), '', $string);
 			$string = str_replace('%¾', '%', $string);
 		}
 
-		if ( ! ( $keep & 2 ) ) {
+		if (!($keep & 2)) {
 			// Remove color encoding if it exists
 			foreach (self::getColors() as $key => $value) {
 				$string = str_replace(self::color($value), '', $string);
@@ -173,7 +176,7 @@ class Colors {
 	 * @param string $colorized The string after running through self::colorize.
 	 * @param string $deprecated Optional. Not used. Default null.
 	 */
-	static public function cacheString( $passed, $colorized, $deprecated = null ) {
+	static public function cacheString($passed, $colorized, $deprecated = null) {
 		self::$_string_cache[md5($passed)] = [
 			'passed'      => $passed,
 			'colorized'   => $colorized,
@@ -185,10 +188,10 @@ class Colors {
 	 * Return the length of the string without color codes.
 	 *
 	 * @param string  $string  the string to measure
-     * @return int
+	 * @return int
 	 */
 	static public function length($string) {
-		return safe_strlen( self::decolorize( $string ) );
+		return safe_strlen(self::decolorize($string));
 	}
 
 	/**
@@ -197,10 +200,10 @@ class Colors {
 	 * @param string      $string        The string to measure.
 	 * @param bool        $pre_colorized Optional. Set if the string is pre-colorized. Default false.
 	 * @param string|bool $encoding      Optional. The encoding of the string. Default false.
-     * @return int
+	 * @return int
 	 */
-	static public function width( $string, $pre_colorized = false, $encoding = false ) {
-		return strwidth( $pre_colorized || self::shouldColorize() ? self::decolorize( $string, $pre_colorized ? 1 /*keep_tokens*/ : 0 ) : $string, $encoding );
+	static public function width($string, $pre_colorized = false, $encoding = false) {
+		return strwidth($pre_colorized || self::shouldColorize() ? self::decolorize($string, $pre_colorized ? 1 /*keep_tokens*/ : 0) : $string, $encoding);
 	}
 
 	/**
@@ -211,14 +214,14 @@ class Colors {
 	 * @param bool        $pre_colorized Optional. Set if the string is pre-colorized. Default false.
 	 * @param string|bool $encoding      Optional. The encoding of the string. Default false.
 	 * @param int         $pad_type      Optional. Can be STR_PAD_RIGHT, STR_PAD_LEFT, or STR_PAD_BOTH. If pad_type is not specified it is assumed to be STR_PAD_RIGHT.
-     * @return string
+	 * @return string
 	 */
-	static public function pad( $string, $length, $pre_colorized = false, $encoding = false, $pad_type = STR_PAD_RIGHT ) {
-		$real_length = self::width( $string, $pre_colorized, $encoding );
-		$diff = strlen( $string ) - $real_length;
+	static public function pad($string, $length, $pre_colorized = false, $encoding = false, $pad_type = STR_PAD_RIGHT) {
+		$real_length = self::width($string, $pre_colorized, $encoding);
+		$diff = strlen($string) - $real_length;
 		$length += $diff;
 
-		return str_pad( $string, $length, ' ', $pad_type );
+		return str_pad($string, $length, ' ', $pad_type);
 	}
 
 	/**

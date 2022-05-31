@@ -1,14 +1,17 @@
 <?php
+
 /**
  * PHP Command Line Tools
  *
- * This source file is subject to the MIT license that is bundled
- * with this package in the file LICENSE.
+ * PHP version 8.1
  *
  * @author    James Logsdon <dwarf@girsbrain.org>
- * @copyright 2010 James Logsdom (http://girsbrain.org)
+ * @author    Philip Michael Raab <peep@inane.co.za>
+ *
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+
+declare(strict_types=1);
 
 namespace Inane\Cli;
 
@@ -77,7 +80,7 @@ abstract class Notify {
 	 * @return int  The elapsed time in seconds.
 	 */
 	public function elapsed() {
-		if (! $this->_start) {
+		if (!$this->_start) {
 			return 0;
 		}
 
@@ -94,9 +97,9 @@ abstract class Notify {
 	public function speed() {
 		static $tick, $iteration = 0, $speed = 0;
 
-		if (! $this->_start) {
+		if (!$this->_start) {
 			return 0;
-		} else if (! $tick) {
+		} else if (!$tick) {
 			$tick = $this->_start;
 		}
 

@@ -1,14 +1,17 @@
 <?php
+
 /**
  * PHP Command Line Tools
  *
- * This source file is subject to the MIT license that is bundled
- * with this package in the file LICENSE.
+ * PHP version 8.1
  *
  * @author    James Logsdon <dwarf@girsbrain.org>
- * @copyright 2010 James Logsdom (http://girsbrain.org)
+ * @author    Philip Michael Raab <peep@inane.co.za>
+ *
  * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+
+declare(strict_types=1);
 
 namespace Inane\Cli;
 
@@ -25,7 +28,7 @@ abstract class Memoize {
 			return ($this->_memoCache[$name] = null);
 		}
 
-		if (! method_exists($this, $name)) {
+		if (!method_exists($this, $name)) {
 			return ($this->_memoCache[$name] = null);
 		}
 

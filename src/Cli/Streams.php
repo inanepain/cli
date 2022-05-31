@@ -1,5 +1,18 @@
 <?php
 
+/**
+ * PHP Command Line Tools
+ *
+ * PHP version 8.1
+ *
+ * @author    James Logsdon <dwarf@girsbrain.org>
+ * @author    Philip Michael Raab <peep@inane.co.za>
+ *
+ * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ */
+
+declare(strict_types=1);
+
 namespace Inane\Cli;
 
 use function implode;
@@ -15,9 +28,9 @@ class Streams {
 	protected static $in = STDIN;
 	protected static $err = STDERR;
 
-	static function _call( $func, $args ) {
+	static function _call($func, $args) {
 		$method = __CLASS__ . '::' . $func;
-		return call_user_func_array( $method, $args );
+		return call_user_func_array($method, $args);
 	}
 
 	static public function isTty() {
@@ -34,32 +47,32 @@ class Streams {
 	 * @param mixed    ...   Either scalar arguments or a single array argument.
 	 * @return string  The rendered string.
 	 */
-	public static function render( $msg ) {
+	public static function render($msg) {
 		$args = func_get_args();
 
 		// No string replacement is needed
-		if( count( $args ) == 1 || ( is_string( $args[1] ) && '' === $args[1] ) ) {
-			return Colors::shouldColorize() ? Colors::colorize( $msg ) : $msg;
+		if (count($args) == 1 || (is_string($args[1]) && '' === $args[1])) {
+			return Colors::shouldColorize() ? Colors::colorize($msg) : $msg;
 		}
 
 		// If the first argument is not an array just pass to sprintf
-		if( ! is_array( $args[1] ) ) {
+		if (!is_array($args[1])) {
 			// Colorize the message first so sprintf doesn't bitch at us
-			if ( Colors::shouldColorize() ) {
-				$args[0] = Colors::colorize( $args[0] );
+			if (Colors::shouldColorize()) {
+				$args[0] = Colors::colorize($args[0]);
 			}
 
 			// Escape percent characters for sprintf
 			$args[0] = preg_replace('/(%([^\w]|$))/', "%$1", $args[0]);
 
-			return call_user_func_array( 'sprintf', $args );
+			return call_user_func_array('sprintf', $args);
 		}
 
 		// Here we do named replacement so formatting strings are more understandable
-		foreach( $args[1] as $key => $value ) {
-			$msg = str_replace( '{:' . $key . '}', $value, $msg );
+		foreach ($args[1] as $key => $value) {
+			$msg = str_replace('{:' . $key . '}', $value, $msg);
 		}
-		return Colors::shouldColorize() ? Colors::colorize( $msg ) : $msg;
+		return Colors::shouldColorize() ? Colors::colorize($msg) : $msg;
 	}
 
 	/**
@@ -71,8 +84,8 @@ class Streams {
 	 * @return void
 	 * @see \Inane\Cli\render()
 	 */
-	public static function out( $msg ) {
-		fwrite( static::$out, self::_call( 'render', func_get_args() ) );
+	public static function out($msg) {
+		fwrite(static::$out, self::_call('render', func_get_args()));
 	}
 
 	/**
@@ -83,9 +96,9 @@ class Streams {
 	 * @return void
 	 * @see cli\out()
 	 */
-	public static function outPadded( $msg ) {
-		$msg = self::_call( 'render', func_get_args() );
-		self::out( str_pad( $msg, \Inane\Cli\Shell::columns() ) );
+	public static function outPadded($msg) {
+		$msg = self::_call('render', func_get_args());
+		self::out(str_pad($msg, \Inane\Cli\Shell::columns()));
 	}
 
 	/**
@@ -94,12 +107,12 @@ class Streams {
 	 *
 	 * @see cli\out()
 	 */
-	public static function line( $msg = '' ) {
+	public static function line($msg = '') {
 		// func_get_args is empty if no args are passed even with the default above.
-		$args = array_merge( func_get_args(), [ '' ] );
+		$args = array_merge(func_get_args(), ['']);
 		$args[0] .= "\n";
 
-		self::_call( 'out', $args );
+		self::_call('out', $args);
 	}
 
 	/**
@@ -111,11 +124,11 @@ class Streams {
 	 * @param mixed   ...   Either scalar arguments or a single array argument.
 	 * @return void
 	 */
-	public static function err( $msg = '' ) {
+	public static function err($msg = '') {
 		// func_get_args is empty if no args are passed even with the default above.
-		$args = array_merge( func_get_args(), [ '' ] );
+		$args = array_merge(func_get_args(), ['']);
 		$args[0] .= "\n";
-		fwrite( static::$err, self::_call( 'render', $args ) );
+		fwrite(static::$err, self::_call('render', $args));
 	}
 
 	/**
@@ -129,26 +142,26 @@ class Streams {
 	 * @return string  The input with whitespace trimmed.
 	 * @throws \Exception  Thrown if ctrl-D (EOT) is sent as input.
 	 */
-	public static function input( $format = null, $hide = false ) {
-		if ( $hide )
+	public static function input($format = null, $hide = false) {
+		if ($hide)
 			Shell::hide();
 
-		if( $format ) {
-			fscanf( static::$in, $format . "\n", $line );
+		if ($format) {
+			fscanf(static::$in, $format . "\n", $line);
 		} else {
-			$line = fgets( static::$in );
+			$line = fgets(static::$in);
 		}
 
-		if ( $hide ) {
-			Shell::hide( false );
+		if ($hide) {
+			Shell::hide(false);
 			echo "\n";
 		}
 
-		if( $line === false ) {
-			throw new \Exception( 'Caught ^D during input' );
+		if ($line === false) {
+			throw new \Exception('Caught ^D during input');
 		}
 
-		return trim( $line );
+		return trim($line);
 	}
 
 	/**
@@ -163,18 +176,18 @@ class Streams {
 	 * @return string  The users input.
 	 * @see cli\input()
 	 */
-	public static function prompt( $question, $default = null, $marker = ': ', $hide = false ) {
-		if( $default && strpos( $question, '[' ) === false ) {
+	public static function prompt($question, $default = null, $marker = ': ', $hide = false) {
+		if ($default && strpos($question, '[') === false) {
 			$question .= ' [' . $default . ']';
 		}
 
-		while( true ) {
-			self::out( $question . $marker );
-			$line = self::input( null, $hide );
+		while (true) {
+			self::out($question . $marker);
+			$line = self::input(null, $hide);
 
-			if ( trim( $line ) !== '' )
+			if (trim($line) !== '')
 				return $line;
-			if( $default !== false )
+			if ($default !== false)
 				return $default;
 		}
 	}
@@ -189,22 +202,22 @@ class Streams {
 	 * @return string  The users choice.
 	 * @see cli\prompt()
 	 */
-	public static function choose( $question, $choice = 'yn', $default = 'n' ) {
-		if( ! is_string( $choice ) ) $choice = implode('', $choice);
+	public static function choose($question, $choice = 'yn', $default = 'n') {
+		if (!is_string($choice)) $choice = implode('', $choice);
 
 		// Make every choice character lowercase except the default
-		$choice = str_ireplace( $default, strtoupper( $default ), strtolower( $choice ) );
+		$choice = str_ireplace($default, strtoupper($default), strtolower($choice));
 		// Seperate each choice with a forward-slash
-		$choices = trim( implode( '/', preg_split( '//', $choice ) ), '/' );
+		$choices = trim(implode('/', preg_split('//', $choice)), '/');
 
-		while( true ) {
-			$line = self::prompt( sprintf( '%s? [%s]', $question, $choices ), $default, '' );
+		while (true) {
+			$line = self::prompt(sprintf('%s? [%s]', $question, $choices), $default, '');
 
-			if( stripos( $choice, $line ) !== false ) {
-				return strtolower( $line );
+			if (stripos($choice, $line) !== false) {
+				return strtolower($line);
 			}
-			if( ! empty( $default ) ) {
-				return strtolower( $default );
+			if (!empty($default)) {
+				return strtolower($default);
 			}
 		}
 	}
@@ -217,39 +230,39 @@ class Streams {
 	 * @param array   $items    The list of items the user can choose from.
 	 * @param string  $default  The index of the default item.
 	 * @param string  $title    The message displayed to the user when prompted.
-     * @param int     $start    Optional start value for menu. default 0, some people prefer 1.
+	 * @param int     $start    Optional start value for menu. default 0, some people prefer 1.
 	 * @return string  The index of the chosen item.
 	 * @see cli\line()
 	 * @see cli\input()
 	 * @see cli\err()
 	 */
 	public static function menu(array $items, ?string $default = null, string $title = 'Choose an item', int $start = 0): string {
-		$map = array_values( $items );
+		$map = array_values($items);
 
 		// if( $default && strpos( $title, '[' ) === false && isset( $items[$default] ) ) {
-		if( $default && isset( $items[$default] ) ) {
+		if ($default && isset($items[$default])) {
 			$title .= ' [' . $items[$default] . ']';
 		}
 
-		foreach( $map as $idx => $item ) {
-			self::line( '  %d. %s', $idx + $start, (string)$item );
+		foreach ($map as $idx => $item) {
+			self::line('  %d. %s', $idx + $start, (string)$item);
 		}
 		self::line();
 
-		while( true ) {
-			fwrite( static::$out, sprintf( '%s: ', $title ) );
+		while (true) {
+			fwrite(static::$out, sprintf('%s: ', $title));
 			$line = self::input();
 
-			if( is_numeric( $line ) ) {
+			if (is_numeric($line)) {
 				$line -= $start;
-				if( isset( $map[$line] ) ) {
-					return array_search( $map[$line], $items );
+				if (isset($map[$line])) {
+					return array_search($map[$line], $items);
 				}
 
-				if( $line < 0 || $line >= count( $map ) ) {
-					self::err( 'Invalid menu selection: out of range' );
+				if ($line < 0 || $line >= count($map)) {
+					self::err('Invalid menu selection: out of range');
 				}
-			} else if( isset( $default ) ) {
+			} else if (isset($default)) {
 				return $default;
 			}
 		}
@@ -271,16 +284,15 @@ class Streams {
 	 * @return void
 	 * @throws \Exception Thrown if $stream is not a resource of the 'stream' type.
 	 */
-	public static function setStream( $whichStream, $stream ) {
-		if( ! is_resource( $stream ) || get_resource_type( $stream ) !== 'stream' ) {
-			throw new \Exception( 'Invalid resource type!' );
+	public static function setStream($whichStream, $stream) {
+		if (!is_resource($stream) || get_resource_type($stream) !== 'stream') {
+			throw new \Exception('Invalid resource type!');
 		}
-		if( property_exists( __CLASS__, $whichStream ) ) {
+		if (property_exists(__CLASS__, $whichStream)) {
 			static::${$whichStream} = $stream;
 		}
-		register_shutdown_function( function() use ($stream) {
-			fclose( $stream );
-		} );
+		register_shutdown_function(function () use ($stream) {
+			fclose($stream);
+		});
 	}
-
 }
