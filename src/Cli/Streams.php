@@ -135,31 +135,31 @@ class Streams {
 	 * Takes input from `STDIN` in the given format. If an end of transmission
 	 * character is sent (^D), an exception is thrown.
 	 *
-	 * @param string  $format  A valid input format. See `fscanf` for documentation.
+	 * @param null|string  $format  A valid input format. See `fscanf` for documentation.
 	 *                         If none is given, all input up to the first newline
 	 *                         is accepted.
 	 * @param boolean $hide    If true will hide what the user types in.
+	 *
 	 * @return string  The input with whitespace trimmed.
+	 *
 	 * @throws \Exception  Thrown if ctrl-D (EOT) is sent as input.
 	 */
-	public static function input($format = null, $hide = false) {
+	public static function input(?string $format = null, bool $hide = false) {
 		if ($hide)
 			Shell::hide();
 
-		if ($format) {
+		if ($format)
 			fscanf(static::$in, $format . "\n", $line);
-		} else {
+		else
 			$line = fgets(static::$in);
-		}
 
 		if ($hide) {
 			Shell::hide(false);
 			echo "\n";
 		}
 
-		if ($line === false) {
+		if ($line === false)
 			throw new \Exception('Caught ^D during input');
-		}
 
 		return trim($line);
 	}
@@ -182,8 +182,8 @@ class Streams {
 		}
 
 		while (true) {
-			self::out($question . $marker);
-			$line = self::input(null, $hide);
+			static::out($question . $marker);
+			$line = static::input(null, $hide);
 
 			if (trim($line) !== '')
 				return $line;

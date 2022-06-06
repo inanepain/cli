@@ -15,7 +15,26 @@ declare(strict_types=1);
 
 namespace Inane\Cli;
 
+use function func_get_args;
+use function function_exists;
+use function getenv;
+use function grapheme_strlen;
+use function grapheme_substr;
 use function implode;
+use function is_bool;
+use function mb_detect_encoding;
+use function mb_strlen;
+use function php_sapi_name;
+use function preg_match;
+use function preg_match_all;
+use function preg_split;
+use function strlen;
+use function strspn;
+use function substr;
+use function version_compare;
+use const false;
+use const null;
+use const true;
 
 /**
  * Cli
@@ -119,10 +138,12 @@ class Cli {
      * @param string  $default  A default value if the user provides no input.
      * @param string  $marker   A string to append to the question and default value on display.
      * @param boolean $hide     If the user input should be hidden
+     *
      * @return string  The users input.
+     *
      * @see cli\input()
      */
-    public static function prompt($question, $default = false, $marker = ': ', $hide = false) {
+    public static function prompt(string $question, bool|string $default = false, string $marker = ': ', bool $hide = false) {
         return Streams::prompt($question, $default, $marker, $hide);
     }
 
@@ -150,9 +171,9 @@ class Cli {
      * @return bool
      */
     public static function confirm($question, $default = false) {
-        if (is_bool($default)) {
+        if (is_bool($default))
             $default = $default ? 'y' : 'n';
-        }
+
         $result  = static::choose($question, 'yn', $default);
         return $result == 'y';
     }
@@ -201,17 +222,16 @@ class Cli {
         }
         // Legacy encodings and old PHPs will reach here.
         if (function_exists('mb_strlen') && ($encoding || function_exists('mb_detect_encoding'))) {
-            if (!$encoding) {
+            if (!$encoding)
                 $encoding = mb_detect_encoding($str, null, true /*strict*/);
-            }
+
             $length = $encoding ? mb_strlen($str, $encoding) : mb_strlen($str); // mbstring funcs can fail if given `$encoding` arg that evals to false.
             if ('UTF-8' === $encoding) {
                 // Subtract combining characters.
                 $length -= preg_match_all(static::getUnicodeRegexs('m'), $str, $dummy /*needed for PHP 5.3*/);
             }
-            if (!$test_safe_strlen || ($test_safe_strlen & 4)) {
+            if (!$test_safe_strlen || ($test_safe_strlen & 4))
                 return $length;
-            }
         }
         return strlen($str);
     }
@@ -229,23 +249,23 @@ class Cli {
      */
     public static function safeSubstr($str, $start, $length = false, $is_width = false, $encoding = false) {
         // Negative $length or $is_width and $length not specified not supported.
-        if ($length < 0 || ($is_width && (null === $length || false === $length))) {
+        if ($length < 0 || ($is_width && (null === $length || false === $length)))
             return false;
-        }
+
         // Need this for normalization below and other uses.
         $safe_strlen = static::safeStrlen($str, $encoding);
 
         // Normalize `$length` when not specified - PHP 5.3 substr takes false as full length, PHP > 5.3 takes null.
-        if (null === $length || false === $length) {
+        if (null === $length || false === $length)
             $length = $safe_strlen;
-        }
+
         // Normalize `$start` - various methods treat this differently.
-        if ($start > $safe_strlen) {
+        if ($start > $safe_strlen)
             return '';
-        }
-        if ($start < 0 && -$start > $safe_strlen) {
+
+        if ($start < 0 && -$start > $safe_strlen)
             $start = 0;
-        }
+
 
         // Allow for selective testings - "1" bit set tests grapheme_substr(), "2" preg_split( '/\X/' ), "4" mb_substr(), "8" substr().
         $test_safe_substr = getenv('PHP_CLI_TOOLS_TEST_SAFE_SUBSTR');

@@ -1,0 +1,4 @@
+Inane\Cli:
+	Exception:
+		Upgrade Exception to Inane\Stdlib\Exception
+		- Streams
