@@ -14,6 +14,9 @@
  *
  * @license 	UNLICENSE
  * @license 	https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ *
+ * @version $Id$
+ * $Date$
  */
 
 declare(strict_types=1);

@@ -14,6 +14,9 @@
  *
  * @license 	UNLICENSE
  * @license 	https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ *
+ * @version $Id$
+ * $Date$
  */
 
 declare(strict_types=1);
@@ -48,7 +51,7 @@ use Inane\Cli\Arguments\{
  *
  * @package Inane\Cli
  *
- * @version 1.0.1
+ * @version 1.0.2
  */
 class Arguments implements ArrayAccess {
 	protected bool $_strict = false;
@@ -128,6 +131,8 @@ class Arguments implements ArrayAccess {
 		if ($offset instanceof Argument) $offset = $offset->key;
 
 		if (isset($this->_parsed[$offset])) return $this->_parsed[$offset];
+
+		return null;
 	}
 
 	/**

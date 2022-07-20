@@ -9,8 +9,8 @@ ini_set('display_errors', 1);
 ini_set('log_errors', 0);
 ini_set('html_errors', 0);
 
-foreach([__DIR__ . '/../vendor', __DIR__ . '/../../../../vendor'] as $vendorDir) {
-	if(is_dir($vendorDir)) {
+foreach ([__DIR__ . '/../vendor', __DIR__ . '/../../../../vendor'] as $vendorDir) {
+	if (is_dir($vendorDir)) {
 		require_once $vendorDir . '/autoload.php';
 		break;
 	}
