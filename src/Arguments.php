@@ -57,7 +57,6 @@ class Arguments implements ArrayAccess {
 	protected bool $_strict = false;
 	protected array $_flags = [];
 	protected array $_options = [];
-	// protected array $_input = [];
 	protected array $_invalid = [];
 	protected array $_parsed = [];
 	protected Lexer $_lexer;
@@ -73,12 +72,10 @@ class Arguments implements ArrayAccess {
 	public function __construct($options = []) {
 		$options += [
 			'strict' => false,
-			// 'input'  => array_slice($_SERVER['argv'], 1)
 		];
 
 		$this->_lexer = new Lexer(array_slice($_SERVER['argv'], 1));
 
-		// $this->_input = $options['input'];
 		$this->setStrict($options['strict']);
 
 		if (isset($options['flags'])) $this->addFlags($options['flags']);
@@ -95,7 +92,7 @@ class Arguments implements ArrayAccess {
 		return $this->_parsed;
 	}
 
-	public function getHelpScreen() {
+	public function getHelpScreen(): HelpScreen {
 		return new HelpScreen($this);
 	}
 
@@ -104,8 +101,19 @@ class Arguments implements ArrayAccess {
 	 *
 	 * @return string
 	 */
-	public function asJSON() {
-		return json_encode($this->_parsed);
+	public function asJSON(): string {
+		return $this->toJSON();
+	}
+
+	/**
+	 * Encodes the parsed arguments as JSON.
+	 *
+	 * @param int $flags Bitmask consisting of JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS, JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT, JSON_UNESCAPED_UNICODE. JSON_THROW_ON_ERROR The behaviour of these constants is described on the JSON constants page.
+	 *
+	 * @return string
+	 */
+	public function toJSON(int $flags = 0): string {
+		return json_encode($this->_parsed, $flags);
 	}
 
 	/**
@@ -159,18 +167,22 @@ class Arguments implements ArrayAccess {
 	}
 
 	/**
+	 * addFlag
+	 *
 	 * Adds a flag (boolean argument) to the argument list.
 	 *
-	 * @param mixed  $flag  A string representing the flag, or an array of strings.
-	 * @param array  $settings  An array of settings for this flag.
-	 * @setting string  description  A description to be shown in --help.
-	 * @setting bool    default  The default value for this flag.
-	 * @setting bool    stackable  Whether the flag is repeatable to increase the value.
-	 * @setting array   aliases  Other ways to trigger this flag.
+	 * SETTINGS:
+	 *  - @setting string  description  A description to be shown in --help.
+	 *  - @setting bool    default  The default value for this flag.
+	 *  - @setting bool    stackable  Whether the flag is repeatable to increase the value.
+	 *  - @setting array   aliases  Other ways to trigger this flag.
+	 *
+	 * @param string|string[]	$flag  A string representing the flag, or an array of strings. If array: the first item is used for checking the flag.
+	 * @param string|array		$settings  An array of settings for this flag.
 	 *
 	 * @return self
 	 */
-	public function addFlag($flag, $settings = []): self {
+	public function addFlag(string|array $flag, string|array $settings = []): self {
 		if (is_string($settings)) $settings = ['description' => $settings];
 
 		if (is_array($flag)) {
@@ -461,10 +473,8 @@ class Arguments implements ArrayAccess {
 				// Oops! Got no value and no default , throw a warning and continue.
 				$this->_warn('no value given for ' . $option->raw);
 				$this[$option->key] = null;
-			} else {
-				// No value and we have a default, so we set to the default
-				$this[$option->key] = $optionSettings['default'];
-			}
+			} else $this[$option->key] = $optionSettings['default']; // No value and we have a default, so we set to the default
+
 			return true;
 		}
 
@@ -473,7 +483,7 @@ class Arguments implements ArrayAccess {
 
 		// Loop until we find a flag in peak-ahead
 		foreach ($this->_lexer as $value) {
-			array_push($values, $value->raw);
+			$values[] = $value->raw;
 
 			if (!$this->_lexer->end() && !$this->_lexer->peek->isValue) break;
 		}
