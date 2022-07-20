@@ -1,7 +1,7 @@
 {
     "name": "inanepain/cli",
     "type": "library",
-    "description": "Console utilities for PHP",
+    "description": "Utilities to simplify working with the console.",
     "repositories": [
         {
             "type": "composer",
@@ -16,8 +16,8 @@
         "cli",
         "utility"
     ],
-    "homepage": "https://git.inane.co.za:3000/inane/inane-cli",
-    "license": "MIT",
+    "homepage": "http://vaieen.local:8000/inane/cli",
+    "license": "UNLICENSE",
     "authors": [
         {
             "name": "Philip Raab",
@@ -35,12 +35,12 @@
             "role": "Developer"
         }
     ],
-    "require": {
-        "php": ">= 8.1.0"
-    },
     "autoload": {
         "psr-4": {
-            "Inane\\Cli\\": "./src/Cli"
+            "Inane\\Cli\\": "src/"
         }
+    },
+    "require": {
+        "php": ">= 8.1.0"
     }
 }

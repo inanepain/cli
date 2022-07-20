@@ -1,14 +1,19 @@
 <?php
 
 /**
- * PHP Command Line Tools
+ * Inane: Cli
+ *
+ * Command Line Tools
  *
  * PHP version 8.1
  *
- * @author    James Logsdon <dwarf@girsbrain.org>
- * @author    Philip Michael Raab <peep@inane.co.za>
+ * @package Inane\Cli
  *
- * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @author    	James Logsdon <dwarf@girsbrain.org>
+ * @author		Philip Michael Raab<peep@inane.co.za>
+ *
+ * @license 	UNLICENSE
+ * @license 	https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
  */
 
 declare(strict_types=1);
@@ -37,7 +42,11 @@ use Inane\Cli\Arguments\{
 };
 
 /**
+ * Arguments
+ *
  * Parses command line arguments.
+ *
+ * @package Inane\Cli
  *
  * @version 1.0.1
  */
@@ -51,14 +60,10 @@ class Arguments implements ArrayAccess {
 	protected Lexer $_lexer;
 
 	/**
-	 * Initializes the argument parser. If you wish to change the default behaviour
-	 * you may pass an array of options as the first argument. Valid options are
-	 * `'help'` and `'strict'`, each a boolean.
+	 * Initializes the argument parser.
 	 *
-	 * - help  :
-	 * - strict: throws error
-	 *
-	 * `'help'` is `true` by default, `'strict'` is false by default.
+	 * - (bool) help   [true] :
+	 * - (bool) strict [false]: throws error if invalid/unhandled arguments passed
 	 *
 	 * @param  array  $options  An array of options for this parser.
 	 */
@@ -119,7 +124,7 @@ class Arguments implements ArrayAccess {
 	 * @param mixed  $offset  An Argument object or the name of the argument.
 	 * @return mixed
 	 */
-	public function offsetGet($offset) {
+	public function offsetGet($offset): mixed {
 		if ($offset instanceof Argument) $offset = $offset->key;
 
 		if (isset($this->_parsed[$offset])) return $this->_parsed[$offset];

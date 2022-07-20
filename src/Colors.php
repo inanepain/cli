@@ -69,13 +69,13 @@ class Colors {
 	/**
 	 * Check if we should colorize output based on local flags and shell type.
 	 *
-	 * Only check the shell type if `Colors::$_enabled` is null and `$colored` is null.
+	 * Only check the shell type if `Colors::$_enabled` is null and `$coloured` is null.
 	 */
-	static public function shouldColorize($colored = null) {
+	static public function shouldColorize($coloured = null) {
 		return self::$_enabled === true ||
 			(self::$_enabled !== false &&
-				($colored === true ||
-					($colored !== false && Streams::isTty())));
+				($coloured === true ||
+					($coloured !== false && Streams::isTty())));
 	}
 
 	/**
@@ -85,15 +85,13 @@ class Colors {
 	 * @return string
 	 */
 	static public function color($color) {
-		if (!is_array($color)) {
+		if (!is_array($color))
 			$color = compact('color');
-		}
 
 		$color += ['color' => null, 'style' => null, 'background' => null];
 
-		if ($color['color'] == 'reset') {
+		if ($color['color'] == 'reset')
 			return "\033[0m";
-		}
 
 		$colors = [];
 		foreach (['color', 'style', 'background'] as $type) {
