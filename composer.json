@@ -41,6 +41,7 @@
         }
     },
     "require": {
-        "php": ">= 8.1.0"
+        "php": ">= 8.1.0",
+        "inanepain/stdlib": ">=0.1.2 || dev-master || dev-develop"
     }
 }
