@@ -1,14 +1,22 @@
 <?php
 
 /**
- * PHP Command Line Tools
+ * Inane: Cli
+ *
+ * Command Line Tools
  *
  * PHP version 8.1
  *
- * @author    James Logsdon <dwarf@girsbrain.org>
- * @author    Philip Michael Raab <peep@inane.co.za>
+ * @package Inane\Cli
  *
- * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @author    	James Logsdon <dwarf@girsbrain.org>
+ * @author		Philip Michael Raab<peep@inane.co.za>
+ *
+ * @license 	UNLICENSE
+ * @license 	https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ *
+ * @version $Id$
+ * $Date$
  */
 
 declare(strict_types=1);
@@ -201,7 +209,7 @@ class Colors {
 	 * @return int
 	 */
 	static public function width($string, $pre_colorized = false, $encoding = false) {
-		return strwidth($pre_colorized || self::shouldColorize() ? self::decolorize($string, $pre_colorized ? 1 /*keep_tokens*/ : 0) : $string, $encoding);
+		return \Inane\Cli\Cli::strwidth($pre_colorized || self::shouldColorize() ? self::decolorize($string, $pre_colorized ? 1 /*keep_tokens*/ : 0) : $string, $encoding);
 	}
 
 	/**

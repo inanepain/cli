@@ -1,14 +1,22 @@
 <?php
 
 /**
- * PHP Command Line Tools
+ * Inane: Cli
+ *
+ * Command Line Tools
  *
  * PHP version 8.1
  *
- * @author    James Logsdon <dwarf@girsbrain.org>
- * @author    Philip Michael Raab <peep@inane.co.za>
+ * @package Inane\Cli
  *
- * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @author    	James Logsdon <dwarf@girsbrain.org>
+ * @author		Philip Michael Raab<peep@inane.co.za>
+ *
+ * @license 	UNLICENSE
+ * @license 	https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ *
+ * @version $Id$
+ * $Date$
  */
 
 declare(strict_types=1);
@@ -39,8 +47,9 @@ use const true;
 /**
  * Cli
  *
+ * @package Inane\Cli
+ *
  * @version 0.11.1
- * @package Inane\Console
  */
 class Cli {
     public const VERSION = '0.11.1';

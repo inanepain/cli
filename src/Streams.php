@@ -1,14 +1,22 @@
 <?php
 
 /**
- * PHP Command Line Tools
+ * Inane: Cli
+ *
+ * Command Line Tools
  *
  * PHP version 8.1
  *
- * @author    James Logsdon <dwarf@girsbrain.org>
- * @author    Philip Michael Raab <peep@inane.co.za>
+ * @package Inane\Cli
  *
- * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @author    	James Logsdon <dwarf@girsbrain.org>
+ * @author		Philip Michael Raab<peep@inane.co.za>
+ *
+ * @license 	UNLICENSE
+ * @license 	https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ *
+ * @version $Id$
+ * $Date$
  */
 
 declare(strict_types=1);
@@ -20,10 +28,11 @@ use function implode;
 /**
  * Streams
  *
+ * @package Inane\Cli
+ *
  * @version 1.0.1
  */
 class Streams {
-
 	protected static $out = STDOUT;
 	protected static $in = STDIN;
 	protected static $err = STDERR;
