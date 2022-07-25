@@ -25,15 +25,13 @@ namespace Inane\Cli;
 
 use Inane\Cli\TextTable\DefinitionRule;
 use Inane\Stdlib\Options;
+use Stringable;
 
-use function array_filter;
 use function array_is_list;
-use function array_key_exists;
 use function array_shift;
 use function array_unshift;
 use function count;
 use function implode;
-use function in_array;
 use function is_integer;
 use function is_null;
 use function str_pad;
@@ -50,9 +48,9 @@ use const true;
  *
  * @package Inane\Cli
  *
- * @version 0.1.0
+ * @version 0.2.0
  */
-class TextTable {
+class TextTable implements Stringable {
     /**
      * Config defaults
      *
@@ -68,7 +66,7 @@ class TextTable {
         'column' => [
             'divider' => ' | ',
             'definition' => [],
-            'rule' => DefinitionRule::Default,
+            'rule' => DefinitionRule::Auto,
             'auto' => [],
         ],
     ];
@@ -114,6 +112,17 @@ class TextTable {
      */
     public function __construct(array $options = []) {
         $this->mergeConfig($options);
+    }
+
+    /**
+     * Renders Table
+     *
+     * @since 0.2.0
+     *
+     * @return string text table
+     */
+    public function __toString(): string {
+        return $this->render();
     }
 
     /**
@@ -182,6 +191,17 @@ class TextTable {
     }
 
     /**
+     * GET: Column Sizes
+     *
+     * @since 0.2.0
+     *
+     * @return array
+     */
+    public function getColumnSizes(): array {
+        return $this->getColumnDefinition()->toArray();
+    }
+
+    /**
      * Check that row and definition have same item count
      *
      * @param array $row
@@ -225,8 +245,8 @@ class TextTable {
      * @return null|\Inane\Cli\TextTable
      */
     public function addHeader(array $header): ?self {
-        $this->config->header = '-';
-        return $this->insertRow($header, true);
+        $this->hasHeader(true);
+        return $this->insertRow($header, true) ? $this : null;
     }
 
     /**
@@ -265,6 +285,21 @@ class TextTable {
      */
     public function addRows(array $rows): self {
         foreach($rows as $r) $this->addRow($r);
+
+        return $this;
+    }
+
+    /**
+     * Adds a divider row
+     *
+     * @since 0.2.0
+     *
+     * @return \Inane\Cli\TextTable
+     */
+    public function insertDivider(): self {
+        $row = [];
+        foreach ($this->getColumnSizes() as $size) $row[] = str_repeat($this->config->row->header ?? '-', $size);
+        $this->addRow($row);
 
         return $this;
     }
