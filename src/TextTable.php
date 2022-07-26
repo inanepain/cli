@@ -36,6 +36,7 @@ use function is_integer;
 use function is_null;
 use function str_pad;
 use function strlen;
+use function substr;
 use const false;
 use const null;
 use const PHP_EOL;
@@ -187,7 +188,7 @@ class TextTable implements Stringable {
      * @return \Inane\Stdlib\Options
      */
     protected function getColumnDefinition(): Options {
-        return $this->getDefinitionRule() == DefinitionRule::Auto ? $this->config->column->auto : $this->config->column->definition;
+        return $this->getDefinitionRule()->dynamic() ? $this->config->column->auto : $this->config->column->definition;
     }
 
     /**
@@ -209,10 +210,13 @@ class TextTable implements Stringable {
      */
     protected function matchesDefinition(array $row): bool {
         $ad = $this->config->column->auto;
+        $sd = $this->config->column->definition;
 
         for($i = 0; $i < count($row); $i++)
-            if (count($ad) < ($i + 1) || strlen($row[$i]) > $ad[$i])
-                $ad[$i] = strlen($row[$i]);
+            if (count($ad) < ($i + 1) || strlen($row[$i]) > $ad[$i]) {
+                if ($this->getDefinitionRule() == DefinitionRule::Max && strlen($row[$i]) > $sd[$i]) $ad[$i] = $sd[$i];
+                else $ad[$i] = strlen($row[$i]);
+            }
 
         return count($this->getColumnDefinition()) == count($row);
     }
@@ -290,6 +294,19 @@ class TextTable implements Stringable {
     }
 
     /**
+     * Get a divider row
+     *
+     * @since 0.2.0
+     *
+     * @return array
+     */
+    protected function getDivider(): array {
+        $row = [];
+        foreach ($this->getColumnSizes() as $size) $row[] = str_repeat($this->config->row->header ?? '-', $size);
+        return $row;
+    }
+
+    /**
      * Adds a divider row
      *
      * @since 0.2.0
@@ -297,9 +314,7 @@ class TextTable implements Stringable {
      * @return \Inane\Cli\TextTable
      */
     public function insertDivider(): self {
-        $row = [];
-        foreach ($this->getColumnSizes() as $size) $row[] = str_repeat($this->config->row->header ?? '-', $size);
-        $this->addRow($row);
+        $this->addRow($this->getDivider());
 
         return $this;
     }
@@ -314,18 +329,17 @@ class TextTable implements Stringable {
         foreach ($this->rows as $r) {
             $cols = [];
 
-            for ($i = 0; $i < count($this->getColumnDefinition()); $i++)
-                $cols[] = str_pad($r[$i], $this->getColumnDefinition()[$i]);
+            for ($i = 0; $i < count($this->getColumnDefinition()); $i++) {
+                $col = str_pad($r[$i], $this->getColumnDefinition()[$i]);
+                if ($this->getDefinitionRule()->truncate() && strlen($col) > $this->getColumnDefinition()[$i]) $col = substr($col, 0, $this->getColumnDefinition()[$i] - 1) . '>';
+                $cols[] = $col;
+            }
 
             $rows[] = implode($this->config->column->divider, $cols);
         }
 
         if ($this->config->row->header !== null) {
-            $c = [];
-            for ($i = 0; $i < count($this->getColumnDefinition()); $i++)
-                $c[] = str_pad('', $this->getColumnDefinition()[$i], $this->config->row->header);
-
-            $d = implode($this->config->column->divider, $c);
+            $d = implode($this->config->column->divider, $this->getDivider());
             $h = array_shift($rows);
             array_unshift($rows, $h, $d);
         }

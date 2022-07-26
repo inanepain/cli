@@ -28,7 +28,7 @@ namespace Inane\Cli\TextTable;
  *
  * @package Inane\Cli
  *
- * @version 0.1.0
+ * @version 0.2.0
  */
 enum DefinitionRule {
     // Definition widths are used as a minimum. Individual cells grow to fit text.
@@ -39,4 +39,36 @@ enum DefinitionRule {
 
     // Auto create definition based on longest text per column.
     case Auto;
+
+    // Definition is the largest a column can be
+    // @since 0.2.0
+    case Max;
+
+    /**
+     * If enumeration causes truncation
+     *
+     * @since 0.2.0
+     *
+     * @return bool
+     */
+    public function truncate(): bool {
+        return match($this) {
+            static::Truncate, static::Max => true,
+            default => false,
+        };
+    }
+
+    /**
+     * If enumeration has dynamic sizing
+     *
+     * @since 0.2.0
+     *
+     * @return bool
+     */
+    public function dynamic(): bool {
+        return match($this) {
+            static::Auto, static::Max => true,
+            default => false,
+        };
+    }
 }
