@@ -2,13 +2,14 @@
 /**
  * Sample invocations:
  *
- *     # php example_args.php -vC ./ --version
- *     {"verbose":true,"cache":".\/","version":true}
- *     # php example_args.php -vC --version
- *     PHP Warning:  [cli\Arguments] no value given for -C
- *     # php example_args.php -vC multi word --version
- *     {"verbose":true,"cache":"multi word","version":true}
- *
+ * {
+ *     "verbose": false,
+ *     "version": false,
+ *     "quiet": false,
+ *     "help": false,
+ *     "cache": "/path/of/invocation",
+ *     "name": "Sadira"
+ * }
  */
 
 require 'common.php';
@@ -24,14 +25,16 @@ $arguments->addFlag(['help', 'h'], 'Show this help screen');
 $arguments->addOption(['cache', 'C'], [
 	'default'     => getcwd(),
 	'description' => 'Set the cache directory']);
+
 $arguments->addOption(['name', 'n'], [
-	'default'     => 'James',
-	'description' => 'Set a name with a really long description and a default so we can see what line wrapping looks like which is probably a goo idea']);
+	'default'     => 'Sadira',
+	'description' => 'Set a name with a really long description and a default so we can see what line wrapping looks like which is probably a good idea']);
 
 $arguments->parse();
+
 if ($arguments['help']) {
 	echo $arguments->getHelpScreen();
-	echo "\n\n";
+	echo PHP_EOL . PHP_EOL;
 }
 
-echo $arguments->asJSON() . "\n";
+echo $arguments->asJSON() . PHP_EOL;

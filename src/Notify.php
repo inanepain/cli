@@ -1,14 +1,25 @@
 <?php
+
 /**
- * PHP Command Line Tools
+ * Inane: Cli
  *
- * This source file is subject to the MIT license that is bundled
- * with this package in the file LICENSE.
+ * Command Line Tools
  *
- * @author    James Logsdon <dwarf@girsbrain.org>
- * @copyright 2010 James Logsdom (http://girsbrain.org)
- * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * PHP version 8.1
+ *
+ * @package Inane\Cli
+ *
+ * @author    	James Logsdon <dwarf@girsbrain.org>
+ * @author		Philip Michael Raab<peep@inane.co.za>
+ *
+ * @license 	UNLICENSE
+ * @license 	https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ *
+ * @version $Id$
+ * $Date$
  */
+
+declare(strict_types=1);
 
 namespace Inane\Cli;
 
@@ -77,7 +88,7 @@ abstract class Notify {
 	 * @return int  The elapsed time in seconds.
 	 */
 	public function elapsed() {
-		if (! $this->_start) {
+		if (!$this->_start) {
 			return 0;
 		}
 
@@ -94,9 +105,9 @@ abstract class Notify {
 	public function speed() {
 		static $tick, $iteration = 0, $speed = 0;
 
-		if (! $this->_start) {
+		if (!$this->_start) {
 			return 0;
-		} else if (! $tick) {
+		} else if (!$tick) {
 			$tick = $this->_start;
 		}
 
@@ -119,7 +130,7 @@ abstract class Notify {
 	 * @return string  The formatted time span.
 	 */
 	public function formatTime($time) {
-		return floor($time / 60) . ':' . str_pad($time % 60, 2, 0, STR_PAD_LEFT);
+		return floor($time / 60) . ':' . str_pad('' . $time % 60, 2, '0', STR_PAD_LEFT);
 	}
 
 	/**

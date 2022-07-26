@@ -1,19 +1,37 @@
 <?php
+
 /**
- * PHP Command Line Tools
+ * Inane: Cli
  *
- * This source file is subject to the MIT license that is bundled
- * with this package in the file LICENSE.
+ * Command Line Tools
  *
- * @author    James Logsdon <dwarf@girsbrain.org>
- * @copyright 2010 James Logsdom (http://girsbrain.org)
- * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * PHP version 8.1
+ *
+ * @package Inane\Cli
+ *
+ * @author    	James Logsdon <dwarf@girsbrain.org>
+ * @author		Philip Michael Raab<peep@inane.co.za>
+ *
+ * @license 	UNLICENSE
+ * @license 	https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ *
+ * @version $Id$
+ * $Date$
  */
+
+declare(strict_types=1);
 
 namespace Inane\Cli\Arguments;
 
 use Inane\Cli\Memoize;
 
+/**
+ * Lexer
+ *
+ * @package Inane\Cli\Arguments
+ *
+ * @version 1.0.0
+ */
 class Lexer extends Memoize implements \Iterator {
 	private $_items = [];
 	private $_index = 0;
@@ -33,7 +51,7 @@ class Lexer extends Memoize implements \Iterator {
 	 *
 	 * @return string
 	 */
-	public function current() {
+	public function current(): mixed {
 		return $this->_item;
 	}
 
@@ -49,7 +67,7 @@ class Lexer extends Memoize implements \Iterator {
 	/**
 	 * Move the cursor forward 1 element if it is valid.
 	 */
-	public function next() {
+	public function next(): void {
 		if ($this->valid()) {
 			$this->_shift();
 		}
@@ -60,7 +78,7 @@ class Lexer extends Memoize implements \Iterator {
 	 *
 	 * @return int
 	 */
-	public function key() {
+	public function key(): mixed {
 		return $this->_index;
 	}
 
@@ -68,7 +86,7 @@ class Lexer extends Memoize implements \Iterator {
 	 * Move forward 1 element and, if the method hasn't been called before, reset
 	 * the cursor's position to 0.
 	 */
-	public function rewind() {
+	public function rewind(): void {
 		$this->_shift();
 		if ($this->_first) {
 			$this->_index = 0;
@@ -81,7 +99,7 @@ class Lexer extends Memoize implements \Iterator {
 	 *
 	 * @return bool
 	 */
-	public function valid() {
+	public function valid(): bool {
 		return ($this->_index < $this->_length);
 	}
 
@@ -112,7 +130,7 @@ class Lexer extends Memoize implements \Iterator {
 	}
 
 	private function _explode() {
-		if (! $this->_item->canExplode) {
+		if (!$this->_item->canExplode) {
 			return false;
 		}
 

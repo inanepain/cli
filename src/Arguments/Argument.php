@@ -1,21 +1,36 @@
 <?php
+
 /**
- * PHP Command Line Tools
+ * Inane: Cli
  *
- * This source file is subject to the MIT license that is bundled
- * with this package in the file LICENSE.
+ * Command Line Tools
  *
- * @author    James Logsdon <dwarf@girsbrain.org>
- * @copyright 2010 James Logsdom (http://girsbrain.org)
- * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * PHP version 8.1
+ *
+ * @package Inane\Cli
+ *
+ * @author    	James Logsdon <dwarf@girsbrain.org>
+ * @author		Philip Michael Raab<peep@inane.co.za>
+ *
+ * @license 	UNLICENSE
+ * @license 	https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ *
+ * @version $Id$
+ * $Date$
  */
+
+declare(strict_types=1);
 
 namespace Inane\Cli\Arguments;
 
 use Inane\Cli\Memoize;
 
 /**
+ * Argument
+ *
  * Represents an Argument or a value and provides several helpers related to parsing an argument list.
+ *
+ * @version 1.0.0
  */
 class Argument extends Memoize {
 	/**
@@ -33,7 +48,7 @@ class Argument extends Memoize {
 	 */
 	public function __construct($argument) {
 		$this->_raw = $argument;
-		$this->key =& $this->_argument;
+		$this->key = &$this->_argument;
 
 		if ($this->isLong) {
 			$this->_argument = substr($this->_raw, 2);
@@ -77,7 +92,7 @@ class Argument extends Memoize {
 	 * @return bool
 	 */
 	public function isLong() {
-		return (0 == strncmp($this->_raw, '--', 2));
+		return (0 == strncmp($this->_raw ?? '', '--', 2));
 	}
 
 	/**
@@ -86,7 +101,7 @@ class Argument extends Memoize {
 	 * @return bool
 	 */
 	public function isShort() {
-		return ! $this->isLong && (0 == strncmp($this->_raw, '-', 1));
+		return !$this->isLong && (0 == strncmp($this->_raw ?? '', '-', 1));
 	}
 
 	/**
@@ -104,7 +119,7 @@ class Argument extends Memoize {
 	 * @return bool
 	 */
 	public function isValue() {
-		return ! $this->isArgument;
+		return !$this->isArgument;
 	}
 
 	/**

@@ -1,14 +1,25 @@
 <?php
+
 /**
- * PHP Command Line Tools
+ * Inane: Cli
  *
- * This source file is subject to the MIT license that is bundled
- * with this package in the file LICENSE.
+ * Command Line Tools
  *
- * @author    Ryan Sullivan <rsullivan@connectstudios.com>
- * @copyright 2010 James Logsdom (http://girsbrain.org)
- * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * PHP version 8.1
+ *
+ * @package Inane\Cli
+ *
+ * @author    	James Logsdon <dwarf@girsbrain.org>
+ * @author		Philip Michael Raab<peep@inane.co.za>
+ *
+ * @license 	UNLICENSE
+ * @license 	https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ *
+ * @version $Id$
+ * $Date$
  */
+
+declare(strict_types=1);
 
 namespace Inane\Cli;
 
@@ -43,8 +54,7 @@ class Tree {
      *     ]
      * @param array $data
      */
-    public function setData(array $data)
-    {
+    public function setData(array $data) {
         $this->_data = $data;
     }
 
@@ -53,17 +63,14 @@ class Tree {
      *
      * @return string|null
      */
-    public function render()
-    {
+    public function render() {
         return $this->_renderer->render($this->_data);
     }
 
     /**
      * Display the rendered tree
      */
-    public function display()
-    {
+    public function display() {
         echo $this->render();
     }
-
 }

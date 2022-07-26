@@ -1,22 +1,34 @@
 <?php
 /**
- * PHP Command Line Tools
+ * Inane: Cli
  *
- * This source file is subject to the MIT license that is bundled
- * with this package in the file LICENSE.
+ * Command Line Tools
  *
- * @author    James Logsdon <dwarf@girsbrain.org>
- * @copyright 2010 James Logsdom (http://girsbrain.org)
- * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * PHP version 8.1
+ *
+ * @package Inane\Cli
+ *
+ * @author    	James Logsdon <dwarf@girsbrain.org>
+ * @author		Philip Michael Raab<peep@inane.co.za>
+ *
+ * @license 	UNLICENSE
+ * @license 	https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ *
+ * @version $Id$
+ * $Date$
  */
+
+declare(strict_types=1);
 
 namespace Inane\Cli\Notify;
 
-use Inane\Cli\Notify;
-use Inane\Cli\Streams;
+use Inane\Cli\{
+	Notify,
+	Streams
+};
 
 /**
- * A Notifer that displays a string of periods.
+ * A Notifier that displays a string of periods.
  */
 class Dots extends Notify {
 	protected $_dots;

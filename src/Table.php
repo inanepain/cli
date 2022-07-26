@@ -1,22 +1,35 @@
 <?php
+
 /**
- * PHP Command Line Tools
+ * Inane: Cli
  *
- * This source file is subject to the MIT license that is bundled
- * with this package in the file LICENSE.
+ * Command Line Tools
  *
- * @author    James Logsdon <dwarf@girsbrain.org>
- * @copyright 2010 James Logsdom (http://girsbrain.org)
- * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * PHP version 8.1
+ *
+ * @package Inane\Cli
+ *
+ * @author    	James Logsdon <dwarf@girsbrain.org>
+ * @author		Philip Michael Raab<peep@inane.co.za>
+ *
+ * @license 	UNLICENSE
+ * @license 	https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ *
+ * @version $Id$
+ * $Date$
  */
+
+declare(strict_types=1);
 
 namespace Inane\Cli;
 
-use Inane\Cli\Shell;
-use Inane\Cli\Streams;
-use Inane\Cli\table\Ascii;
-use Inane\Cli\table\Renderer;
-use Inane\Cli\table\Tabular;
+use Inane\Cli\{
+	table\Ascii,
+	table\Renderer,
+	table\Tabular,
+	Shell,
+	Streams
+};
 
 /**
  * The `Table` class is used to display data in a tabular format.
@@ -45,7 +58,7 @@ class Table {
 	 * @param array  $footers  Footers used in this table. Optional.
 	 */
 	public function __construct(array $headers = null, array $rows = null, array $footers = null) {
-		if (! empty($headers)) {
+		if (!empty($headers)) {
 			// If all the rows is given in $headers we use the keys from the
 			// first row for the header values
 			if ($rows === null) {
@@ -62,7 +75,7 @@ class Table {
 			$this->setRows($rows);
 		}
 
-		if (! empty($footers)) {
+		if (!empty($footers)) {
 			$this->setFooters($footers);
 		}
 
@@ -73,8 +86,7 @@ class Table {
 		}
 	}
 
-	public function resetTable()
-	{
+	public function resetTable() {
 		$this->_headers = [];
 		$this->_width = [];
 		$this->_rows = [];
@@ -98,12 +110,12 @@ class Table {
 	 * Loops through the row and sets the maximum width for each column.
 	 *
 	 * @param array  $row  The table row.
-     * @return array $row
+	 * @return array $row
 	 */
 	protected function checkRow(array $row) {
 		foreach ($row as $column => $str) {
-			$width = Colors::width( $str, $this->isAsciiPreColorized( $column ) );
-			if (! isset($this->_width[$column]) || $width > $this->_width[$column]) {
+			$width = Colors::width($str, $this->isAsciiPreColorized($column));
+			if (!isset($this->_width[$column]) || $width > $this->_width[$column]) {
 				$this->_width[$column] = $width;
 			}
 		}
@@ -122,8 +134,8 @@ class Table {
 	 * @see Table::renderRow()
 	 */
 	public function display() {
-		foreach( $this->getDisplayLines() as $line ) {
-			Streams::line( $line );
+		foreach ($this->getDisplayLines() as $line) {
+			Streams::line($line);
 		}
 	}
 
@@ -150,8 +162,8 @@ class Table {
 
 		foreach ($this->_rows as $row) {
 			$row = $this->_renderer->row($row);
-			$row = explode( PHP_EOL, $row );
-			$out = array_merge( $out, $row );
+			$row = explode(PHP_EOL, $row);
+			$out = array_merge($out, $row);
 		}
 
 		if (isset($border)) {
@@ -173,12 +185,12 @@ class Table {
 	 * @param int  $column  The index of the column to sort by.
 	 */
 	public function sort($column) {
-		if (! isset($this->_headers[$column])) {
+		if (!isset($this->_headers[$column])) {
 			trigger_error('No column with index ' . $column, E_USER_NOTICE);
 			return;
 		}
 
-		usort($this->_rows, function($a, $b) use ($column) {
+		usort($this->_rows, function ($a, $b) use ($column) {
 			return strcmp($a[$column], $b[$column]);
 		});
 	}
@@ -235,9 +247,9 @@ class Table {
 	 * @param bool|array $precolorized A boolean to set all columns in the table as pre-colorized, or an array of booleans keyed by column index (number) to set individual columns as pre-colorized.
 	 * @see Ascii::setPreColorized()
 	 */
-	public function setAsciiPreColorized( $pre_colorized ) {
-		if ( $this->_renderer instanceof Ascii ) {
-			$this->_renderer->setPreColorized( $pre_colorized );
+	public function setAsciiPreColorized($pre_colorized) {
+		if ($this->_renderer instanceof Ascii) {
+			$this->_renderer->setPreColorized($pre_colorized);
 		}
 	}
 
@@ -248,9 +260,9 @@ class Table {
 	 * @return bool True if whole Ascii table is marked as pre-colorized, or if the individual column is pre-colorized; else false.
 	 * @see Ascii::isPreColorized()
 	 */
-	private function isAsciiPreColorized( $column ) {
-		if ( $this->_renderer instanceof Ascii ) {
-			return $this->_renderer->isPreColorized( $column );
+	private function isAsciiPreColorized($column) {
+		if ($this->_renderer instanceof Ascii) {
+			return $this->_renderer->isPreColorized($column);
 		}
 		return false;
 	}
