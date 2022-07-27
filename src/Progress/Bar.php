@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Inane\Cli\Progress;
 
+use function intval;
 use function strval;
 
 use Inane\Cli\{
@@ -77,7 +78,7 @@ class Bar extends Progress {
 			$size = 0;
 		}
 
-		$bar = str_repeat($this->_bars[0], floor($_percent * $size)) . $this->_bars[1];
+		$bar = str_repeat($this->_bars[0], intval(floor($_percent * $size))) . $this->_bars[1];
 		// substr is needed to trim off the bar cap at 100%
 		$bar = substr(str_pad($bar, $size, ' '), 0, $size);
 
