@@ -38,6 +38,8 @@ use Inane\Cli\{
  * Basic format:
  *
  *   ^MSG  PER% [=======================            ]  00:00 / 00:00$
+ *
+ * @version 0.1.0
  */
 class Bar extends Progress {
 	protected $_bars = '=>';
