@@ -34,6 +34,7 @@ use function count;
 use function implode;
 use function is_integer;
 use function is_null;
+use function is_string;
 use function str_pad;
 use function strlen;
 use function substr;
@@ -49,7 +50,7 @@ use const true;
  *
  * @package Inane\Cli
  *
- * @version 0.2.0
+ * @version 0.2.1
  */
 class TextTable implements Stringable {
     /**
@@ -212,7 +213,7 @@ class TextTable implements Stringable {
         $ad = $this->config->column->auto;
         $sd = $this->config->column->definition;
 
-        for($i = 0; $i < count($row); $i++)
+        for ($i = 0; $i < count($row); $i++)
             if (count($ad) < ($i + 1) || strlen($row[$i]) > $ad[$i]) {
                 if ($this->getDefinitionRule() == DefinitionRule::Max && strlen($row[$i]) > $sd[$i]) $ad[$i] = $sd[$i];
                 else $ad[$i] = strlen($row[$i]);
@@ -288,7 +289,7 @@ class TextTable implements Stringable {
      * @return \Inane\Cli\TextTable|false
      */
     public function addRows(array $rows): self {
-        foreach($rows as $r) $this->addRow($r);
+        foreach ($rows as $r) $this->addRow($r);
 
         return $this;
     }
@@ -314,8 +315,7 @@ class TextTable implements Stringable {
      * @return \Inane\Cli\TextTable
      */
     public function insertDivider(): self {
-        $this->addRow($this->getDivider());
-
+        $this->rows[] = 'divider';
         return $this;
     }
 
@@ -328,6 +328,9 @@ class TextTable implements Stringable {
         $rows = [];
         foreach ($this->rows as $r) {
             $cols = [];
+
+            if (is_string($r) && $r == 'divider')
+                $r = $this->getDivider();
 
             for ($i = 0; $i < count($this->getColumnDefinition()); $i++) {
                 $col = str_pad($r[$i], $this->getColumnDefinition()[$i]);
