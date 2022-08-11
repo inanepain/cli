@@ -4,7 +4,7 @@
 
 ## History
 
-### current: 0.12.1 @2022 Aug xx
+### 0.12.1 (2022 Aug 11)
 
  - fix: `TextTable` `divider` => uses full column width
  - fix: `TextTable` coloured string cell width
