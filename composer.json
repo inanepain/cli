@@ -1,5 +1,5 @@
 {
-    "cli": "inanepain/cli",
+    "name": "inanepain/cli",
     "description": "Utilities to simplify working with the console.",
     "type": "library",
     "license": "UNLICENSE",
@@ -36,9 +36,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=8.1",
-        "inanepain/stdlib": ">=0.1.2 || dev-master"
+        "inanepain/stdlib": ">=0.1.2 || dev-master || dev-develop"
     },
-    "require-dev": {
-        "inanepain/stdlib": "dev-develop"
-    }
+    "require-dev": {}
 }
