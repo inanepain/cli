@@ -1,5 +1,5 @@
 <?php
-// Samples. Lines marked with * should be colored in output
+// Samples. Lines marked with * should be coloured in output
 // php examples/colors.php
 // *  All output is run through \Inane\Cli\Colors::colorize before display
 // *  All output is run through \Inane\Cli\Colors::colorize before display
@@ -29,4 +29,3 @@ echo \Inane\Cli\Colors::colorize('  %C%5All output is run through %Y%6\Inane\Cli
 \Inane\Cli\Cli::line('  %C%5All output is run through %Y%6\Inane\Cli\Colors::colorize%C%5 before display%n', true);
 \Inane\Cli\Colors::enable(false); // Enable, but not forcefully
 \Inane\Cli\Cli::line('  %C%5All output is run through %Y%6\Inane\Cli\Colors::colorize%C%5 before display%n');
-

@@ -23,13 +23,27 @@ declare(strict_types=1);
 
 namespace Inane\Cli;
 
+use function array_keys;
+use function compact;
 use function implode;
+use function is_array;
+use function md5;
+use function str_pad;
+use function str_replace;
+use function strlen;
+use const false;
+use const null;
+use const STR_PAD_RIGHT;
+use const true;
 
 /**
- * Change the color of text.
+ * Change the colour of text.
  *
  * Reference: http://graphcomp.com/info/specs/ansi_col.html#colors
- * @version 1.0.1
+ *
+ * @package Inane\Cli
+ *
+ * @version 1.0.2
  */
 class Colors {
 	static protected $_colors = [
@@ -62,6 +76,7 @@ class Colors {
 			'white'   => 47
 		]
 	];
+
 	static protected $_enabled = null;
 
 	static protected $_string_cache = [];
@@ -75,7 +90,7 @@ class Colors {
 	}
 
 	/**
-	 * Check if we should colorize output based on local flags and shell type.
+	 * Check if we should colourise output based on local flags and shell type.
 	 *
 	 * Only check the shell type if `Colors::$_enabled` is null and `$coloured` is null.
 	 */
@@ -87,9 +102,10 @@ class Colors {
 	}
 
 	/**
-	 * Set the color.
+	 * Set the colour.
 	 *
-	 * @param string  $color  The name of the color or style to set.
+	 * @param string  $color  The name of the colour or style to set.
+	 *
 	 * @return string
 	 */
 	static public function color($color) {
@@ -104,45 +120,42 @@ class Colors {
 		$colors = [];
 		foreach (['color', 'style', 'background'] as $type) {
 			$code = $color[$type];
-			if (isset(self::$_colors[$type][$code])) {
+			if (isset(self::$_colors[$type][$code]))
 				$colors[] = self::$_colors[$type][$code];
-			}
 		}
 
-		if (empty($colors)) {
+		if (empty($colors))
 			$colors[] = 0;
-		}
 
 		return "\033[" . implode(';', $colors) . "m";
 	}
 
 	/**
-	 * Colorize a string using helpful string formatters. If the `Streams::$out` points to a TTY coloring will be enabled,
-	 * otherwise disabled. You can control this check with the `$colored` parameter.
+	 * Colourise a string using helpful string formatters. If the `Streams::$out` points to a TTY colouring will be enabled,
+	 * otherwise disabled. You can control this check with the `$coloured` parameter.
 	 *
 	 * @param string   $string
-	 * @param boolean  $colored  Force enable or disable the colorized output. If left as `null` the TTY will control coloring.
+	 * @param boolean  $coloured  Force enable or disable the colourised output. If left as `null` the TTY will control colouring.
+	 *
 	 * @return string
 	 */
-	static public function colorize($string, $colored = null) {
+	static public function colorize($string, $coloured = null) {
 		$passed = $string;
 
-		if (!self::shouldColorize($colored)) {
+		if (!self::shouldColorize($coloured)) {
 			$return = self::decolorize($passed, 2 /*keep_encodings*/);
 			self::cacheString($passed, $return);
 			return $return;
 		}
 
 		$md5 = md5($passed);
-		if (isset(self::$_string_cache[$md5]['colorized'])) {
+		if (isset(self::$_string_cache[$md5]['colorized']))
 			return self::$_string_cache[$md5]['colorized'];
-		}
 
 		$string = str_replace('%%', '%¾', $string);
 
-		foreach (self::getColors() as $key => $value) {
+		foreach (self::getColors() as $key => $value)
 			$string = str_replace($key, self::color($value), $string);
-		}
 
 		$string = str_replace('%¾', '%', $string);
 		self::cacheString($passed, $string);
@@ -151,79 +164,82 @@ class Colors {
 	}
 
 	/**
-	 * Remove color information from a string.
+	 * Remove colour information from a string.
 	 *
-	 * @param string $string A string with color information.
-	 * @param int    $keep   Optional. If the 1 bit is set, color tokens (eg "%n") won't be stripped. If the 2 bit is set, color encodings (ANSI escapes) won't be stripped. Default 0.
-	 * @return string A string with color information removed.
+	 * @param string $string A string with colour information.
+	 * @param int    $keep   Optional. If the 1 bit is set, colour tokens (eg "%n") won't be stripped. If the 2 bit is set, colour encodings (ANSI escapes) won't be stripped. Default 0.
+	 *
+	 * @return string A string with colour information removed.
 	 */
 	static public function decolorize($string, $keep = 0) {
 		if (!($keep & 1)) {
-			// Get rid of color tokens if they exist
+			// Get rid of colour tokens if they exist
 			$string = str_replace('%%', '%¾', $string);
 			$string = str_replace(array_keys(self::getColors()), '', $string);
 			$string = str_replace('%¾', '%', $string);
 		}
 
 		if (!($keep & 2)) {
-			// Remove color encoding if it exists
-			foreach (self::getColors() as $key => $value) {
+			// Remove colour encoding if it exists
+			foreach (self::getColors() as $key => $value)
 				$string = str_replace(self::color($value), '', $string);
-			}
 		}
 
 		return $string;
 	}
 
 	/**
-	 * Cache the original, colorized, and decolorized versions of a string.
+	 * Cache the original, colourised, and de-colourised versions of a string.
 	 *
-	 * @param string $passed The original string before colorization.
-	 * @param string $colorized The string after running through self::colorize.
+	 * @param string $passed     The original string before colourisation.
+	 * @param string $colourised The string after running through self::colorize.
 	 * @param string $deprecated Optional. Not used. Default null.
 	 */
-	static public function cacheString($passed, $colorized, $deprecated = null) {
+	static public function cacheString($passed, $colourised, $deprecated = null) {
 		self::$_string_cache[md5($passed)] = [
 			'passed'      => $passed,
-			'colorized'   => $colorized,
+			'colorized'   => $colourised,
 			'decolorized' => self::decolorize($passed), // Not very useful but keep for BC.
 		];
 	}
 
 	/**
-	 * Return the length of the string without color codes.
+	 * Return the length of the string without colour codes.
 	 *
 	 * @param string  $string  the string to measure
+	 *
 	 * @return int
 	 */
 	static public function length($string) {
-		return safe_strlen(self::decolorize($string));
+		return Cli::safeStrlen(self::decolorize($string));
 	}
 
 	/**
-	 * Return the width (length in characters) of the string without color codes if enabled.
+	 * Return the width (length in characters) of the string without colour codes if enabled.
 	 *
-	 * @param string      $string        The string to measure.
-	 * @param bool        $pre_colorized Optional. Set if the string is pre-colorized. Default false.
-	 * @param string|bool $encoding      Optional. The encoding of the string. Default false.
+	 * @param string      $string         The string to measure.
+	 * @param bool        $pre_colourised Optional. Set if the string is pre-colourised. Default false.
+	 * @param string|bool $encoding       Optional. The encoding of the string. Default false.
+	 *
 	 * @return int
 	 */
-	static public function width($string, $pre_colorized = false, $encoding = false) {
-		return \Inane\Cli\Cli::strwidth($pre_colorized || self::shouldColorize() ? self::decolorize($string, $pre_colorized ? 1 /*keep_tokens*/ : 0) : $string, $encoding);
+	static public function width($string, $pre_colourised = false, $encoding = false) {
+		return \Inane\Cli\Cli::strwidth($pre_colourised || self::shouldColorize() ? self::decolorize($string, $pre_colourised ? 1 /*keep_tokens*/ : 0) : $string, $encoding);
 	}
 
 	/**
 	 * Pad the string to a certain display length.
 	 *
-	 * @param string      $string        The string to pad.
-	 * @param int         $length        The display length.
-	 * @param bool        $pre_colorized Optional. Set if the string is pre-colorized. Default false.
-	 * @param string|bool $encoding      Optional. The encoding of the string. Default false.
-	 * @param int         $pad_type      Optional. Can be STR_PAD_RIGHT, STR_PAD_LEFT, or STR_PAD_BOTH. If pad_type is not specified it is assumed to be STR_PAD_RIGHT.
+	 * @param string      $string         The string to pad.
+	 * @param int         $length         The display length.
+	 * @param bool        $pre_colourised Optional. Set if the string is pre-colourised. Default false.
+	 * @param string|bool $encoding       Optional. The encoding of the string. Default false.
+	 * @param int         $pad_type       Optional. Can be STR_PAD_RIGHT, STR_PAD_LEFT, or STR_PAD_BOTH. If pad_type is not specified it is assumed to be STR_PAD_RIGHT.
+	 *
 	 * @return string
 	 */
-	static public function pad($string, $length, $pre_colorized = false, $encoding = false, $pad_type = STR_PAD_RIGHT) {
-		$real_length = self::width($string, $pre_colorized, $encoding);
+	static public function pad($string, $length, $pre_colourised = false, $encoding = false, $pad_type = STR_PAD_RIGHT) {
+		$real_length = self::width($string, $pre_colourised, $encoding);
 		$diff = strlen($string) - $real_length;
 		$length += $diff;
 
@@ -231,9 +247,9 @@ class Colors {
 	}
 
 	/**
-	 * Get the color mapping array.
+	 * Get the colour mapping array.
 	 *
-	 * @return array Array of color tokens mapped to colors and styles.
+	 * @return array Array of colour tokens mapped to colours and styles.
 	 */
 	static public function getColors() {
 		return [
