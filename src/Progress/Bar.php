@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Inane: Cli
  *
@@ -22,6 +23,9 @@ declare(strict_types=1);
 
 namespace Inane\Cli\Progress;
 
+use function intval;
+use function strval;
+
 use Inane\Cli\{
 	Notify,
 	Progress,
@@ -35,6 +39,8 @@ use Inane\Cli\{
  * Basic format:
  *
  *   ^MSG  PER% [=======================            ]  00:00 / 00:00$
+ *
+ * @version 0.1.0
  */
 class Bar extends Progress {
 	protected $_bars = '=>';
@@ -58,7 +64,7 @@ class Bar extends Progress {
 	public function display($finish = false) {
 		$_percent = $this->percent();
 
-		$percent = str_pad(floor($_percent * 100), 3);
+		$percent = str_pad(strval(floor($_percent * 100)), 3);
 		$msg = $this->_message;
 		$msg = Streams::render($this->_formatMessage, compact('msg', 'percent'));
 
@@ -68,11 +74,11 @@ class Bar extends Progress {
 
 		$size = Shell::columns();
 		$size -= strlen($msg . $timing);
-		if ( $size < 0 ) {
+		if ($size < 0) {
 			$size = 0;
 		}
 
-		$bar = str_repeat($this->_bars[0], floor($_percent * $size)) . $this->_bars[1];
+		$bar = str_repeat($this->_bars[0], intval(floor($_percent * $size))) . $this->_bars[1];
 		// substr is needed to trim off the bar cap at 100%
 		$bar = substr(str_pad($bar, $size, ' '), 0, $size);
 

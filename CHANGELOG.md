@@ -1,0 +1,11 @@
+# Changelog: Cli
+
+> version: $Id$ ($Date$)
+
+## History
+
+### 0.12.1 (2022 Aug 11)
+
+ - fix: `TextTable` `divider` => uses full column width
+ - fix: `TextTable` coloured string cell width
+ - fix: `Colors::length` error

@@ -1,5 +1,7 @@
 # PHP Command Line Tools
 
+> version: $Id$ ($Date$)
+
 A collection of functions and classes to assist with command line development.
 
 Requirements

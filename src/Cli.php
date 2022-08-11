@@ -86,7 +86,7 @@ class Cli {
      * @return void
      * @see \Inane\Cli\render()
      */
-    public static function out($msg) {
+    public static function out(string $msg) {
         Streams::_call('out', func_get_args());
     }
 
