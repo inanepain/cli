@@ -1,5 +1,5 @@
 {
-    "cli": "inanepain/cli",
+    "name": "inanepain/cli",
     "description": "Utilities to simplify working with the console.",
     "type": "library",
     "license": "UNLICENSE",
