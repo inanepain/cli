@@ -4,6 +4,10 @@
 
 ## History
 
+### current: 0.12.2 (2022 Aug xx)
+
+ - fix: STD(OUT/IN/ERR) undefined
+
 ### 0.12.1 (2022 Aug 11)
 
  - fix: `TextTable` `divider` => uses full column width
