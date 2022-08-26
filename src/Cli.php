@@ -13,7 +13,7 @@
  * @author		Philip Michael Raab<peep@inane.co.za>
  *
  * @license 	UNLICENSE
- * @license 	https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ * @license 	https://github.com/inanepain/cli/raw/develop/UNLICENSE UNLICENSE
  *
  * @version $Id$
  * $Date$
@@ -49,10 +49,10 @@ use const true;
  *
  * @package Inane\Cli
  *
- * @version 0.11.1
+ * @version 0.11.2
  */
 class Cli {
-    public const VERSION = '0.11.1';
+    public const VERSION = '0.11.2';
 
     /**
      * Is shell environment
@@ -61,6 +61,17 @@ class Cli {
      */
     public static function isCli(): bool {
         return (php_sapi_name() == 'cli');
+    }
+
+    /**
+     * Is PHP built-in server
+     *
+     * @since 0.11.2
+     *
+     * @return bool
+     */
+    public static function isCliServer(): bool {
+        return (php_sapi_name() == 'cli-server');
     }
 
     /**

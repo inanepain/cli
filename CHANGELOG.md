@@ -7,6 +7,7 @@
 ### current: 0.12.2 (2022 Aug xx)
 
  - fix: STD(OUT/IN/ERR) undefined
+ - new: `Cli::isCliServer` Is PHP built-in server
 
 ### 0.12.1 (2022 Aug 11)
 
