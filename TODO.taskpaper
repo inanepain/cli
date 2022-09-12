@@ -1,4 +1,11 @@
 Inane\Cli:
+	Cli:
+		output buffering:
+			Out put buffered until flushed or cleared.
+			- buffered writer
+				- flush
+				- clear
+				- conditional/triggered flush
 	Exception:
 		Upgrade Exception to Inane\Stdlib\Exception
-		- Streams
+		- Streams @done(2022-08-26)
