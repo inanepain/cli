@@ -49,10 +49,10 @@ use const true;
  *
  * @package Inane\Cli
  *
- * @version 0.11.2
+ * @version 0.11.3
  */
 class Cli {
-    public const VERSION = '0.11.2';
+    public const VERSION = '0.11.3';
 
     /**
      * Is shell environment
@@ -143,10 +143,11 @@ class Cli {
      * @param string  $format  A valid input format. See `fscanf` for documentation.
      *                         If none is given, all input up to the first newline
      *                         is accepted.
-     * @return string  The input with whitespace trimmed.
+     * @return array|string|int|float|false|null  The input with whitespace trimmed.
+     *
      * @throws \Exception  Thrown if ctrl-D (EOT) is sent as input.
      */
-    public static function input($format = null) {
+    public static function input($format = null): array|string|int|float|false|null {
         return Streams::input($format);
     }
 

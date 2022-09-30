@@ -36,6 +36,9 @@ use function is_numeric;
 use function is_string;
 use function json_encode;
 use function trigger_error;
+use const false;
+use const null;
+use const true;
 
 use Inane\Cli\Arguments\{
 	Argument,
@@ -87,11 +90,16 @@ class Arguments implements ArrayAccess {
 	 *
 	 * @return array
 	 */
-	public function getArguments() {
+	public function getArguments(): array {
 		if (!isset($this->_parsed)) $this->parse();
 		return $this->_parsed;
 	}
 
+	/**
+	 * Get the Help Screen
+	 *
+	 * @return \Inane\Cli\Arguments\HelpScreen help screen
+	 */
 	public function getHelpScreen(): HelpScreen {
 		return new HelpScreen($this);
 	}
@@ -113,7 +121,7 @@ class Arguments implements ArrayAccess {
 	 * @return string
 	 */
 	public function toJSON(int $flags = 0): string {
-		return json_encode($this->_parsed, $flags);
+		return json_encode($this->getArguments(), $flags);
 	}
 
 	/**
@@ -126,7 +134,7 @@ class Arguments implements ArrayAccess {
 	public function offsetExists($offset): bool {
 		if ($offset instanceof Argument) $offset = $offset->key;
 
-		return array_key_exists($offset, $this->_parsed);
+		return array_key_exists($offset, $this->getArguments());
 	}
 
 	/**
@@ -138,7 +146,7 @@ class Arguments implements ArrayAccess {
 	public function offsetGet($offset): mixed {
 		if ($offset instanceof Argument) $offset = $offset->key;
 
-		if (isset($this->_parsed[$offset])) return $this->_parsed[$offset];
+		if (isset($this->getArguments()[$offset])) return $this->getArguments()[$offset];
 
 		return null;
 	}
@@ -246,6 +254,7 @@ class Arguments implements ArrayAccess {
 			$settings['aliases'] = $option;
 			$option = array_shift($settings['aliases']);
 		}
+
 		if (isset($this->_options[$option])) {
 			$this->_warn('option already exists: ' . $option);
 			return $this;
@@ -339,11 +348,21 @@ class Arguments implements ArrayAccess {
 		}
 	}
 
-	public function getFlags() {
+	/**
+	 * Get Flags
+	 *
+	 * @return array flags
+	 */
+	public function getFlags(): array {
 		return $this->_flags;
 	}
 
-	public function hasFlags() {
+	/**
+	 * Has Flags
+	 *
+	 * @return bool True if any flags defined
+	 */
+	public function hasFlags(): bool {
 		return !empty($this->_flags);
 	}
 
@@ -352,9 +371,10 @@ class Arguments implements ArrayAccess {
 	 *
 	 * @param mixed  $argument  Either a string representing the flag or an
 	 *                          cli\arguments\Argument object.
+	 *
 	 * @return bool
 	 */
-	public function isFlag($argument) {
+	public function isFlag($argument): bool {
 		return (null !== $this->getFlag($argument));
 	}
 
@@ -363,9 +383,10 @@ class Arguments implements ArrayAccess {
 	 *
 	 * @param mixed  $flag  Either a string representing the flag or an
 	 *                      cli\arguments\Argument object.
+	 *
 	 * @return bool
 	 */
-	public function isStackable($flag) {
+	public function isStackable($flag): bool {
 		$settings = $this->getFlag($flag);
 
 		return isset($settings) && (true === $settings['stackable']);
@@ -378,7 +399,7 @@ class Arguments implements ArrayAccess {
 	 *                       cli\arguments\Argument object.
 	 * @return array
 	 */
-	public function getOption($option) {
+	public function getOption($option): array {
 		if ($option instanceof Argument) {
 			$obj = $option;
 			$option = $option->value;
@@ -393,11 +414,21 @@ class Arguments implements ArrayAccess {
 		}
 	}
 
-	public function getOptions() {
+	/**
+	 * Get defined options
+	 *
+	 * @return array options
+	 */
+	public function getOptions(): array {
 		return $this->_options;
 	}
 
-	public function hasOptions() {
+	/**
+	 * Tests if any options defined
+	 *
+	 * @return bool True if any defined options
+	 */
+	public function hasOptions(): bool {
 		return !empty($this->_options);
 	}
 
@@ -406,20 +437,21 @@ class Arguments implements ArrayAccess {
 	 *
 	 * @param mixed  $argument  Either a string representing the option or an
 	 *                          cli\arguments\Argument object.
+	 *
 	 * @return bool
 	 */
-	public function isOption($argument) {
+	public function isOption($argument): bool {
 		return (null != $this->getOption($argument));
 	}
 
 	/**
 	 * Parses arguments
 	 *
-	 * @return array arguments by long name
+	 * @return void
 	 *
 	 * @throws arguments\InvalidArguments
 	 */
-	public function parse() {
+	public function parse(): void {
 		$this->_applyDefaults();
 
 		foreach ($this->_lexer as $argument) {

@@ -23,7 +23,13 @@ declare(strict_types=1);
 namespace Inane\Cli\Table;
 
 /**
+ * Renderer
+ *
  * Table renderers are used to change how a table is displayed.
+ *
+ * @version 0.1.0
+ *
+ * @package Inane\Cli
  */
 abstract class Renderer {
 	protected $_widths = [];

@@ -43,10 +43,10 @@ use const true;
  *
  * @package Inane\Cli
  *
- * @version 1.0.2
+ * @version 1.0.3
  */
 class Colors {
-	static protected $_colors = [
+	static protected array $_colors = [
 		'color' => [
 			'black'   => 30,
 			'red'	 => 31,
@@ -77,16 +77,16 @@ class Colors {
 		]
 	];
 
-	static protected $_enabled = null;
+	static protected ?bool $_enabled = null;
 
-	static protected $_string_cache = [];
+	static protected array $_string_cache = [];
 
 	static public function enable($force = true) {
-		self::$_enabled = $force === true ? true : null;
+		static::$_enabled = $force === true ? true : null;
 	}
 
 	static public function disable($force = true) {
-		self::$_enabled = $force === true ? false : null;
+		static::$_enabled = $force === true ? false : null;
 	}
 
 	/**
@@ -95,8 +95,8 @@ class Colors {
 	 * Only check the shell type if `Colors::$_enabled` is null and `$coloured` is null.
 	 */
 	static public function shouldColorize($coloured = null) {
-		return self::$_enabled === true ||
-			(self::$_enabled !== false &&
+		return static::$_enabled === true ||
+			(static::$_enabled !== false &&
 				($coloured === true ||
 					($coloured !== false && Streams::isTty())));
 	}
@@ -120,8 +120,8 @@ class Colors {
 		$colors = [];
 		foreach (['color', 'style', 'background'] as $type) {
 			$code = $color[$type];
-			if (isset(self::$_colors[$type][$code]))
-				$colors[] = self::$_colors[$type][$code];
+			if (isset(static::$_colors[$type][$code]))
+				$colors[] = static::$_colors[$type][$code];
 		}
 
 		if (empty($colors))
@@ -142,23 +142,23 @@ class Colors {
 	static public function colorize($string, $coloured = null) {
 		$passed = $string;
 
-		if (!self::shouldColorize($coloured)) {
-			$return = self::decolorize($passed, 2 /*keep_encodings*/);
-			self::cacheString($passed, $return);
+		if (!static::shouldColorize($coloured)) {
+			$return = static::decolorize($passed, 2 /*keep_encodings*/);
+			static::cacheString($passed, $return);
 			return $return;
 		}
 
 		$md5 = md5($passed);
-		if (isset(self::$_string_cache[$md5]['colorized']))
-			return self::$_string_cache[$md5]['colorized'];
+		if (isset(static::$_string_cache[$md5]['colorized']))
+			return static::$_string_cache[$md5]['colorized'];
 
 		$string = str_replace('%%', '%¾', $string);
 
-		foreach (self::getColors() as $key => $value)
-			$string = str_replace($key, self::color($value), $string);
+		foreach (static::getColors() as $key => $value)
+			$string = str_replace($key, static::color($value), $string);
 
 		$string = str_replace('%¾', '%', $string);
-		self::cacheString($passed, $string);
+		static::cacheString($passed, $string);
 
 		return $string;
 	}
@@ -174,15 +174,15 @@ class Colors {
 	static public function decolorize($string, $keep = 0) {
 		if (!($keep & 1)) {
 			// Get rid of colour tokens if they exist
-			$string = str_replace('%%', '%¾', $string);
-			$string = str_replace(array_keys(self::getColors()), '', $string);
+			$string = str_replace('%%', '%¾', "$string");
+			$string = str_replace(array_keys(static::getColors()), '', $string);
 			$string = str_replace('%¾', '%', $string);
 		}
 
 		if (!($keep & 2)) {
 			// Remove colour encoding if it exists
-			foreach (self::getColors() as $key => $value)
-				$string = str_replace(self::color($value), '', $string);
+			foreach (static::getColors() as $key => $value)
+				$string = str_replace(static::color($value), '', $string);
 		}
 
 		return $string;
@@ -192,14 +192,14 @@ class Colors {
 	 * Cache the original, colourised, and de-colourised versions of a string.
 	 *
 	 * @param string $passed     The original string before colourisation.
-	 * @param string $colourised The string after running through self::colorize.
+	 * @param string $colourised The string after running through static::colorize.
 	 * @param string $deprecated Optional. Not used. Default null.
 	 */
 	static public function cacheString($passed, $colourised, $deprecated = null) {
-		self::$_string_cache[md5($passed)] = [
+		static::$_string_cache[md5($passed)] = [
 			'passed'      => $passed,
 			'colorized'   => $colourised,
-			'decolorized' => self::decolorize($passed), // Not very useful but keep for BC.
+			'decolorized' => static::decolorize($passed), // Not very useful but keep for BC.
 		];
 	}
 
@@ -211,7 +211,7 @@ class Colors {
 	 * @return int
 	 */
 	static public function length($string) {
-		return Cli::safeStrlen(self::decolorize($string));
+		return Cli::safeStrlen(static::decolorize($string));
 	}
 
 	/**
@@ -224,7 +224,7 @@ class Colors {
 	 * @return int
 	 */
 	static public function width($string, $pre_colourised = false, $encoding = false) {
-		return \Inane\Cli\Cli::strwidth($pre_colourised || self::shouldColorize() ? self::decolorize($string, $pre_colourised ? 1 /*keep_tokens*/ : 0) : $string, $encoding);
+		return \Inane\Cli\Cli::strwidth($pre_colourised || static::shouldColorize() ? static::decolorize($string, $pre_colourised ? 1 /*keep_tokens*/ : 0) : $string, $encoding);
 	}
 
 	/**
@@ -239,11 +239,11 @@ class Colors {
 	 * @return string
 	 */
 	static public function pad($string, $length, $pre_colourised = false, $encoding = false, $pad_type = STR_PAD_RIGHT) {
-		$real_length = self::width($string, $pre_colourised, $encoding);
-		$diff = strlen($string) - $real_length;
+		$real_length = static::width($string, $pre_colourised, $encoding);
+		$diff = strlen("$string") - $real_length;
 		$length += $diff;
 
-		return str_pad($string, $length, ' ', $pad_type);
+		return str_pad("$string", $length, ' ', $pad_type);
 	}
 
 	/**
@@ -295,13 +295,13 @@ class Colors {
 	 * @return array The cached string values.
 	 */
 	static public function getStringCache() {
-		return self::$_string_cache;
+		return static::$_string_cache;
 	}
 
 	/**
 	 * Clear the string cache.
 	 */
 	static public function clearStringCache() {
-		self::$_string_cache = [];
+		static::$_string_cache = [];
 	}
 }
