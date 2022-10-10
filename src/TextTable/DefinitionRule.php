@@ -9,7 +9,6 @@
  *
  * @package Inane\Cli
  *
- * @author    	James Logsdon <dwarf@girsbrain.org>
  * @author		Philip Michael Raab<peep@inane.co.za>
  *
  * @license 	UNLICENSE

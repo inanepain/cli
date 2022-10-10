@@ -42,7 +42,7 @@ class Lexer extends Memoize implements \Iterator {
 	/**
 	 * @param array  $items  A list of strings to process as tokens.
 	 */
-	public function __construct(array $items): void {
+	public function __construct(array $items) {
 		$this->_items = $items;
 		$this->_length = count($items);
 	}

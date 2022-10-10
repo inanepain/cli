@@ -8,6 +8,7 @@
 
  - fix: STD(OUT/IN/ERR) undefined
  - new: `Cli::isCliServer` Is PHP built-in server
+ - upd: `Cli::input` new optional arg `$default` returned if non-interactive shell
 
 ### 0.12.1 (2022 Aug 11)
 

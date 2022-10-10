@@ -62,7 +62,7 @@ use const true;
  *
  * @package Inane\Cli
  *
- * @version 1.0.2
+ * @version 1.0.3
  */
 class Streams {
 	protected static $out = STDOUT;
@@ -182,19 +182,22 @@ class Streams {
 	}
 
 	/**
+	 * get input from terminal
+	 *
 	 * Takes input from `STDIN` in the given format. If an end of transmission
 	 * character is sent (^D), an exception is thrown.
 	 *
-	 * @param null|string  $format  A valid input format. See `fscanf` for documentation.
-	 *                         If none is given, all input up to the first newline
-	 *                         is accepted.
-	 * @param boolean $hide    If true will hide what the user types in.
+	 * @param null|string	$format		A valid input format. See `fscanf`. If null all input to first newline as string.
+	 * @param bool			$hide		If true will hide what the user types in.
+	 * @param mixed			$default	Value to return if not an interactive terminal.
 	 *
-	 * @return string  The input with whitespace trimmed.
+	 * @return mixed		The input with whitespace trimmed.
 	 *
-	 * @throws \Exception  Thrown if ctrl-D (EOT) is sent as input.
+	 * @throws \Exception	Thrown if ctrl-D (EOT) is sent as input.
 	 */
-	public static function input(?string $format = null, bool $hide = false) {
+	public static function input(?string $format = null, bool $hide = false, mixed $default = null): mixed {
+		if (!self::isTty()) return $default;
+
 		if ($hide)
 			Shell::hide();
 

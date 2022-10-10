@@ -49,10 +49,10 @@ use const true;
  *
  * @package Inane\Cli
  *
- * @version 0.11.3
+ * @version 0.11.4
  */
 class Cli {
-    public const VERSION = '0.11.3';
+    public const VERSION = '0.11.4';
 
     /**
      * Is shell environment
@@ -62,6 +62,15 @@ class Cli {
     public static function isCli(): bool {
         return (php_sapi_name() == 'cli');
     }
+
+    /**
+	 * Is output an interactive terminal
+	 *
+	 * @return bool
+	 */
+	static public function isTty(): bool {
+		return Streams::isTty();
+	}
 
     /**
      * Is PHP built-in server
@@ -137,18 +146,21 @@ class Cli {
     }
 
     /**
-     * Takes input from `STDIN` in the given format. If an end of transmission
-     * character is sent (^D), an exception is thrown.
-     *
-     * @param string  $format  A valid input format. See `fscanf` for documentation.
-     *                         If none is given, all input up to the first newline
-     *                         is accepted.
-     * @return array|string|int|float|false|null  The input with whitespace trimmed.
-     *
-     * @throws \Exception  Thrown if ctrl-D (EOT) is sent as input.
-     */
-    public static function input($format = null): array|string|int|float|false|null {
-        return Streams::input($format);
+	 * get input from terminal
+	 *
+	 * Takes input from `STDIN` in the given format. If an end of transmission
+	 * character is sent (^D), an exception is thrown.
+	 *
+	 * @param null|string	$format		A valid input format. See `fscanf`. If null all input to first newline as string.
+     * @param mixed			$default	Value to return if not an interactive terminal.
+	 * @param bool			$hide		If true will hide what the user types in.
+	 *
+	 * @return mixed		The input with whitespace trimmed.
+	 *
+	 * @throws \Exception	Thrown if ctrl-D (EOT) is sent as input.
+	 */
+    public static function input(?string $format = null, mixed $default = null, bool $hide = false): mixed {
+        return Streams::input(format: $format, hide: $hide, default: $default);
     }
 
     /**
