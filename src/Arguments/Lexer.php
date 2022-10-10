@@ -33,10 +33,11 @@ use Inane\Cli\Memoize;
  * @version 1.0.0
  */
 class Lexer extends Memoize implements \Iterator {
-	private $_items = [];
-	private $_index = 0;
-	private $_length = 0;
-	private $_first = true;
+	private array $_items = [];
+	private $_item;
+	private int $_index = 0;
+	private int $_length = 0;
+	private bool $_first = true;
 
 	/**
 	 * @param array  $items  A list of strings to process as tokens.
@@ -68,9 +69,8 @@ class Lexer extends Memoize implements \Iterator {
 	 * Move the cursor forward 1 element if it is valid.
 	 */
 	public function next(): void {
-		if ($this->valid()) {
+		if ($this->valid())
 			$this->_shift();
-		}
 	}
 
 	/**
@@ -108,7 +108,7 @@ class Lexer extends Memoize implements \Iterator {
 	 *
 	 * @param mixed  $item  The value to set
 	 */
-	public function unshift($item) {
+	public function unshift($item): mixed {
 		array_unshift($this->_items, $item);
 		$this->_length += 1;
 	}
@@ -118,11 +118,11 @@ class Lexer extends Memoize implements \Iterator {
 	 *
 	 * @return bool
 	 */
-	public function end() {
+	public function end(): bool {
 		return ($this->_index + 1) == $this->_length;
 	}
 
-	private function _shift() {
+	private function _shift(): void {
 		$this->_item = new Argument(array_shift($this->_items));
 		$this->_index += 1;
 		$this->_explode();
@@ -130,12 +130,9 @@ class Lexer extends Memoize implements \Iterator {
 	}
 
 	private function _explode() {
-		if (!$this->_item->canExplode) {
-			return false;
-		}
+		if (!$this->_item->canExplode) return false;
 
-		foreach ($this->_item->exploded as $piece) {
+		foreach ($this->_item->exploded as $piece)
 			$this->unshift('-' . $piece);
-		}
 	}
 }

@@ -19,6 +19,6 @@ while (true) {
 		break;
 	}
 
-	include "${choice}.php";
+	include "{$choice}.php";
 	\Inane\Cli\Cli::line();
 }

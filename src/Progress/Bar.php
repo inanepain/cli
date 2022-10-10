@@ -57,7 +57,7 @@ class Bar extends Progress {
 	 * @see cli\out()
 	 * @see Notify::formatTime()
 	 * @see Notify::elapsed()
-	 * @see Progress::estimated();
+	 * @see Progress::estimated()
 	 * @see Progress::percent()
 	 * @see Shell::columns()
 	 */

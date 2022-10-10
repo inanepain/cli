@@ -23,7 +23,13 @@ declare(strict_types=1);
 namespace Inane\Cli\Table;
 
 /**
+ * Tabular
+ *
  * The tabular renderer is used for displaying data in a tabular format.
+ *
+ * @version 0.1.0
+ *
+ * @package Inane\Cli
  */
 class Tabular extends Renderer {
 	/**

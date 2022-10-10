@@ -4,6 +4,14 @@
 
 ## History
 
+### 0.13.0 (2022 Oct 10)
+
+ - fix: STD(OUT/IN/ERR) undefined
+ - new: `Cli::isCliServer` Is PHP built-in server
+ - new: `Pencil` stationary tools
+ - upd: `Cli::input` new optional arg `$default` returned if non-interactive shell
+ - many minor tweaks, updates and fixes
+
 ### 0.12.1 (2022 Aug 11)
 
  - fix: `TextTable` `divider` => uses full column width

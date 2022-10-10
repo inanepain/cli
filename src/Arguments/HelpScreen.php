@@ -113,7 +113,7 @@ class HelpScreen implements Stringable {
 
 			$pad = str_repeat(' ', $max + 3);
 			while ($desc = array_shift($description))
-				$formatted .= PHP_EOL . "${pad}${desc}";
+				$formatted .= PHP_EOL . "{$pad}{$desc}";
 
 			array_push($help, $formatted);
 		}

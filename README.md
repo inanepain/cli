@@ -76,7 +76,6 @@ Check `examples/arguments.php` for an example.
 
 See `examples/` directory for examples.
 
-
 ## Todo
 
  - Expand this README
