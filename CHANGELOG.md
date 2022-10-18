@@ -4,6 +4,11 @@
 
 ## History
 
+### develop: 0.13.x (2022 Xxx xx)
+
+ - new: `Pencil::format` returns colour string without outputting it
+ - new: `Pencil` cache original text for reversing it in certain situations
+
 ### 0.13.0 (2022 Oct 10)
 
  - fix: STD(OUT/IN/ERR) undefined

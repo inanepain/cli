@@ -24,8 +24,10 @@ namespace Inane\Cli;
 
 use Stringable;
 
+use function array_key_exists;
 use function fwrite;
 use function is_null;
+use function strlen;
 use const null;
 use const STDOUT;
 
@@ -43,7 +45,7 @@ use Inane\Cli\Pencil\{
  *
  * @package Inane\Cli
  *
- * @version 0.1.0
+ * @version 0.2.0
  */
 class Pencil implements Stringable {
     public const VERSION = '0.1.0';
@@ -54,6 +56,8 @@ class Pencil implements Stringable {
      * @var string
      */
     private string $pencil;
+
+    private static $cache = [];
 
     /**
      * Pencil constructor
@@ -84,6 +88,44 @@ class Pencil implements Stringable {
          */
         private ?Colour $background = null,
     ) {
+    }
+
+    public static function reverse(string $text): ?string {
+        if (array_key_exists($text, static::$cache))
+            return static::$cache[$text];
+
+        return null;
+    }
+
+    public static function width(string $text): ?int {
+        $string = static::reverse($text);
+        if (!is_null($string)) return strlen($string);
+
+        return null;
+    }
+
+        /**
+	 * Pad the string to a certain display length.
+	 *
+	 * @param string      $string         The string to pad.
+	 * @param int         $length         The display length.
+	 * @param bool        $pre_colourised Optional. Set if the string is pre-colourised. Default false.
+	 * @param string|bool $encoding       Optional. The encoding of the string. Default false.
+	 * @param int         $pad_type       Optional. Can be STR_PAD_RIGHT, STR_PAD_LEFT, or STR_PAD_BOTH. If pad_type is not specified it is assumed to be STR_PAD_RIGHT.
+	 *
+	 * @return string
+	 */
+    public static function pad(string $text, int $length, bool $pre_colourised = false, bool|string $encoding = false, int $pad_type = STR_PAD_RIGHT): ?string {
+        $string = static::reverse($text);
+        if (!is_null($string)) {
+            $real_length = static::width($text);
+            $diff = strlen($text) - $real_length;
+            $length += $diff;
+
+            return str_pad("$text", $length, ' ', $pad_type);
+        }
+
+        return null;
     }
 
     /**
@@ -135,7 +177,7 @@ class Pencil implements Stringable {
      * @return void
      */
     public function out(string $text, bool $reset = true): void {
-        fwrite(STDOUT, "$this$text" . ($reset ? self::reset() : ''));
+        fwrite(STDOUT, $this->format($text, $reset));
     }
 
     /**
@@ -149,5 +191,22 @@ class Pencil implements Stringable {
     public function line(string $text, bool $reset = true): void {
         $this->out("$text", $reset);
         $this->out("\n", false);
+    }
+
+    /**
+     * Create a string with current format
+     *
+     * @since 0.2.0
+     *
+     * @param string $text to format
+     * @param bool $reset reset colours after writing
+     *
+     * @return string
+     */
+    public function format(string $text, bool $reset = true): string {
+        $string = "$this$text" . ($reset ? self::reset() : '');
+        static::$cache[$string] = $text;
+
+        return $string;
     }
 }

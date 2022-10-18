@@ -49,10 +49,10 @@ use const true;
  *
  * @package Inane\Cli
  *
- * @version 0.11.4
+ * @version 0.11.5
  */
 class Cli {
-    public const VERSION = '0.11.4';
+    public const VERSION = '0.11.5';
 
     /**
      * Is shell environment
@@ -365,7 +365,7 @@ class Cli {
                 if ($width < 0 && $length > 1) {
                     $length--;
                 }
-                return implode(array_slice($chars, 0, $length), '');
+                return implode('', array_slice($chars, 0, $length));
             }
         }
         return $str;

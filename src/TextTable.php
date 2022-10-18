@@ -47,7 +47,7 @@ use const true;
  *
  * @package Inane\Cli
  *
- * @version 0.2.2
+ * @version 0.2.3
  */
 class TextTable implements Stringable {
     /**
@@ -211,9 +211,9 @@ class TextTable implements Stringable {
         $sd = $this->config->column->definition;
 
         for ($i = 0; $i < count($row); $i++)
-            if (count($ad) < ($i + 1) || Colors::width($row[$i]) > $ad[$i]) {
-                if ($this->getDefinitionRule() == DefinitionRule::Max && Colors::width($row[$i]) > $sd[$i]) $ad[$i] = $sd[$i];
-                else $ad[$i] = Colors::width($row[$i]);
+            if (count($ad) < ($i + 1) || (Pencil::width($row[$i]) ?? Colors::width($row[$i])) > $ad[$i]) {
+                if ($this->getDefinitionRule() == DefinitionRule::Max && (Pencil::width($row[$i]) ?? Colors::width($row[$i])) > $sd[$i]) $ad[$i] = $sd[$i];
+                else $ad[$i] = (Pencil::width($row[$i]) ?? Colors::width($row[$i]));
             }
 
         return count($this->getColumnDefinition()) == count($row);
@@ -330,8 +330,8 @@ class TextTable implements Stringable {
                 $r = $this->getDivider();
 
             for ($i = 0; $i < count($this->getColumnDefinition()); $i++) {
-                $col = Colors::pad($r[$i], $this->getColumnDefinition()[$i]);
-                if ($this->getDefinitionRule()->truncate() && Colors::width($col) > $this->getColumnDefinition()[$i]) $col = substr($col, 0, $this->getColumnDefinition()[$i] - 1) . '>';
+                $col = Pencil::pad($r[$i], $this->getColumnDefinition()[$i]) ?? Colors::pad($r[$i], $this->getColumnDefinition()[$i]);
+                if ($this->getDefinitionRule()->truncate() && (Pencil::width($col) ?? Colors::width($col)) > $this->getColumnDefinition()[$i]) $col = substr($col, 0, $this->getColumnDefinition()[$i] - 1) . '>';
                 $cols[] = $col;
             }
 
