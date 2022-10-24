@@ -50,9 +50,9 @@ class Lexer extends Memoize implements \Iterator {
 	/**
 	 * The current token.
 	 *
-	 * @return string
+	 * @return \Inane\Cli\Arguments\Argument
 	 */
-	public function current(): mixed {
+	public function current(): Argument {
 		return $this->_item;
 	}
 

@@ -8,6 +8,7 @@
  * PHP version 8.1
  *
  * @package Inane\Cli
+ * @category console
  *
  * @author		Philip Michael Raab<peep@inane.co.za>
  *
@@ -27,10 +28,10 @@ namespace Inane\Cli\Pencil;
  *
  * @package Inane\Cli
  *
- * @version 0.1.0
+ * @version 0.1.1
  */
 enum Style: int {
-    case Regular    = 0;
+    case Plain      = 0;
     case Bold       = 1;
     case Dim        = 2;
     case Italic     = 3;
@@ -38,5 +39,6 @@ enum Style: int {
     case SlowBlink  = 5;
     // case FastBlink  = 6;
     case Reverse    = 7;
+    case Hidden     = 8;
     case CrossOut   = 9;
 }

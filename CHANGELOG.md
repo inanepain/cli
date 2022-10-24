@@ -7,7 +7,10 @@
 ### develop: 0.13.x (2022 Xxx xx)
 
  - new: `Pencil::format` returns colour string without outputting it
+ - new: `Pencil::input` reads terminal input
  - new: `Pencil` cache original text for reversing it in certain situations
+ - new: `Colour::Default` system colour
+ - fix: various little updates and fixes
 
 ### 0.13.0 (2022 Oct 10)
 
