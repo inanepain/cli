@@ -43,13 +43,15 @@ use const PHP_EOL;
  *
  * @package Inane\Cli
  *
- * @version 1.0.2
+ * @version 1.0.3
  */
 class HelpScreen implements Stringable {
-	protected $_flags = [];
-	protected $_maxFlag = 0;
-	protected $_options = [];
-	protected $_maxOption = 0;
+	protected array $flags = [];
+	protected int $maxFlag = 0;
+	protected array $options = [];
+	protected int $maxOption = 0;
+	protected int $flagMax = 0;
+	protected int $optionMax = 0;
 
 	public function __construct(Arguments $arguments) {
 		$this->setArguments($arguments);
@@ -67,15 +69,15 @@ class HelpScreen implements Stringable {
 	public function consumeArgumentFlags(Arguments $arguments): void {
 		$data = $this->_consume($arguments->getFlags());
 
-		$this->_flags = $data[0];
-		$this->_flagMax = $data[1];
+		$this->flags = $data[0];
+		$this->flagMax = $data[1];
 	}
 
 	public function consumeArgumentOptions(Arguments $arguments): void {
 		$data = $this->_consume($arguments->getOptions());
 
-		$this->_options = $data[0];
-		$this->_optionMax = $data[1];
+		$this->options = $data[0];
+		$this->optionMax = $data[1];
 	}
 
 	public function render(): string {
@@ -88,17 +90,17 @@ class HelpScreen implements Stringable {
 	}
 
 	private function _renderFlags(): ?string {
-		if (empty($this->_flags))
+		if (empty($this->flags))
 			return null;
 
-		return 'Flags' . PHP_EOL . $this->_renderScreen($this->_flags, $this->_flagMax);
+		return 'Flags' . PHP_EOL . $this->_renderScreen($this->flags, $this->flagMax);
 	}
 
 	private function _renderOptions(): ?string {
-		if (empty($this->_options))
+		if (empty($this->options))
 			return null;
 
-		return 'Options' . PHP_EOL . $this->_renderScreen($this->_options, $this->_optionMax);
+		return 'Options' . PHP_EOL . $this->_renderScreen($this->options, $this->optionMax);
 	}
 
 	private function _renderScreen($options, $max): string {

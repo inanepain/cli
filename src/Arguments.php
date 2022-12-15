@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Inane\Cli;
 
 use ArrayAccess;
+use Inane\Stdlib\Converters\JSONable;
 
 use function array_key_exists;
 use function array_push;
@@ -54,9 +55,9 @@ use Inane\Cli\Arguments\{
  *
  * @package Inane\Cli
  *
- * @version 1.0.2
+ * @version 1.1.0
  */
-class Arguments implements ArrayAccess {
+class Arguments implements ArrayAccess, JSONable {
 	protected bool $strict = false;
 	protected array $flags = [];
 	protected array $options = [];
@@ -116,11 +117,17 @@ class Arguments implements ArrayAccess {
 	/**
 	 * Encodes the parsed arguments as JSON.
 	 *
+	 * @since 1.1.0 $pretty argument
+	 *
 	 * @param int $flags Bitmask consisting of JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS, JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT, JSON_UNESCAPED_UNICODE. JSON_THROW_ON_ERROR The behaviour of these constants is described on the JSON constants page.
+	 * @param bool $pretty format the resulting json pretty
 	 *
 	 * @return string
 	 */
-	public function toJSON(int $flags = 0): string {
+	public function toJSON(int $flags = 0, bool $pretty = false): string {
+		if ($pretty) {
+			$flags |= JSON_NUMERIC_CHECK|JSON_PRETTY_PRINT;
+		}
 		return json_encode($this->getArguments(), $flags);
 	}
 

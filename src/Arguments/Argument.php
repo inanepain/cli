@@ -8,6 +8,7 @@
  * PHP version 8.1
  *
  * @package Inane\Cli
+ * @category console
  *
  * @author    	James Logsdon <dwarf@girsbrain.org>
  * @author		Philip Michael Raab<peep@inane.co.za>

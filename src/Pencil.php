@@ -205,10 +205,12 @@ class Pencil implements Stringable {
      * @param string $text to write
      * @param bool $reset reset colours after writing
      *
-     * @return void
+     * @return \Inane\Cli\Pencil
      */
-    public function out(string $text, bool $reset = true): void {
+    public function out(string $text, bool $reset = true): static {
         fwrite(STDOUT, $this->format($text, $reset));
+
+        return $this;
     }
 
     /**
@@ -217,11 +219,13 @@ class Pencil implements Stringable {
      * @param string $text to write
      * @param bool $reset reset colours after writing
      *
-     * @return void
+     * @return \Inane\Cli\Pencil
      */
-    public function line(string $text, bool $reset = true): void {
+    public function line(string $text, bool $reset = true): static {
         $this->out("$text", $reset);
         fwrite(STDOUT, "\n");
+
+        return $this;
     }
 
     /**
