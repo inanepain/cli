@@ -4,7 +4,7 @@
 
 ## History
 
-### develop: 0.14.0-dev (2022 Xxx xx)
+### develop: 0.14.0 (2022 Dec 15)
 
  - new: `Pencil::format` returns colour string without outputting it
  - new: `Pencil::input` reads terminal input
