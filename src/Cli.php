@@ -8,6 +8,7 @@
  * PHP version 8.1
  *
  * @package Inane\Cli
+ * @category console
  *
  * @author    	James Logsdon <dwarf@girsbrain.org>
  * @author		Philip Michael Raab<peep@inane.co.za>
@@ -49,10 +50,10 @@ use const true;
  *
  * @package Inane\Cli
  *
- * @version 0.11.4
+ * @version 0.11.5
  */
 class Cli {
-    public const VERSION = '0.11.4';
+    public const VERSION = '0.11.5';
 
     /**
      * Is shell environment
@@ -84,6 +85,15 @@ class Cli {
     }
 
     /**
+     * Plays a beep sound
+     *
+     * @return void
+     */
+    public static function beep(): void {
+        echo "\x07";
+    }
+
+    /**
      * Handles rendering strings. If extra scalar arguments are given after the `$msg`
      * the string will be rendered with `sprintf`. If the second argument is an `array`
      * then each key in the array will be the placeholder name. Placeholders are of the
@@ -91,6 +101,7 @@ class Cli {
      *
      * @param string   $msg  The message to render.
      * @param mixed    ...   Either scalar arguments or a single array argument.
+     *
      * @return string  The rendered string.
      */
     public static function render($msg) {
@@ -103,7 +114,9 @@ class Cli {
      *
      * @param string  $msg  The message to output in `printf` format.
      * @param mixed   ...   Either scalar arguments or a single array argument.
+     *
      * @return void
+     *
      * @see \Inane\Cli\render()
      */
     public static function out(string $msg) {
@@ -365,7 +378,7 @@ class Cli {
                 if ($width < 0 && $length > 1) {
                     $length--;
                 }
-                return implode(array_slice($chars, 0, $length), '');
+                return implode('', array_slice($chars, 0, $length));
             }
         }
         return $str;
@@ -455,7 +468,7 @@ class Cli {
         static $can_use_pcre_x = null;
 
         if (null === $can_use_pcre_x) {
-            // '\X' introduced (as Unicde extended grapheme cluster) in PCRE 8.32 - see https://vcs.pcre.org/pcre/code/tags/pcre-8.32/ChangeLog?view=markup line 53.
+            // '\X' introduced (as Unicode extended grapheme cluster) in PCRE 8.32 - see https://vcs.pcre.org/pcre/code/tags/pcre-8.32/ChangeLog?view=markup line 53.
             // Older versions of PCRE were bundled with PHP <= 5.3.23 & <= 5.4.13.
             $pcre_version = substr(PCRE_VERSION, 0, strspn(PCRE_VERSION, '0123456789.')); // Remove any trailing date stuff.
             $can_use_pcre_x = version_compare($pcre_version, '8.32', '>=') && false !== @preg_match('/\X/u', '');
@@ -473,18 +486,13 @@ class Cli {
     public static function getUnicodeRegexs($idx = null) {
         static $eaw_regex; // East Asian Width regex. Characters that count as 2 characters as they're "wide" or "fullwidth". See http://www.unicode.org/reports/tr11/tr11-19.html
         static $m_regex; // Mark characters regex (Unicode property "M") - mark combining "Mc", mark enclosing "Me" and mark non-spacing "Mn" chars that should be ignored for spacing purposes.
-        if (null === $eaw_regex) {
-            // Load both regexs generated from Unicode data.
-            require __DIR__ . '/unicode/regex.php';
-        }
+
+        // Load both regexs generated from Unicode data.
+        if (null === $eaw_regex) require __DIR__ . '/unicode/regex.php';
 
         if (null !== $idx) {
-            if ('eaw' === $idx) {
-                return $eaw_regex;
-            }
-            if ('m' === $idx) {
-                return $m_regex;
-            }
+            if ('eaw' === $idx) return $eaw_regex;
+            if ('m' === $idx) return $m_regex;
         }
 
         return [$eaw_regex, $m_regex,];

@@ -8,6 +8,7 @@
  * PHP version 8.1
  *
  * @package Inane\Cli
+ * @category console
  *
  * @author		Philip Michael Raab<peep@inane.co.za>
  *
