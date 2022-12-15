@@ -10,6 +10,7 @@
  - new: `Pencil::input` reads terminal input
  - new: `Pencil` cache original text for reversing it in certain situations
  - new: `Colour::Default` system colour
+ - fix: `Arguments::getOption` return type
  - update: `Arguments` implements `\Inane\Stdlib\Converters\JSONable`
  - update: `Arguments::toJSON` added $pretty option to format json
  - update: `HelpScreen` fixes for *php 8.1*

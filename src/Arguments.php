@@ -402,11 +402,11 @@ class Arguments implements ArrayAccess, JSONable {
 	/**
 	 * Get an option by primary matcher or any defined aliases.
 	 *
-	 * @param mixed  $option Either a string representing the option or an
-	 *                       cli\arguments\Argument object.
-	 * @return array
+	 * @param \Inane\Cli\Arguments\Argument|string  $option Either a string representing the option or an cli\arguments\Argument object.
+	 *
+	 * @return null|array
 	 */
-	public function getOption($option): array {
+	public function getOption(Argument|string $option): ?array {
 		if ($option instanceof Argument) {
 			$obj = $option;
 			$option = $option->value;
@@ -419,6 +419,8 @@ class Arguments implements ArrayAccess, JSONable {
 
 			return $settings;
 		}
+
+		return null;
 	}
 
 	/**
