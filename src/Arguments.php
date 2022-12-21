@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Inane\Cli;
 
 use ArrayAccess;
-use Inane\Stdlib\Converters\JSONable;
 
 use function array_key_exists;
 use function array_push;
@@ -35,7 +34,6 @@ use function in_array;
 use function is_array;
 use function is_numeric;
 use function is_string;
-use function json_encode;
 use function trigger_error;
 use const false;
 use const null;
@@ -47,6 +45,10 @@ use Inane\Cli\Arguments\{
 	InvalidArguments,
 	Lexer
 };
+use Inane\Stdlib\{
+	Converters\JSONable,
+	Json
+};
 
 /**
  * Arguments
@@ -55,7 +57,7 @@ use Inane\Cli\Arguments\{
  *
  * @package Inane\Cli
  *
- * @version 1.1.0
+ * @version 1.1.1
  */
 class Arguments implements ArrayAccess, JSONable {
 	protected bool $strict = false;
@@ -125,10 +127,12 @@ class Arguments implements ArrayAccess, JSONable {
 	 * @return string
 	 */
 	public function toJSON(int $flags = 0, bool $pretty = false): string {
-		if ($pretty) {
-			$flags |= JSON_NUMERIC_CHECK|JSON_PRETTY_PRINT;
-		}
-		return json_encode($this->getArguments(), $flags);
+		$options = [
+			'flags' => $flags,
+			'pretty' => $pretty,
+		];
+
+		return Json::encode($this->getArguments(), $options);
 	}
 
 	/**
