@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Inane\Cli;
 
+use Inane\Cli\Shell\Environment as ShellEnv;
+
 use function func_get_args;
 use function function_exists;
 use function getenv;
@@ -50,10 +52,26 @@ use const true;
  *
  * @package Inane\Cli
  *
- * @version 0.11.5
+ * @version 0.11.6
  */
 class Cli {
     public const VERSION = '0.11.5';
+
+    /**
+     * Get Shell Environment
+	 * 
+	 * - None
+	 * - Interactive
+	 * - NonInteractive
+     *
+     * @return \Inane\Cli\Shell\Environment
+     */
+    public static function shellEnv(): ShellEnv {
+		if (Streams::isTty()) return ShellEnv::Interactive;
+		else if (php_sapi_name() == 'cli') return ShellEnv::NonInteractive;
+
+        return ShellEnv::None;
+    }
 
     /**
      * Is shell environment
@@ -251,7 +269,7 @@ class Cli {
      * @return int  Numeric value that represents the string's length
      */
     public static function safeStrlen($str, $encoding = false) {
-        // Allow for selective testings - "1" bit set tests grapheme_strlen(), "2" preg_match_all( '/\X/u' ), "4" mb_strlen(), "other" strlen().
+        // Allow for selective testing - "1" bit set tests grapheme_strlen(), "2" preg_match_all( '/\X/u' ), "4" mb_strlen(), "other" strlen().
         $test_safe_strlen = getenv('PHP_CLI_TOOLS_TEST_SAFE_STRLEN');
 
         // Assume UTF-8 if no encoding given - `grapheme_strlen()` will return null if given non-UTF-8 string.

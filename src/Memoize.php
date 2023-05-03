@@ -23,33 +23,54 @@ declare(strict_types=1);
 
 namespace Inane\Cli;
 
+/**
+ * Memo cache
+ * 
+ * @version 0.1.0
+ * 
+ * @package Inane\Cli
+ */
 abstract class Memoize {
-	protected $_memoCache = [];
+	/**
+	 * Cache
+	 * 
+	 * @var array
+	 */
+	protected $memoCache = [];
 
+	/**
+	 * Magic Getter
+	 * 
+	 * @param mixed $name memo to get
+	 * @return mixed 
+	 */
 	public function __get($name) {
-		if (isset($this->_memoCache[$name])) {
-			return $this->_memoCache[$name];
-		}
+		if (isset($this->memoCache[$name]))
+			return $this->memoCache[$name];
 
 		// Hide probable private methods
-		if (0 == strncmp($name, '_', 1)) {
-			return ($this->_memoCache[$name] = null);
-		}
+		if (0 == strncmp($name, '_', 1))
+			return ($this->memoCache[$name] = null);
 
-		if (!method_exists($this, $name)) {
-			return ($this->_memoCache[$name] = null);
-		}
+		if (!method_exists($this, $name))
+			return ($this->memoCache[$name] = null);
 
 		$method = [$this, $name];
-		($this->_memoCache[$name] = call_user_func($method));
-		return $this->_memoCache[$name];
+		($this->memoCache[$name] = call_user_func($method));
+		return $this->memoCache[$name];
 	}
 
-	protected function _unmemo($name) {
-		if ($name === true) {
-			$this->_memoCache = [];
-		} else {
-			unset($this->_memoCache[$name]);
-		}
+	/**
+	 * UnMemo
+	 * 
+	 * @param string|true $name memo to remove or use `true` to reset cache completely
+	 * 
+	 * @return void 
+	 */
+	protected function _unmemo(string|true $name) {
+		if ($name === true)
+			$this->memoCache = [];
+		else
+			unset($this->memoCache[$name]);
 	}
 }

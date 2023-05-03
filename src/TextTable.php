@@ -98,12 +98,12 @@ class TextTable implements Stringable {
      * [
      *      'row' => [
      *          'header' => '-', // header separator OR null for no header row
-     *      ].
+     *      ],
      *      'column' => [
      *          'divider' => ' | ', // column divider char
      *          'definition' => [5, 20], // width of each column
      *          'rule' => \Inane\Cli\TextTable\DefinitionRule::Default,
-     *      ].
+     *      ],
      * ]
      *
      * @param array $options

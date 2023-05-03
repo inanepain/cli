@@ -25,7 +25,7 @@ echo \Inane\Cli\Colors::colorize('  %C%5All output is run through %Y%6\Inane\Cli
 \Inane\Cli\Colors::enable(); // Forcefully enable
 \Inane\Cli\Cli::line('  %C%5All output is run through %Y%6\Inane\Cli\Colors::colorize%C%5 before display%n');
 
-\Inane\Cli\Colors::disable(); // Disable forcefully!
+//\Inane\Cli\Colors::disable(); // Disable forcefully!
 \Inane\Cli\Cli::line('  %C%5All output is run through %Y%6\Inane\Cli\Colors::colorize%C%5 before display%n', true);
 \Inane\Cli\Colors::enable(false); // Enable, but not forcefully
 \Inane\Cli\Cli::line('  %C%5All output is run through %Y%6\Inane\Cli\Colors::colorize%C%5 before display%n');
