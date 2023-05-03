@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace Inane\Cli;
 
+use Inane\Cli\Shell\Environment as ShellEnv;
+
 use function func_get_args;
 use function function_exists;
 use function getenv;
@@ -50,10 +52,26 @@ use const true;
  *
  * @package Inane\Cli
  *
- * @version 0.11.5
+ * @version 0.11.6
  */
 class Cli {
     public const VERSION = '0.11.5';
+
+    /**
+     * Get Shell Environment
+	 * 
+	 * - None
+	 * - Interactive
+	 * - NonInteractive
+     *
+     * @return \Inane\Cli\Shell\Environment
+     */
+    public static function shellEnv(): ShellEnv {
+		if (Streams::isTty()) return ShellEnv::Interactive;
+		else if (php_sapi_name() == 'cli') return ShellEnv::NonInteractive;
+
+        return ShellEnv::None;
+    }
 
     /**
      * Is shell environment

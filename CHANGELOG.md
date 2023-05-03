@@ -4,6 +4,11 @@
 
 ## History
 
+### current: 0.14.1-dev (2023 May 03)
+
+ - new: `Cli::shellEnv` return enum Environment type: none, interactive, non-interactive
+ - update: minor tweaks, improvements and updates
+
 ### 0.14.0 (2022 Dec 21)
 
  - new: `Pencil::format` returns colour string without outputting it

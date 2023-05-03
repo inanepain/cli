@@ -25,39 +25,47 @@ declare(strict_types=1);
 namespace Inane\Cli\Arguments;
 
 use Inane\Cli\Memoize;
+use Stringable;
+
+use function array_pop;
+use function array_push;
+use function strlen;
+use function strncmp;
+use function substr;
 
 /**
  * Argument
  *
  * Represents an Argument or a value and provides several helpers related to parsing an argument list.
  *
- * @version 1.0.0
+ * @version 1.0.1
  */
-class Argument extends Memoize {
+class Argument extends Memoize implements Stringable {
 	/**
 	 * The canonical name of this argument, used for aliasing.
 	 *
 	 * @param string
 	 */
-	public $key;
+	public string $key;
 
-	private $_argument;
-	private $_raw;
+	private string $argument;
+	private string $raw;
 
 	/**
-	 * @param string  $argument  The raw argument, leading dashes included.
+	 * Argument Constructor
+	 * 
+	 * @param null|string  $argument  The raw argument, leading dashes included.
 	 */
-	public function __construct($argument) {
-		$this->_raw = $argument;
-		$this->key = &$this->_argument;
+	public function __construct(?string $argument) {
+		$this->raw = $argument ?? '';
+		
+		$this->argument = match(true) {
+			$this->isLong => substr($this->raw, 2),
+			$this->isShort => substr($this->raw, 1),
+			default => $this->raw,
+		};
 
-		if ($this->isLong) {
-			$this->_argument = substr($this->_raw, 2);
-		} else if ($this->isShort) {
-			$this->_argument = substr($this->_raw, 1);
-		} else {
-			$this->_argument = $this->_raw;
-		}
+		$this->key = &$this->argument;
 	}
 
 	/**
@@ -65,8 +73,8 @@ class Argument extends Memoize {
 	 *
 	 * @return string
 	 */
-	public function __toString() {
-		return (string)$this->_raw;
+	public function __toString(): string {
+		return $this->raw;
 	}
 
 	/**
@@ -74,8 +82,8 @@ class Argument extends Memoize {
 	 *
 	 * @return string
 	 */
-	public function value() {
-		return $this->_argument;
+	public function value(): string {
+		return $this->argument;
 	}
 
 	/**
@@ -83,8 +91,8 @@ class Argument extends Memoize {
 	 *
 	 * @return mixed
 	 */
-	public function raw() {
-		return $this->_raw;
+	public function raw(): mixed {
+		return $this->raw;
 	}
 
 	/**
@@ -92,8 +100,8 @@ class Argument extends Memoize {
 	 *
 	 * @return bool
 	 */
-	public function isLong() {
-		return (0 == strncmp($this->_raw ?? '', '--', 2));
+	public function isLong(): bool {
+		return (0 == strncmp($this->raw, '--', 2));
 	}
 
 	/**
@@ -101,8 +109,8 @@ class Argument extends Memoize {
 	 *
 	 * @return bool
 	 */
-	public function isShort() {
-		return !$this->isLong && (0 == strncmp($this->_raw ?? '', '-', 1));
+	public function isShort(): bool {
+		return !$this->isLong && (0 == strncmp($this->raw, '-', 1));
 	}
 
 	/**
@@ -110,7 +118,7 @@ class Argument extends Memoize {
 	 *
 	 * @return bool
 	 */
-	public function isArgument() {
+	public function isArgument(): bool {
 		return $this->isShort() || $this->isLong();
 	}
 
@@ -119,7 +127,7 @@ class Argument extends Memoize {
 	 *
 	 * @return bool
 	 */
-	public function isValue() {
+	public function isValue(): bool {
 		return !$this->isArgument;
 	}
 
@@ -129,8 +137,8 @@ class Argument extends Memoize {
 	 *
 	 * @return bool
 	 */
-	public function canExplode() {
-		return $this->isShort && strlen($this->_argument) > 1;
+	public function canExplode(): bool {
+		return $this->isShort && strlen($this->argument) > 1;
 	}
 
 	/**
@@ -139,15 +147,14 @@ class Argument extends Memoize {
 	 *
 	 * @return array
 	 */
-	public function exploded() {
+	public function exploded(): array {
 		$exploded = [];
 
-		for ($i = strlen($this->_argument); $i > 0; $i--) {
-			array_push($exploded, $this->_argument[$i - 1]);
-		}
+		for ($i = strlen($this->argument); $i > 0; $i--)
+			array_push($exploded, $this->argument[$i - 1]);
 
-		$this->_argument = array_pop($exploded);
-		$this->_raw      = '-' . $this->_argument;
+		$this->argument = array_pop($exploded);
+		$this->raw      = '-' . $this->argument;
 		return $exploded;
 	}
 }
