@@ -17,7 +17,7 @@ require 'common.php';
 $strict = in_array('--strict', $_SERVER['argv']);
 $arguments = new \Inane\Cli\Arguments(compact('strict'));
 
-$arguments->addFlag(['verbose', 'v'], 'Turn on verbose output');
+$arguments->addFlag(['verbose', 'V'], ['description' => 'Turn on verbose output', 'stackable' => true]);
 $arguments->addFlag('version', 'Display the version');
 $arguments->addFlag(['quiet', 'q'], 'Disable all output');
 $arguments->addFlag(['help', 'h'], 'Show this help screen');

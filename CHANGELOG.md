@@ -4,6 +4,12 @@
 
 ## History
 
+### current: 0.14.2-dev (2023 May xx)
+
+ - fix: `Lexer::unshift` return type
+ - fix: `Arguments::parseFlag` not incrementing stackable flags
+ - other minor updates and fixes (mainly to code comments & variable typing)
+
 ### 0.14.1 (2023 May 03)
 
  - new: `Cli::shellEnv` return enum Environment type: none, interactive, non-interactive

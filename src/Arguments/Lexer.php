@@ -30,7 +30,7 @@ use Inane\Cli\Memoize;
  *
  * @package Inane\Cli\Arguments
  *
- * @version 1.0.0
+ * @version 1.0.1
  */
 class Lexer extends Memoize implements \Iterator {
 	private array $_items = [];
@@ -105,10 +105,12 @@ class Lexer extends Memoize implements \Iterator {
 
 	/**
 	 * Push an element to the front of the stack.
-	 *
-	 * @param mixed  $item  The value to set
+	 * 
+	 * @param mixed $item The value to set
+	 * 
+	 * @return void 
 	 */
-	public function unshift($item): mixed {
+	public function unshift(mixed $item): void {
 		array_unshift($this->_items, $item);
 		$this->_length += 1;
 	}
