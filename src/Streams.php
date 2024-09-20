@@ -39,7 +39,7 @@ use function is_array;
 use function is_numeric;
 use function is_resource;
 use function is_string;
-use function posix_isatty;
+use function stream_isatty;
 use function preg_replace;
 use function preg_split;
 use function property_exists;
@@ -62,7 +62,7 @@ use const true;
  *
  * @package Inane\Cli
  *
- * @version 1.0.3
+ * @version 1.0.4
  */
 class Streams {
 	protected static $out = STDOUT;
@@ -80,7 +80,7 @@ class Streams {
 	 * @return bool
 	 */
 	static public function isTty(): bool {
-		return (function_exists('posix_isatty') && posix_isatty(static::$out));
+		return (function_exists('stream_isatty') && stream_isatty(static::$out));
 	}
 
 	/**
@@ -138,10 +138,9 @@ class Streams {
 	/**
 	 * Pads `$msg` to the width of the shell before passing to `cli\out`.
 	 *
-	 * @see cli\out()
+	 * @see \Inane\Cli\out()
 	 *
 	 * @param string  $msg  The message to pad and pass on.
-	 * @param mixed   ...   Either scalar arguments or a single array argument.
 	 *
 	 * @return void
 	 */
@@ -154,7 +153,7 @@ class Streams {
 	 * Prints a message to `STDOUT` with a newline appended. See `\Inane\Cli\Cli::out` for
 	 * more documentation.
 	 *
-	 * @see cli\out()
+	 * @see \Inane\Cli\out()
 	 */
 	public static function line($msg = '') {
 		// func_get_args is empty if no args are passed even with the default above.
@@ -237,9 +236,9 @@ class Streams {
 
 		while (true) {
 			static::out($question . $marker);
-			$line = static::input(null, $hide);
+			$line = static::input(null, $hide) ?? '';
 
-			if (trim($line) !== '')
+			if ($line && trim($line) !== '')
 				return $line;
 			if ($default !== false)
 				return $default;

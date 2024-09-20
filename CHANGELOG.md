@@ -4,11 +4,13 @@
 
 ## History
 
-### current: 0.14.2-dev (2023 May xx)
+### current: 0.14.2-dev (2024 Sep xx)
 
  - fix: `Lexer::unshift` return type
  - fix: `Arguments::parseFlag` not incrementing stackable flags
  - other minor updates and fixes (mainly to code comments & variable typing)
+ - switch from `posix_isatty` to `stream_isatty` for better compatibility
+ - windows compatibility improvements
 
 ### 0.14.1 (2023 May 03)
 
