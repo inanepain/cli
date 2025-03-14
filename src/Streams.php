@@ -23,14 +23,12 @@ declare(strict_types=1);
 
 namespace Inane\Cli;
 
-use function array_merge;
 use function array_search;
 use function array_values;
 use function call_user_func_array;
 use function count;
 use function fgets;
 use function fscanf;
-use function func_get_args;
 use function function_exists;
 use function fwrite;
 use function get_resource_type;
@@ -65,11 +63,30 @@ use const true;
  * @version 1.0.4
  */
 class Streams {
+	/**
+	 * @var resource|false $out The output stream, defaulting to STDOUT.
+	 */
 	protected static $out = STDOUT;
+
+	/**
+	 * @var resource|false $in Standard input stream.
+	 */
 	protected static $in = STDIN;
+
+	/**
+	 * @var resource|false $err A static property that holds the STDERR stream.
+	 */
 	protected static $err = STDERR;
 
-	static function _call($func, $args) {
+	/**
+	 * Calls a specified function with the given arguments.
+	 *
+	 * @param string $func The name of the function to call.
+	 * @param array $args The arguments to pass to the function.
+	 *
+	 * @return mixed — the function result, or false on error.
+	 */
+	public static function _call(string $func, array $args): mixed {
 		$method = __CLASS__ . '::' . $func;
 		return call_user_func_array($method, $args);
 	}
@@ -79,7 +96,7 @@ class Streams {
 	 *
 	 * @return bool
 	 */
-	static public function isTty(): bool {
+	public static function isTty(): bool {
 		return (function_exists('stream_isatty') && stream_isatty(static::$out));
 	}
 
@@ -90,31 +107,28 @@ class Streams {
 	 * format {:key}.
 	 *
 	 * @param string   $msg  The message to render.
-	 * @param mixed    ...   Either scalar arguments or a single array argument.
+	 * @param array|string  ...$options Additional options for the output. Either scalar arguments or a single array argument.
 	 *
 	 * @return string  The rendered string.
 	 */
-	public static function render($msg) {
-		$args = func_get_args();
-
+	public static function render(string $msg = '', array|string|int ...$options): string {
 		// No string replacement is needed
-		if (count($args) == 1 || (is_string($args[1]) && '' === $args[1]))
+		if (count($options) == 0)
 			return Colors::shouldColorize() ? Colors::colorize($msg) : $msg;
 
 		// If the first argument is not an array just pass to sprintf
-		if (!is_array($args[1])) {
+		if (!is_array($options[0])) {
 			// Colorize the message first so sprintf doesn't bitch at us
 			if (Colors::shouldColorize())
-				$args[0] = Colors::colorize($args[0]);
+				$msg = Colors::colorize($msg);
 
 			// Escape percent characters for sprintf
-			$args[0] = preg_replace('/(%([^\w]|$))/', "%$1", $args[0]);
+			$msg = preg_replace('/(%([^\w]|$))/', "%$1", $msg);
 
-			return call_user_func_array('sprintf', $args);
+			return sprintf($msg, ...$options);
 		}
 
-		// Here we do named replacement so formatting strings are more understandable
-		foreach ($args[1] as $key => $value)
+		foreach ($options[0] as $key => $value)
 			$msg = str_replace('{:' . $key . '}', $value, $msg);
 
 		return Colors::shouldColorize() ? Colors::colorize($msg) : $msg;
@@ -127,12 +141,15 @@ class Streams {
 	 * @see \Inane\Cli\render()
 	 *
 	 * @param string  $msg  The message to output in `printf` format.
-	 * @param mixed   ...   Either scalar arguments or a single array argument.
+	 * @param array|string  ...$options Additional options for the output. Either scalar arguments or a single array argument.
+	 *
 	 * @return void
 	 *
 	 */
-	public static function out($msg) {
-		fwrite(static::$out, static::_call('render', func_get_args()));
+	public static function out(string $msg = '', array|string|int ...$options): void {
+		fwrite(static::$out, static::render($msg, ...$options));
+		// fwrite(static::$out, static::_call('render', [$msg, $options]));
+		// fwrite(static::$out, static::_call('render', func_get_args()));
 	}
 
 	/**
@@ -141,11 +158,12 @@ class Streams {
 	 * @see \Inane\Cli\out()
 	 *
 	 * @param string  $msg  The message to pad and pass on.
+	 * @param array|string  ...$options Additional options for the output. Either scalar arguments or a single array argument.
 	 *
 	 * @return void
 	 */
-	public static function outPadded($msg) {
-		$msg = static::_call('render', func_get_args());
+	public static function outPadded(string $msg = '', array|string ...$options): void {
+		$msg = static::render($msg, ...$options);
 		static::out(str_pad($msg, \Inane\Cli\Shell::columns()));
 	}
 
@@ -153,31 +171,31 @@ class Streams {
 	 * Prints a message to `STDOUT` with a newline appended. See `\Inane\Cli\Cli::out` for
 	 * more documentation.
 	 *
+	 * @param string        $msg        The message to output in `printf` format. Defaults to an empty string.
+     * @param array|string  ...$options Additional options for the output. Either scalar arguments or a single array argument.
+	 *
 	 * @see \Inane\Cli\out()
 	 */
-	public static function line($msg = '') {
+	public static function line(string $msg = '', array|string|int ...$options): void {
 		// func_get_args is empty if no args are passed even with the default above.
-		$args = array_merge(func_get_args(), ['']);
-		$args[0] .= "\n";
-
-		static::_call('out', $args);
+		// $args = array_merge([$msg], $options, ['']);
+		// $args[0] .= "\n";
+		$options[] = '';
+		static::out($msg . \PHP_EOL, ...$options);
+		// static::_call('out', $args);
 	}
 
 	/**
 	 * Shortcut for printing to `STDERR`. The message and parameters are passed
 	 * through `sprintf` before output.
 	 *
-	 * @param string  $msg  The message to output in `printf` format. With no string,
-	 *                      a newline is printed.
-	 * @param mixed   ...   Either scalar arguments or a single array argument.
+	 * @param string        $msg        The message to output in `printf` format. Defaults to an empty string.
+     * @param array|string  ...$options Additional options for the output. Either scalar arguments or a single array argument.
 	 *
 	 * @return void
 	 */
-	public static function err($msg = '') {
-		// func_get_args is empty if no args are passed even with the default above.
-		$args = array_merge(func_get_args(), ['']);
-		$args[0] .= "\n";
-		fwrite(static::$err, static::_call('render', $args));
+	public static function err(string $msg = '', array|string|int ...$options): void {
+		fwrite(static::$err, static::render($msg . \PHP_EOL, ...$options));
 	}
 
 	/**
