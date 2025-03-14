@@ -4,7 +4,7 @@
 
 ## History
 
-### current: 0.14.2-dev (2025 Mar 14)
+### current: 0.15.0-dev (2025 Mar 14)
 
  - fix: `Lexer::unshift` return type
  - fix: `Arguments::parseFlag` not incrementing stackable flags
@@ -14,6 +14,7 @@
  - update return & param types
  - update code docs
  - simplify inter-class function calls
+ - improved File writing
 
 ### 0.14.1 (2023 May 03)
 
