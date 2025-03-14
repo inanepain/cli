@@ -4,7 +4,7 @@ error_reporting(-1);
 require_once __DIR__ . '/vendor/autoload.php';
 
 
-$args = new cli\Arguments([
+$args = new \Inane\Cli\Arguments([
 	'flags' => [
 		'verbose' => [
 			'description' => 'Turn on verbose mode',
@@ -26,7 +26,7 @@ $args = new cli\Arguments([
 
 try {
     $args->parse();
-} catch (cli\InvalidArguments $e) {
+} catch (\Inane\Cli\Arguments\InvalidArguments $e) {
     echo $e->getMessage() . "\n\n";
 }
 
