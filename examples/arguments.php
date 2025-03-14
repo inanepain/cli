@@ -12,7 +12,7 @@
  * }
  */
 
-require 'common.php';
+ require_once 'common.php';
 
 $strict = in_array('--strict', $_SERVER['argv']);
 $arguments = new \Inane\Cli\Arguments(compact('strict'));

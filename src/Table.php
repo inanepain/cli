@@ -53,11 +53,11 @@ class Table {
 	 *     table are used as the header values.
 	 *  3. Pass nothing and use `setHeaders()` and `addRow()` or `setRows()`.
 	 *
-	 * @param array  $headers  Headers used in this table. Optional.
-	 * @param array  $rows     The rows of data for this table. Optional.
-	 * @param array  $footers  Footers used in this table. Optional.
+	 * @param null|array  $headers  Headers used in this table. Optional.
+	 * @param null|array  $rows     The rows of data for this table. Optional.
+	 * @param null|array  $footers  Footers used in this table. Optional.
 	 */
-	public function __construct(array $headers = null, array $rows = null, array $footers = null) {
+	public function __construct(?array $headers = null, ?array $rows = null, ?array $footers = null) {
 		if (!empty($headers)) {
 			// If all the rows is given in $headers we use the keys from the
 			// first row for the header values

@@ -52,23 +52,28 @@ use const true;
  *
  * @package Inane\Cli
  *
- * @version 0.11.6
+ * @version 0.12.0
  */
 class Cli {
-    public const VERSION = '0.11.5';
+    /**
+     * The current version of the CLI application.
+     *
+     * @var string VERSION The version number of the CLI application.
+     */
+    public const VERSION = '0.12.0';
 
     /**
      * Get Shell Environment
-	 * 
-	 * - None
-	 * - Interactive
-	 * - NonInteractive
+     *
+     * - None
+     * - Interactive
+     * - NonInteractive
      *
      * @return \Inane\Cli\Shell\Environment
      */
     public static function shellEnv(): ShellEnv {
-		if (Streams::isTty()) return ShellEnv::Interactive;
-		else if (php_sapi_name() == 'cli') return ShellEnv::NonInteractive;
+        if (Streams::isTty()) return ShellEnv::Interactive;
+        else if (php_sapi_name() == 'cli') return ShellEnv::NonInteractive;
 
         return ShellEnv::None;
     }
@@ -83,13 +88,13 @@ class Cli {
     }
 
     /**
-	 * Is output an interactive terminal
-	 *
-	 * @return bool
-	 */
-	static public function isTty(): bool {
-		return Streams::isTty();
-	}
+     * Is output an interactive terminal
+     *
+     * @return bool
+     */
+    static public function isTty(): bool {
+        return Streams::isTty();
+    }
 
     /**
      * Is PHP built-in server
@@ -118,12 +123,12 @@ class Cli {
      * format {:key}.
      *
      * @param string   $msg  The message to render.
-     * @param mixed    ...   Either scalar arguments or a single array argument.
+     * @param array|string|int  ...$options Additional options for the output. Either scalar arguments or a single array argument.
      *
      * @return string  The rendered string.
      */
-    public static function render($msg) {
-        return Streams::_call('render', func_get_args());
+    public static function render(string $msg = '', array|string|int ...$options): string {
+        return Streams::render($msg, ...$options);
     }
 
     /**
@@ -131,65 +136,73 @@ class Cli {
      * through `sprintf` before output.
      *
      * @param string  $msg  The message to output in `printf` format.
-     * @param mixed   ...   Either scalar arguments or a single array argument.
+     * @param array|string|int  ...$options Additional options for the output. Either scalar arguments or a single array argument.
      *
      * @return void
      *
      * @see \Inane\Cli\render()
      */
-    public static function out(string $msg) {
-        Streams::_call('out', func_get_args());
+    public static function out(string $msg = '', array|string|int ...$options): void {
+        Streams::out($msg, ...$options);
     }
 
     /**
      * Pads `$msg` to the width of the shell before passing to `cli\out`.
      *
      * @param string  $msg  The message to pad and pass on.
-     * @param mixed   ...   Either scalar arguments or a single array argument.
+     * @param array|string|int  ...$options Additional options for the output. Either scalar arguments or a single array argument.
+     *
      * @return void
      * @see cli\out()
      */
-    public static function outPadded($msg) {
-        Streams::_call('outPadded', func_get_args());
+    public static function outPadded(string $msg = '', array|string|int ...$options): void {
+        Streams::outPadded($msg, ...$options);
     }
 
     /**
-     * Prints a message to `STDOUT` with a newline appended. See `\Inane\Cli\Cli::out` for
+     * Outputs a line of text to the CLI.
+     *
+     * Message sent to `STDOUT` with a newline appended. See `\Inane\Cli\Cli::out` for
      * more documentation.
      *
-     * @see cli\out()
+     * @see Cli\out()
+     *
+     * @param string        $msg        The message to output in `printf` format. Defaults to an empty string.
+     * @param array|string|int  ...$options Additional options for the output. Either scalar arguments or a single array argument.
+     *
+     * @return void
      */
-    public static function line($msg = '') {
-        Streams::_call('line', func_get_args());
+    public static function line(string $msg = '', array|string|int ...$options): void {
+        Streams::line($msg, ...$options);
     }
 
     /**
      * Shortcut for printing to `STDERR`. The message and parameters are passed
      * through `sprintf` before output.
      *
-     * @param string  $msg  The message to output in `printf` format. With no string,
-     *                      a newline is printed.
-     * @param mixed   ...   Either scalar arguments or a single array argument.
+     * @param string        $msg        The message to output in `printf` format. Defaults to an empty string.
+     * @param array|string|int  ...$options Additional options for the output. Either scalar arguments or a single array argument.\
+     *
      * @return void
      */
-    public static function err($msg = '') {
-        Streams::_call('err', func_get_args());
+    public static function err(string $msg = '', array|string|int ...$options): void {
+        Streams::err($msg, ...$options);
     }
 
     /**
-	 * get input from terminal
-	 *
-	 * Takes input from `STDIN` in the given format. If an end of transmission
-	 * character is sent (^D), an exception is thrown.
-	 *
-	 * @param null|string	$format		A valid input format. See `fscanf`. If null all input to first newline as string.
+     * get input from terminal
+     *
+     * Takes input from `STDIN` in the given format. If an end of transmission
+     * character is sent (^D), an exception is thrown.
+     *
+     * @param null|string	$format		A valid input format. See `fscanf`. If null all input to first newline as string.
      * @param mixed			$default	Value to return if not an interactive terminal.
-	 * @param bool			$hide		If true will hide what the user types in.
-	 *
-	 * @return mixed		The input with whitespace trimmed.
-	 *
-	 * @throws \Exception	Thrown if ctrl-D (EOT) is sent as input.
-	 */
+     * @param bool			$hide		If true will hide what the user types in.
+     *
+     * @return mixed		The input with whitespace trimmed.
+     *
+     * @throws \Exception	Thrown if ctrl-D (EOT) is sent as input.
+     */
     public static function input(?string $format = null, mixed $default = null, bool $hide = false): mixed {
         return Streams::input(format: $format, hide: $hide, default: $default);
     }
@@ -223,7 +236,7 @@ class Cli {
      * @return string  The users choice.
      * @see      cli\prompt()
      */
-    public static function choose($question, $choice = 'yn', $default = 'n') {
+    public static function choose($question, $choice = 'yn', $default = 'n'): string {
         return Streams::choose($question, $choice, $default);
     }
 
@@ -234,7 +247,7 @@ class Cli {
      * @param bool|null $default   The default choice, in a boolean format.
      * @return bool
      */
-    public static function confirm($question, $default = false) {
+    public static function confirm($question, $default = false): bool {
         if (is_bool($default))
             $default = $default ? 'y' : 'n';
 
@@ -266,9 +279,10 @@ class Cli {
      *
      * @param  string      $str      The string to check.
      * @param  string|bool $encoding Optional. The encoding of the string. Default false.
+     *
      * @return int  Numeric value that represents the string's length
      */
-    public static function safeStrlen($str, $encoding = false) {
+    public static function safeStrlen($str, $encoding = false): int {
         // Allow for selective testing - "1" bit set tests grapheme_strlen(), "2" preg_match_all( '/\X/u' ), "4" mb_strlen(), "other" strlen().
         $test_safe_strlen = getenv('PHP_CLI_TOOLS_TEST_SAFE_STRLEN');
 
@@ -309,9 +323,10 @@ class Cli {
      * @param  int|bool|null $length   Optional, unless $is_width is set. Maximum length of the substring. Default false. Negative not supported.
      * @param  int|bool      $is_width Optional. If set and encoding is UTF-8, $length (which must be specified) is interpreted as spacing width. Default false.
      * @param  string|bool   $encoding Optional. The encoding of the string. Default false.
+     *
      * @return bool|string  False if given unsupported args, otherwise substring of string specified by start and length parameters
      */
-    public static function safeSubstr($str, $start, $length = false, $is_width = false, $encoding = false) {
+    public static function safeSubstr(string $str, int $start, bool|int|null $length = false, bool|int $is_width = false, bool|string $encoding = false): bool|string {
         // Negative $length or $is_width and $length not specified not supported.
         if ($length < 0 || ($is_width && (null === $length || false === $length)))
             return false;
@@ -371,7 +386,7 @@ class Cli {
      *
      * @return string
      */
-    public static function _safeSubstrEaw($str, $length) {
+    public static function _safeSubstrEaw(string $str, int $length): string {
         // Set the East Asian Width regex.
         $eaw_regex = static::getUnicodeRegexs('eaw');
 
@@ -408,9 +423,10 @@ class Cli {
      * @param  string      $string   The string to pad.
      * @param  int         $length   The length to pad it to.
      * @param  string|bool $encoding Optional. The encoding of the string. Default false.
+     *
      * @return string
      */
-    public static function safeStrPad($string, $length, $encoding = false) {
+    public static function safeStrPad(string $string, int $length, bool|string $encoding = false): string {
         $real_length = static::strwidth($string, $encoding);
         $diff = strlen($string) - $real_length;
         $length += $diff;
@@ -423,9 +439,10 @@ class Cli {
      *
      * @param  string      $string   The string to check.
      * @param  string|bool $encoding Optional. The encoding of the string. Default false.
+     *
      * @return int  The string's width.
      */
-    public static function strwidth($string, $encoding = false) {
+    public static function strwidth(string $string, string|bool $encoding = false): int {
         // Set the East Asian Width and Mark regexs.
         list($eaw_regex, $m_regex) = static::getUnicodeRegexs();
 
@@ -466,7 +483,7 @@ class Cli {
      *
      * @return bool
      */
-    public static function canUseIcu() {
+    public static function canUseIcu(): bool {
         static $can_use_icu = null;
 
         if (null === $can_use_icu) {
@@ -482,7 +499,7 @@ class Cli {
      *
      * @return bool
      */
-    public static function canUsePcreX() {
+    public static function canUsePcreX(): bool {
         static $can_use_pcre_x = null;
 
         if (null === $can_use_pcre_x) {
@@ -498,10 +515,11 @@ class Cli {
     /**
      * Get the regexs generated from Unicode data.
      *
-     * @param string $idx Optional. Return a specific regex only. Default null.
+     * @param string|null $idx Optional. Return a specific regex only. Default null.
+     *
      * @return array|string  Returns keyed array if not given $idx or $idx doesn't exist, otherwise the specific regex string.
      */
-    public static function getUnicodeRegexs($idx = null) {
+    public static function getUnicodeRegexs(?string $idx = null): array|string {
         static $eaw_regex; // East Asian Width regex. Characters that count as 2 characters as they're "wide" or "fullwidth". See http://www.unicode.org/reports/tr11/tr11-19.html
         static $m_regex; // Mark characters regex (Unicode property "M") - mark combining "Mc", mark enclosing "Me" and mark non-spacing "Mn" chars that should be ignored for spacing purposes.
 
