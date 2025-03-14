@@ -27,6 +27,10 @@ namespace Inane\Cli;
  * A <strong>Shell</strong> Utility class
  *
  * Offering shell related tasks such as information on width.
+ *
+ * @package Inane\Cli
+ *
+ * @version 1.0.0
  */
 class Shell {
 	/**
@@ -107,7 +111,11 @@ class Shell {
 	 * @param boolean $hidden Will hide/show the next data. Defaults to true.
 	 */
 	static public function hide(bool $hidden = true): void {
-		system('stty ' . ($hidden ? '-echo' : 'echo'));
+		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+			// TODO: Implement for Windows
+		} else {
+			system('stty ' . ($hidden ? '-echo' : 'echo'));
+		}
 	}
 
 	/**

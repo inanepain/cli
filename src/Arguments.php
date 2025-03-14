@@ -57,7 +57,7 @@ use Inane\Stdlib\{
  *
  * @package Inane\Cli
  *
- * @version 1.1.1
+ * @version 1.1.2
  */
 class Arguments implements ArrayAccess, JSONable {
 	protected bool $strict = false;
@@ -339,11 +339,11 @@ class Arguments implements ArrayAccess, JSONable {
 	/**
 	 * Get a flag by primary matcher or any defined aliases.
 	 *
-	 * @param mixed  $flag  Either a string representing the flag or an
-	 *                      cli\arguments\Argument object.
-	 * @return array
+	 * @param mixed  $flag  Either a string representing the flag or an `cli\arguments\Argument` object.
+	 *
+	 * @return null|array
 	 */
-	public function getFlag($flag) {
+	public function getFlag($flag): ?array {
 		if ($flag instanceof Argument) {
 			$obj  = $flag;
 			$flag = $flag->value;
@@ -357,6 +357,8 @@ class Arguments implements ArrayAccess, JSONable {
 			$cache[$flag] = &$settings;
 			return $settings;
 		}
+
+		return null;
 	}
 
 	/**
@@ -380,8 +382,7 @@ class Arguments implements ArrayAccess, JSONable {
 	/**
 	 * Returns true if the given argument is defined as a flag.
 	 *
-	 * @param mixed  $argument  Either a string representing the flag or an
-	 *                          cli\arguments\Argument object.
+	 * @param mixed  $argument  Either a string representing the flag or an `cli\arguments\Argument` object.
 	 *
 	 * @return bool
 	 */
@@ -495,13 +496,20 @@ class Arguments implements ArrayAccess, JSONable {
 		trigger_error('[' . __CLASS__ . '] ' . $message, E_USER_WARNING);
 	}
 
-	private function parseFlag($argument) {
+	/**
+	 * Parse flag
+	 * 
+	 * @param mixed $argument flag options
+	 * 
+	 * @return bool parse success
+	 */
+	private function parseFlag($argument): bool {
 		if (!$this->isFlag($argument)) return false;
 
 		if ($this->isStackable($argument)) {
 			if (!isset($this[$argument])) $this[$argument->key] = 0;
 
-			$this[$argument->key]++;
+			$this[$argument->key] += 1;
 		} else $this[$argument->key] = true;
 
 		return true;
