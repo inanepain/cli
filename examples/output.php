@@ -14,5 +14,5 @@ require_once 'common.php';
 
 \Inane\Cli\Cli::line('  \Inane\Cli\Cli::line forwards to \Inane\Cli\Cli::out for output');
 \Inane\Cli\Cli::line('  It does automatically append a new line');
-\Inane\Cli\Cli::line('  It does accept any number of %s which are then %s to %s for formatting', 'arguments', 'passed', 'sprintf');
+\Inane\Cli\Cli::line("  It does accept any number of %s which are then %s to %s for formatting", 'arguments', 'passed', 'sprintf');
 \Inane\Cli\Cli::line("  Alternatively, {:a} can use an {:b} as the second argument.\n", ['a' => 'you', 'b' => 'array']);
