@@ -60,7 +60,7 @@ use const true;
  *
  * @package Inane\Cli
  *
- * @version 1.0.4
+ * @version 1.1.0
  */
 class Streams {
 	/**

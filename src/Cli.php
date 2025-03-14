@@ -52,7 +52,7 @@ use const true;
  *
  * @package Inane\Cli
  *
- * @version 0.11.6
+ * @version 0.12.0
  */
 class Cli {
     /**
@@ -60,7 +60,7 @@ class Cli {
      *
      * @var string VERSION The version number of the CLI application.
      */
-    public const VERSION = '0.11.5';
+    public const VERSION = '0.12.0';
 
     /**
      * Get Shell Environment
