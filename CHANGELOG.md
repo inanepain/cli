@@ -4,7 +4,11 @@
 
 ## History
 
-### current: 0.15.0-dev (2025 Mar 14)
+### current: 0.16.0-dev (2025 Mar xx)
+
+ - menu: now takes int and string values for menu index
+
+### current: 0.15.0 (2025 Mar 14)
 
  - fix: `Lexer::unshift` return type
  - fix: `Arguments::parseFlag` not incrementing stackable flags
