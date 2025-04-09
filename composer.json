@@ -2,8 +2,8 @@
     "name": "inanepain/cli",
     "description": "Utilities to simplify working with the console.",
     "type": "library",
-    "license": "UNLICENSE",
-    "homepage": "http://vaieen.local:3000/inane/cli",
+    "license": "Unlicense",
+    "homepage": "https://github.com/inanepain/cli",
     "readme": "README.md",
     "authors": [
         {
@@ -14,7 +14,7 @@
     ],
     "support": {
         "email": "philip@cathedral.co.za",
-        "issues": "http://vaieen.local:3000/iane"
+        "issues": "https://github.com/inanepain"
     },
     "keywords": [
         "inane",
