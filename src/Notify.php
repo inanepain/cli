@@ -35,12 +35,12 @@ use Inane\Cli\Streams;
  * of characters to indicate progress is being made.
  */
 abstract class Notify {
-	protected $_current = 0;
-	protected $_first = true;
-	protected $_interval;
-	protected $_message;
-	protected $_start;
-	protected $_timer;
+	protected int $_current = 0;
+	protected bool $_first = true;
+	protected int $_interval;
+	protected string $_message;
+	protected ?int $_start = null;
+	protected ?float $_timer;
 
 	/**
 	 * Instatiates a Notification object.
@@ -48,7 +48,7 @@ abstract class Notify {
 	 * @param string  $msg       The text to display next to the Notifier.
 	 * @param int     $interval  The interval in milliseconds between updates.
 	 */
-	public function __construct($msg, $interval = 100) {
+	public function __construct(string $msg, int $interval = 100) {
 		$this->_message = $msg;
 		$this->_interval = (int)$interval;
 	}
@@ -59,9 +59,10 @@ abstract class Notify {
 	 *
 	 * @abstract
 	 * @param boolean  $finish
+	 *
 	 * @see Notify::tick()
 	 */
-	abstract public function display($finish = false);
+	abstract public function display(bool $finish = false): void;
 
 	/**
 	 * Reset the notifier state so the same instance can be used in multiple loops.
@@ -181,11 +182,12 @@ abstract class Notify {
 	 * and then update the display if enough time has passed since our last tick.
 	 *
 	 * @param int  $increment  The amount to increment by.
+	 *
 	 * @see Notify::increment()
 	 * @see Notify::shouldUpdate()
 	 * @see Notify::display()
 	 */
-	public function tick($increment = 1) {
+	public function tick(int $increment = 1) {
 		$this->increment($increment);
 
 		if ($this->shouldUpdate()) {

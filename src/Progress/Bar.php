@@ -27,8 +27,10 @@ use function intval;
 use function strval;
 
 use Inane\Cli\{
-	Notify,
-	Progress,
+    Colors,
+    Notify,
+    Pencil,
+    Progress,
 	Shell,
 	Streams
 };
@@ -54,6 +56,7 @@ class Bar extends Progress {
 	 *
 	 * @param boolean  $finish  `true` if this was called from
 	 *                          `cli\Notify::finish()`, `false` otherwise.
+	 *
 	 * @see cli\out()
 	 * @see Notify::formatTime()
 	 * @see Notify::elapsed()
@@ -61,7 +64,7 @@ class Bar extends Progress {
 	 * @see Progress::percent()
 	 * @see Shell::columns()
 	 */
-	public function display($finish = false) {
+	public function display(bool $finish = false): void {
 		$_percent = $this->percent();
 
 		$percent = str_pad(strval(floor($_percent * 100)), 3);
@@ -73,13 +76,12 @@ class Bar extends Progress {
 		$timing    = Streams::render($this->_formatTiming, compact('elapsed', 'estimated'));
 
 		$size = Shell::columns();
-		$size -= strlen($msg . $timing);
+		$size -= Colors::width($msg . $timing);
 		if ($size < 0) {
 			$size = 0;
 		}
 
 		$bar = str_repeat($this->_bars[0], intval(floor($_percent * $size))) . $this->_bars[1];
-		// substr is needed to trim off the bar cap at 100%
 		$bar = substr(str_pad($bar, $size, ' '), 0, $size);
 
 		Streams::out($this->_format, compact('msg', 'bar', 'timing'));
@@ -89,11 +91,12 @@ class Bar extends Progress {
 	 * This method augments the base definition from cli\Notify to optionally
 	 * allow passing a new message.
 	 *
-	 * @param int    $increment The amount to increment by.
-	 * @param string $msg       The text to display next to the Notifier. (optional)
+	 * @param int    		$increment The amount to increment by.
+	 * @param null|string	$msg       The text to display next to the Notifier. (optional)
+	 *
 	 * @see Notify::tick()
 	 */
-	public function tick($increment = 1, $msg = null) {
+	public function tick(int $increment = 1, ?string $msg = null) {
 		if ($msg) {
 			$this->_message = $msg;
 		}

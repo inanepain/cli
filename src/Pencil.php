@@ -47,7 +47,7 @@ use Inane\Cli\Pencil\{
  *
  * @package Inane\Cli
  *
- * @version 0.3.0
+ * @version 0.4.0
  */
 class Pencil implements Stringable {
     public const VERSION = '0.1.0';
@@ -132,22 +132,25 @@ class Pencil implements Stringable {
     /**
      * Pad the string to a certain display length.
      *
+     * @since 0.4.0 padString is now optional and defaults to a space.
+     *
      * @param string      $string         The string to pad.
      * @param int         $length         The display length.
+     * @param string      $padString      Note : The pad_string may be truncated if the required number of padding characters can't be evenly divided by the pad_string's length.
      * @param bool        $pre_colourised Optional. Set if the string is pre-colourised. Default false.
      * @param string|bool $encoding       Optional. The encoding of the string. Default false.
      * @param int         $pad_type       Optional. Can be STR_PAD_RIGHT, STR_PAD_LEFT, or STR_PAD_BOTH. If pad_type is not specified it is assumed to be STR_PAD_RIGHT.
      *
      * @return string
      */
-    public static function pad(string $text, int $length, bool $pre_colourised = false, bool|string $encoding = false, int $pad_type = STR_PAD_RIGHT): ?string {
+    public static function pad(string $text, int $length, string $padString = ' ', bool $pre_colourised = false, bool|string $encoding = false, int $pad_type = STR_PAD_RIGHT): ?string {
         $string = static::original($text);
         if (!is_null($string)) {
             $real_length = static::width($text);
             $diff = strlen($text) - $real_length;
             $length += $diff;
 
-            return str_pad("$text", $length, ' ', $pad_type);
+            return str_pad("$text", $length, $padString, $pad_type);
         }
 
         return null;

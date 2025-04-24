@@ -1,10 +1,10 @@
 <?php
 
 error_reporting(-1);
-require_once __DIR__ . '/vendor/autoload.php';
+// require_once __DIR__ . '/vendor/autoload.php';
+require_once 'examples/common.php';
 
-
-$args = new cli\Arguments([
+$args = new \Inane\Cli\Arguments([
 	'flags' => [
 		'verbose' => [
 			'description' => 'Turn on verbose mode',
@@ -21,12 +21,13 @@ $args = new cli\Arguments([
 			'aliases'     => ['u']
 		]
 	],
-	'strict' => true
+	'strict' => true,
 ]);
 
 try {
     $args->parse();
-} catch (cli\InvalidArguments $e) {
+	echo $args->getHelpScreen();
+} catch (\Inane\Cli\Arguments\InvalidArguments $e) {
     echo $e->getMessage() . "\n\n";
 }
 

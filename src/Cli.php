@@ -261,15 +261,17 @@ class Cli {
      * or objects with a `__toString()` method.
      *
      * @param array  $items   The list of items the user can choose from.
-     * @param string $default The index of the default item.
+     * @param int|string|false|null $default The index of the default item.
      * @param string $title   The message displayed to the user when prompted.
      * @param int     $start    Optional start value for menu. default 0, some people prefer 1.
-     * @return string  The index of the chosen item.
+     *
+     * @return int|string|false  The index of the chosen item.
+     *
      * @see cli\line()
      * @see cli\input()
      * @see cli\err()
      */
-    public static function menu(array $items, ?string $default = null, string $title = 'Choose an item', int $start = 0): string {
+    public static function menu(array $items, int|string|false|null $default = null, string $title = 'Choose an item', int $start = 0): int|string|false {
         return Streams::menu($items, $default, $title, $start);
     }
 
