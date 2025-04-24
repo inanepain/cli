@@ -4,13 +4,13 @@
 
 ## History
 
-### current: 0.16.0-dev (2025 Mar xx)
+### 0.16.0 (2025 Apr 25)
 
  - menu  : now takes int and string values for menu index
  - update: `Pencil::pad` now has a padString argument
  - update: `Notify` improved parametar types
 
-### current: 0.15.0 (2025 Mar 14)
+### 0.15.0 (2025 Mar 14)
 
  - fix: `Lexer::unshift` return type
  - fix: `Arguments::parseFlag` not incrementing stackable flags
