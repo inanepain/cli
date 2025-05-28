@@ -3,21 +3,23 @@
 /**
  * Inane: Cli
  *
- * Command Line Tools
+ * Utilities to simplify working with the console.
+ *
+ * $Id$
+ * $Date$
  *
  * PHP version 8.1
  *
- * @package Inane\Cli
+ * @package inanepain\cli
  * @category console
  *
  * @author    	James Logsdon <dwarf@girsbrain.org>
  * @author		Philip Michael Raab<peep@inane.co.za>
  *
  * @license 	UNLICENSE
- * @license 	https://github.com/inanepain/cli/raw/develop/UNLICENSE UNLICENSE
+ * @license 	https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $Id$
- * $Date$
+ * @version $version
  */
 
 declare(strict_types=1);
@@ -26,7 +28,6 @@ namespace Inane\Cli;
 
 use Inane\Cli\Shell\Environment as ShellEnv;
 
-use function func_get_args;
 use function function_exists;
 use function getenv;
 use function grapheme_strlen;
@@ -49,8 +50,6 @@ use const true;
 
 /**
  * Cli
- *
- * @package Inane\Cli
  *
  * @version 0.12.0
  */
@@ -211,16 +210,20 @@ class Cli {
      * Displays an input prompt. If no default value is provided the prompt will
      * continue displaying until input is received.
      *
-     * @param string  $question The question to ask the user.
-     * @param string  $default  A default value if the user provides no input.
-     * @param string  $marker   A string to append to the question and default value on display.
-     * @param boolean $hide     If the user input should be hidden
+     * $default:
+	 * - `null`			if no input received a `null` is returned.
+	 * - `false`		the prompt will continue displaying until input is received.
      *
-     * @return string  The users input.
+     * @param string            $question The question to ask the user.
+     * @param null|false|string $default  A default value if the user provides no input.
+     * @param string            $marker   A string to append to the question and default value on display.
+     * @param boolean           $hide     If the user input should be hidden
+     *
+     * @return null|string  The users input or the default value or `null` if no input was received.
      *
      * @see cli\input()
      */
-    public static function prompt(string $question, bool|string $default = false, string $marker = ': ', bool $hide = false) {
+    public static function prompt(string $question, null|false|string $default = null, string $marker = ': ', bool $hide = false): string|null {
         return Streams::prompt($question, $default, $marker, $hide);
     }
 
@@ -229,14 +232,15 @@ class Cli {
      * questions (which this function defaults too).
      *
      * @param string      $question   The question to ask the user.
-     * @param string      $choice
-     * @param string|null $default    The default choice. NULL if a default is not allowed.
+     * @param string      $choice     A string of characters allowed as a response. Case is ignored.
+     * @param string      $default    The default choice.
+     *
      * @internal param string $valid  A string of characters allowed as a response. Case
      *                                is ignored.
      * @return string  The users choice.
      * @see      cli\prompt()
      */
-    public static function choose($question, $choice = 'yn', $default = 'n'): string {
+    public static function choose(string $question, string $choice = 'yn', string $default = 'n'): string {
         return Streams::choose($question, $choice, $default);
     }
 
@@ -244,10 +248,10 @@ class Cli {
      * Does the same as {@see choose()}, but always asks yes/no and returns a boolean
      *
      * @param string    $question  The question to ask the user.
-     * @param bool|null $default   The default choice, in a boolean format.
+     * @param bool      $default   The default choice, `true` for *Yes* and `false` for *No*.
      * @return bool
      */
-    public static function confirm($question, $default = false): bool {
+    public static function confirm(string $question, bool $default = false): bool {
         if (is_bool($default))
             $default = $default ? 'y' : 'n';
 

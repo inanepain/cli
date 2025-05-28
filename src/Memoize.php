@@ -3,20 +3,23 @@
 /**
  * Inane: Cli
  *
- * Command Line Tools
+ * Utilities to simplify working with the console.
+ *
+ * $Id$
+ * $Date$
  *
  * PHP version 8.1
  *
- * @package Inane\Cli
+ * @package inanepain\cli
+ * @category console
  *
  * @author    	James Logsdon <dwarf@girsbrain.org>
  * @author		Philip Michael Raab<peep@inane.co.za>
  *
  * @license 	UNLICENSE
- * @license 	https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ * @license 	https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $Id$
- * $Date$
+ * @version $version
  */
 
 declare(strict_types=1);
@@ -25,24 +28,22 @@ namespace Inane\Cli;
 
 /**
  * Memo cache
- * 
+ *
  * @version 0.1.0
- * 
- * @package Inane\Cli
  */
 abstract class Memoize {
 	/**
 	 * Cache
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $memoCache = [];
 
 	/**
 	 * Magic Getter
-	 * 
+	 *
 	 * @param mixed $name memo to get
-	 * @return mixed 
+	 * @return mixed
 	 */
 	public function __get($name) {
 		if (isset($this->memoCache[$name]))
@@ -62,10 +63,10 @@ abstract class Memoize {
 
 	/**
 	 * UnMemo
-	 * 
+	 *
 	 * @param string|true $name memo to remove or use `true` to reset cache completely
-	 * 
-	 * @return void 
+	 *
+	 * @return void
 	 */
 	protected function _unmemo(string|true $name) {
 		if ($name === true)

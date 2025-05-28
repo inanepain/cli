@@ -1,21 +1,25 @@
 <?php
+
 /**
  * Inane: Cli
  *
- * Command Line Tools
+ * Utilities to simplify working with the console.
+ *
+ * $Id$
+ * $Date$
  *
  * PHP version 8.1
  *
- * @package Inane\Cli
+ * @package inanepain\cli
+ * @category console
  *
  * @author    	James Logsdon <dwarf@girsbrain.org>
  * @author		Philip Michael Raab<peep@inane.co.za>
  *
  * @license 	UNLICENSE
- * @license 	https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
+ * @license 	https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $Id$
- * $Date$
+ * @version $version
  */
 
 declare(strict_types=1);
@@ -45,7 +49,7 @@ class Spinner extends Notify {
 	 * @see Notify::formatTime()
 	 * @see Notify::speed()
 	 */
-	public function display($finish = false) {
+	public function display(bool $finish = false): void {
 		$msg = $this->_message;
 		$idx = $this->_iteration++ % strlen($this->_chars);
 		$char = $this->_chars[$idx];
