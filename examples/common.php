@@ -1,5 +1,8 @@
 <?php
 
+use Inane\Cli\Pencil;
+use Inane\Cli\Pencil\Colour;
+
 if (php_sapi_name() != 'cli') {
 	die('Must run from command line');
 }
@@ -30,7 +33,8 @@ function test_notify_msg(Inane\Cli\Notify $notify, $cycle = 1000000, $sleep = nu
 		// Sleep before tick to simulate time-intensive work and give time
 		// for the initial message to display before it is changed
 		if ($sleep) usleep($sleep);
-		$msg = sprintf('  Finished step %d', $i + 1);
+		$blue = new Pencil(Colour::Blue);
+		$msg = sprintf($blue . '  Finished step %d', $i + 1);
 		$notify->tick(1, $msg);
 	}
 	$notify->finish();

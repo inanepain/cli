@@ -79,7 +79,7 @@ class Bar extends Progress {
 		$timing    = Streams::render($this->_formatTiming, compact('elapsed', 'estimated'));
 
 		$size = Shell::columns();
-		$size -= Colors::width($msg . $timing);
+		$size -= Pencil::width($msg . $timing) ?? Colors::width($msg . $timing);
 		if ($size < 0) {
 			$size = 0;
 		}
