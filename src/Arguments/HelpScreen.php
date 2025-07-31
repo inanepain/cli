@@ -121,7 +121,7 @@ class HelpScreen implements Stringable {
 			array_push($help, $formatted);
 		}
 
-		return implode(PHP_EOL, $help);;
+		return implode(PHP_EOL, $help);
 	}
 
 	private function _consume($options): array {
