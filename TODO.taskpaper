@@ -1,4 +1,4 @@
-Inane\Cli:
+inanepain\Cli:
 	Cli:
 		output buffering:
 			Out put buffered until flushed or cleared.
