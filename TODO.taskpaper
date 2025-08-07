@@ -1,4 +1,4 @@
-inanepain\Cli:
+inanepain\cli:
 	Cli:
 		output buffering:
 			Out put buffered until flushed or cleared.
