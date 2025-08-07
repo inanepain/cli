@@ -1,5 +1,5 @@
 inanepain\cli:
-  Cli:
+  cli:
     output buffering:
       Out put buffered until flushed or cleared.
       - buffered writer
