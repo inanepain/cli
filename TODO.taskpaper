@@ -1,6 +1,6 @@
 inanepain\cli:
-	Cli:
-		output buffering:
+  Cli:
+    output buffering:
 			Out put buffered until flushed or cleared.
 			- buffered writer
 				- flush
