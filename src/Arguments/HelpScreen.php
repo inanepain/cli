@@ -8,16 +8,15 @@
  * $Id$
  * $Date$
  *
- * PHP version 8.1
+ * PHP version 8.4
  *
- * @package inanepain\cli
- * @category console
+ * @author  James Logsdon <dwarf@girsbrain.org>
+ * @author  Philip Michael Raab<philip@cathedral.co.za>
+ * @package inanepain\ cli
+ * @category cli
  *
- * @author    	James Logsdon <dwarf@girsbrain.org>
- * @author		Philip Michael Raab<peep@inane.co.za>
- *
- * @license 	UNLICENSE
- * @license 	https://unlicense.org/UNLICENSE UNLICENSE
+ * @license UNLICENSE
+ * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
  * @version $version
  */
