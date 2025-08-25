@@ -12,13 +12,13 @@
  *
  * @author  James Logsdon <dwarf@girsbrain.org>
  * @author  Philip Michael Raab<philip@cathedral.co.za>
- * @package inanepain\ cli
+ * @package inanepain\cli
  * @category cli
  *
  * @license UNLICENSE
  * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $version
+ * _version_ $version
  */
 
 namespace Inane\Cli\Tree;
@@ -27,13 +27,11 @@ namespace Inane\Cli\Tree;
  * The ASCII renderer renders trees with ASCII lines.
  */
 class Ascii extends Renderer {
-
     /**
      * @param array $tree
      * @return string
      */
-    public function render(array $tree)
-    {
+    public function render(array $tree) {
         $output = '';
 
         $treeIterator = new \RecursiveTreeIterator(
@@ -41,12 +39,10 @@ class Ascii extends Renderer {
             \RecursiveTreeIterator::SELF_FIRST
         );
 
-        foreach ($treeIterator as $val)
-        {
+        foreach ($treeIterator as $val) {
             $output .= $val . "\n";
         }
 
         return $output;
     }
-
 }

@@ -12,13 +12,13 @@
  *
  * @author  James Logsdon <dwarf@girsbrain.org>
  * @author  Philip Michael Raab<philip@cathedral.co.za>
- * @package inanepain\ cli
+ * @package inanepain\cli
  * @category cli
  *
  * @license UNLICENSE
  * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $version
+ * _version_ $version
  */
 
 declare(strict_types=1);
@@ -210,8 +210,8 @@ class Cli {
      * continue displaying until input is received.
      *
      * $default:
-	 * - `null`			if no input received a `null` is returned.
-	 * - `false`		the prompt will continue displaying until input is received.
+     * - `null`			if no input received a `null` is returned.
+     * - `false`		the prompt will continue displaying until input is received.
      *
      * @param string            $question The question to ask the user.
      * @param null|false|string $default  A default value if the user provides no input.

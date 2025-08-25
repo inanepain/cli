@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Sample invocations:
  *
@@ -12,7 +13,7 @@
  * }
  */
 
- require_once 'common.php';
+require_once 'common.php';
 
 $strict = in_array('--strict', $_SERVER['argv']);
 $arguments = new \Inane\Cli\Arguments(compact('strict'));
@@ -24,11 +25,13 @@ $arguments->addFlag(['help', 'h'], 'Show this help screen');
 
 $arguments->addOption(['cache', 'C'], [
 	'default'     => getcwd(),
-	'description' => 'Set the cache directory']);
+	'description' => 'Set the cache directory'
+]);
 
 $arguments->addOption(['name', 'n'], [
 	'default'     => 'Sadira',
-	'description' => 'Set a name with a really long description and a default so we can see what line wrapping looks like which is probably a good idea']);
+	'description' => 'Set a name with a really long description and a default so we can see what line wrapping looks like which is probably a good idea'
+]);
 
 $arguments->parse();
 

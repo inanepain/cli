@@ -12,13 +12,13 @@
  *
  * @author  James Logsdon <dwarf@girsbrain.org>
  * @author  Philip Michael Raab<philip@cathedral.co.za>
- * @package inanepain\ cli
+ * @package inanepain\cli
  * @category cli
  *
  * @license UNLICENSE
  * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $version
+ * _version_ $version
  */
 
 declare(strict_types=1);
@@ -59,7 +59,6 @@ class Beep implements Stringable {
          */
         protected bool $visualBeep = true,
     ) {
-
     }
 
     /**

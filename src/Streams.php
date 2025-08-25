@@ -12,13 +12,13 @@
  *
  * @author  James Logsdon <dwarf@girsbrain.org>
  * @author  Philip Michael Raab<philip@cathedral.co.za>
- * @package inanepain\ cli
+ * @package inanepain\cli
  * @category cli
  *
  * @license UNLICENSE
  * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $version
+ * _version_ $version
  */
 
 declare(strict_types=1);
@@ -172,7 +172,7 @@ class Streams {
 	 * more documentation.
 	 *
 	 * @param string        $msg        The message to output in `printf` format. Defaults to an empty string.
-     * @param array|string  ...$options Additional options for the output. Either scalar arguments or a single array argument.
+	 * @param array|string  ...$options Additional options for the output. Either scalar arguments or a single array argument.
 	 *
 	 * @see \Inane\Cli\out()
 	 */
@@ -190,7 +190,7 @@ class Streams {
 	 * through `sprintf` before output.
 	 *
 	 * @param string        $msg        The message to output in `printf` format. Defaults to an empty string.
-     * @param array|string  ...$options Additional options for the output. Either scalar arguments or a single array argument.
+	 * @param array|string  ...$options Additional options for the output. Either scalar arguments or a single array argument.
 	 *
 	 * @return void
 	 */
@@ -333,7 +333,6 @@ class Streams {
 
 				if ($line < 0 || $line >= count($map))
 					static::err('Invalid menu selection: out of range');
-
 			} else if (isset($default))
 				return $default;
 		}

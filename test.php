@@ -25,10 +25,10 @@ $args = new \Inane\Cli\Arguments([
 ]);
 
 try {
-    $args->parse();
+	$args->parse();
 	echo $args->getHelpScreen();
 } catch (\Inane\Cli\Arguments\InvalidArguments $e) {
-    echo $e->getMessage() . "\n\n";
+	echo $e->getMessage() . "\n\n";
 }
 
 print_r($args->getArguments());

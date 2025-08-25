@@ -12,13 +12,13 @@
  *
  * @author  James Logsdon <dwarf@girsbrain.org>
  * @author  Philip Michael Raab<philip@cathedral.co.za>
- * @package inanepain\ cli
+ * @package inanepain\cli
  * @category cli
  *
  * @license UNLICENSE
  * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $version
+ * _version_ $version
  */
 
 declare(strict_types=1);
@@ -29,7 +29,6 @@ namespace Inane\Cli;
  * The `Tree` class is used to display data in a tree-like format.
  */
 class Tree {
-
     protected $_renderer;
     protected $_data = [];
 

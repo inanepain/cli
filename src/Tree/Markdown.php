@@ -12,13 +12,13 @@
  *
  * @author  James Logsdon <dwarf@girsbrain.org>
  * @author  Philip Michael Raab<philip@cathedral.co.za>
- * @package inanepain\ cli
+ * @package inanepain\cli
  * @category cli
  *
  * @license UNLICENSE
  * @license https://unlicense.org/UNLICENSE UNLICENSE
  *
- * @version $version
+ * _version_ $version
  */
 
 namespace Inane\Cli\Tree;
@@ -37,10 +37,8 @@ class Markdown extends Renderer {
     /**
      * @param int $padding Optional. Default 2.
      */
-    function __construct($padding = null)
-    {
-        if ($padding)
-        {
+    function __construct($padding = null) {
+        if ($padding) {
             $this->_padding = $padding;
         }
     }
@@ -52,15 +50,12 @@ class Markdown extends Renderer {
      * @param int $level Optional
      * @return string
      */
-    public function render(array $tree, $level = 0)
-    {
+    public function render(array $tree, $level = 0) {
         $output = '';
 
-        foreach ($tree as $label => $next)
-        {
+        foreach ($tree as $label => $next) {
 
-            if (is_string($next))
-            {
+            if (is_string($next)) {
                 $label = $next;
             }
 
@@ -68,14 +63,11 @@ class Markdown extends Renderer {
             $output .= sprintf("%s- %s\n", str_repeat(' ', $level * $this->_padding), $label);
 
             // Next level
-            if (is_array($next))
-            {
+            if (is_array($next)) {
                 $output .= $this->render($next, $level + 1);
             }
-
         }
 
         return $output;
     }
-
 }
