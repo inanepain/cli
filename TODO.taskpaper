@@ -1,4 +1,5 @@
-inanepain\cli:
+inanepain/cli:
+  Utilities to simplify working with the console.
   cli:
     output buffering:
       Out put buffered until flushed or cleared.
