@@ -3,20 +3,22 @@
 /**
  * Inane: Cli
  *
- * Command Line Tools
+ * Utilities to simplify working with the console.
  *
- * PHP version 8.1
- *
- * @package Inane\Cli
- *
- * @author    	James Logsdon <dwarf@girsbrain.org>
- * @author		Philip Michael Raab<peep@inane.co.za>
- *
- * @license 	UNLICENSE
- * @license 	https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
- *
- * @version $Id$
+ * $Id$
  * $Date$
+ *
+ * PHP version 8.4
+ *
+ * @author  James Logsdon <dwarf@girsbrain.org>
+ * @author  Philip Michael Raab<philip@cathedral.co.za>
+ * @package inanepain\cli
+ * @category cli
+ *
+ * @license UNLICENSE
+ * @license https://unlicense.org/UNLICENSE UNLICENSE
+ *
+ * _version_ $version
  */
 
 declare(strict_types=1);
@@ -57,8 +59,6 @@ use const true;
 
 /**
  * Streams
- *
- * @package Inane\Cli
  *
  * @version 1.1.0
  */
@@ -172,7 +172,7 @@ class Streams {
 	 * more documentation.
 	 *
 	 * @param string        $msg        The message to output in `printf` format. Defaults to an empty string.
-     * @param array|string  ...$options Additional options for the output. Either scalar arguments or a single array argument.
+	 * @param array|string  ...$options Additional options for the output. Either scalar arguments or a single array argument.
 	 *
 	 * @see \Inane\Cli\out()
 	 */
@@ -190,7 +190,7 @@ class Streams {
 	 * through `sprintf` before output.
 	 *
 	 * @param string        $msg        The message to output in `printf` format. Defaults to an empty string.
-     * @param array|string  ...$options Additional options for the output. Either scalar arguments or a single array argument.
+	 * @param array|string  ...$options Additional options for the output. Either scalar arguments or a single array argument.
 	 *
 	 * @return void
 	 */
@@ -240,20 +240,23 @@ class Streams {
 	 *
 	 * @see cli\input()
 	 *
-	 * @param string      $question The question to ask the user.
-	 * @param bool|string $default  A default value if the user provides no input.
-	 * @param string      $marker   A string to append to the question and default value
-	 *                              on display.
-	 * @param boolean     $hide     Optionally hides what the user types in.
+	 * $default:
+	 * - `null`			if no input received a `null` is returned.
+	 * - `false`		the prompt will continue displaying until input is received.
 	 *
-	 * @return string  The users input.
+	 * @param string      	    $question The question to ask the user.
+	 * @param null|false|string $default  A default value if the user provides no input.
+	 * @param string     	    $marker   A string to append to the question and default value on display.
+	 * @param boolean   	    $hide     Optionally hides what the user types in.
+	 *
+	 * @return null|string  The users input or the default value or `null` if no input was received.
 	 */
-	public static function prompt($question, $default = null, $marker = ': ', $hide = false) {
+	public static function prompt(string $question, null|false|string $default = null, string $marker = ': ', bool $hide = false): null|string {
 		if ($default && strpos($question, '[') === false)
-			$question .= ' [' . $default . ']';
+			$question .= " [$default]";
 
 		while (true) {
-			static::out($question . $marker);
+			static::out("$question$marker");
 			$line = static::input(null, $hide) ?? '';
 
 			if ($line && trim($line) !== '')
@@ -271,13 +274,11 @@ class Streams {
 	 *
 	 * @param string  $question  The question to ask the user.
 	 * @param string  $choice    A string of characters allowed as a response. Case is ignored.
-	 * @param string  $default   The default choice. NULL if a default is not allowed.
+	 * @param string  $default   The default choice.
 	 *
 	 * @return string  The users choice.
 	 */
-	public static function choose($question, $choice = 'yn', $default = 'n') {
-		if (!is_string($choice)) $choice = implode('', $choice);
-
+	public static function choose(string $question, string $choice = 'yn', string $default = 'n'): string {
 		// Make every choice character lowercase except the default
 		$choice = str_ireplace($default, strtoupper($default), strtolower($choice));
 		// Separate each choice with a forward-slash
@@ -319,7 +320,7 @@ class Streams {
 		foreach ($map as $idx => $item)
 			static::line('  %d. %s', $idx + $start, (string)$item);
 
-		static::line();
+		// static::line();
 
 		while (true) {
 			fwrite(static::$out, sprintf('%s: ', $title));
@@ -332,7 +333,6 @@ class Streams {
 
 				if ($line < 0 || $line >= count($map))
 					static::err('Invalid menu selection: out of range');
-
 			} else if (isset($default))
 				return $default;
 		}

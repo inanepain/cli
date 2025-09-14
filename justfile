@@ -1,4 +1,4 @@
-# inanepain/datetime
+# inanepain/cli
 # version: $Id$
 # date: $Date$
 

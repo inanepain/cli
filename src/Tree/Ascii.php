@@ -1,13 +1,24 @@
 <?php
+
 /**
- * PHP Command Line Tools
+ * Inane: Cli
  *
- * This source file is subject to the MIT license that is bundled
- * with this package in the file LICENSE.
+ * Utilities to simplify working with the console.
  *
- * @author    Ryan Sullivan <rsullivan@connectstudios.com>
- * @copyright 2010 James Logsdom (http://girsbrain.org)
- * @license   http://www.opensource.org/licenses/mit-license.php The MIT License
+ * $Id$
+ * $Date$
+ *
+ * PHP version 8.4
+ *
+ * @author  James Logsdon <dwarf@girsbrain.org>
+ * @author  Philip Michael Raab<philip@cathedral.co.za>
+ * @package inanepain\cli
+ * @category cli
+ *
+ * @license UNLICENSE
+ * @license https://unlicense.org/UNLICENSE UNLICENSE
+ *
+ * _version_ $version
  */
 
 namespace Inane\Cli\Tree;
@@ -16,13 +27,11 @@ namespace Inane\Cli\Tree;
  * The ASCII renderer renders trees with ASCII lines.
  */
 class Ascii extends Renderer {
-
     /**
      * @param array $tree
      * @return string
      */
-    public function render(array $tree)
-    {
+    public function render(array $tree) {
         $output = '';
 
         $treeIterator = new \RecursiveTreeIterator(
@@ -30,12 +39,10 @@ class Ascii extends Renderer {
             \RecursiveTreeIterator::SELF_FIRST
         );
 
-        foreach ($treeIterator as $val)
-        {
+        foreach ($treeIterator as $val) {
             $output .= $val . "\n";
         }
 
         return $output;
     }
-
 }

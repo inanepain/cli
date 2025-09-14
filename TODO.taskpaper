@@ -1,11 +1,12 @@
-Inane\Cli:
-	Cli:
-		output buffering:
-			Out put buffered until flushed or cleared.
-			- buffered writer
-				- flush
-				- clear
-				- conditional/triggered flush
-	Exception:
-		Upgrade Exception to Inane\Stdlib\Exception
-		- Streams @done(2022-08-26)
+inanepain/cli:
+  Utilities to simplify working with the console.
+  cli:
+    output buffering:
+      Out put buffered until flushed or cleared.
+      - buffered writer
+        - flush
+        - clear
+        - conditional/triggered flush
+  Exception:
+    Upgrade Exception to Inane\Stdlib\Exception
+    - Streams @done(2022-08-26)

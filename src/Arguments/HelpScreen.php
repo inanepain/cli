@@ -3,20 +3,22 @@
 /**
  * Inane: Cli
  *
- * Command Line Tools
+ * Utilities to simplify working with the console.
  *
- * PHP version 8.1
- *
- * @package Inane\Cli
- *
- * @author    	James Logsdon <dwarf@girsbrain.org>
- * @author		Philip Michael Raab<peep@inane.co.za>
- *
- * @license 	UNLICENSE
- * @license 	https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
- *
- * @version $Id$
+ * $Id$
  * $Date$
+ *
+ * PHP version 8.4
+ *
+ * @author  James Logsdon <dwarf@girsbrain.org>
+ * @author  Philip Michael Raab<philip@cathedral.co.za>
+ * @package inanepain\cli
+ * @category cli
+ *
+ * @license UNLICENSE
+ * @license https://unlicense.org/UNLICENSE UNLICENSE
+ *
+ * _version_ $version
  */
 
 declare(strict_types=1);
@@ -40,8 +42,6 @@ use const PHP_EOL;
  * HelpScreen
  *
  * Arguments help screen renderer
- *
- * @package Inane\Cli
  *
  * @version 1.0.3
  */
@@ -120,7 +120,7 @@ class HelpScreen implements Stringable {
 			array_push($help, $formatted);
 		}
 
-		return implode(PHP_EOL, $help);;
+		return implode(PHP_EOL, $help);
 	}
 
 	private function _consume($options): array {

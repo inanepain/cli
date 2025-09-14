@@ -3,19 +3,22 @@
 /**
  * Inane: Cli
  *
- * Command Line Tools
+ * Utilities to simplify working with the console.
  *
- * PHP version 8.1
- *
- * @package Inane\Cli
- *
- * @author		Philip Michael Raab<peep@inane.co.za>
- *
- * @license 	UNLICENSE
- * @license 	https://github.com/inanepain/stdlib/raw/develop/UNLICENSE UNLICENSE
- *
- * @version $Id$
+ * $Id$
  * $Date$
+ *
+ * PHP version 8.4
+ *
+ * @author  James Logsdon <dwarf@girsbrain.org>
+ * @author  Philip Michael Raab<philip@cathedral.co.za>
+ * @package inanepain\cli
+ * @category cli
+ *
+ * @license UNLICENSE
+ * @license https://unlicense.org/UNLICENSE UNLICENSE
+ *
+ * _version_ $version
  */
 
 declare(strict_types=1);
@@ -24,8 +27,6 @@ namespace Inane\Cli\TextTable;
 
 /**
  * Definition
- *
- * @package Inane\Cli
  *
  * @version 0.2.0
  */
