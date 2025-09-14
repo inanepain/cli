@@ -4,7 +4,7 @@ Utilities to simplify working with the console.
 
 Requirements
 
-- PHP &gt;= 8.1
+- PHP &gt;= 8.4
 
 Suggested PHP extensions
 

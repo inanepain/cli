@@ -1,12 +1,6 @@
-Version: $Id$ ($Date$)
-
 # History
 
-## 0.17.0-dev (2025 Xxx xx)
-
-- new: `Console` Three classes that handle a directory of cli script
-  files. Running them as templates an making range of methods available
-  to them.
+Version: $Id$ ($Date$)
 
 ## 0.12.1 (2022 Aug 11)
 
