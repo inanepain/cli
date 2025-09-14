@@ -4,9 +4,9 @@
 :description: Utilities to simplify working with the console.
 :keywords: inanepain, library, console, cli, utility, text-table, prompt
 :revnumber: 0.17.0
-:revdate: 2025-xx-xx
-:revremark: -dev
-:version-label: Unconfirmed
+:revdate: 2025-09-14
+// :revremark: -dev
+// :version-label: Unconfirmed
 :copyright: Unlicense
 :experimental:
 :hide-uri-scheme:
@@ -15,34 +15,12 @@
 :sectnums!:
 :toc: left
 :sectanchors:
-
-Version: $Id$ ($Date$)
 
 == History
 
-:leveloffset: +2
+Version: $Id$ ($Date$)
 
-= 0.17.0-dev (2025 Xxx xx)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:description: Utilities to simplify working with the console.
-:keywords: inanepain, library, console, cli, utility, text-table, prompt
-:revnumber: 0.xx.0
-:revdate: 2025-xx-xx
-:revremark: -dev
-:version-label: Unconfirmed
-:copyright: Unlicense
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: left
-:sectanchors:
-
-* new: `Console` Three classes that handle a directory of cli script files. Running them as templates an making range of methods available to them.
-
-:leveloffset!:
+// include::./release/0.0.0.adoc[leveloffset=+2]
 
 :leveloffset: +2
 
