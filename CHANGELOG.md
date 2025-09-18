@@ -2,6 +2,16 @@
 
 Version: $Id$ ($Date$)
 
+## 0.17.0-dev (2025 Xxx xx)
+
+- new: `Console` Three classes that handle a directory of cli script
+  files. Running them as templates an making range of methods available
+  to them.
+
+- update: `Arguments` `options` now also support stacking.
+
+- update: type setting more methods.
+
 ## 0.12.1 (2022 Aug 11)
 
 - fix: `TextTable` `divider` ⇒ uses full column width

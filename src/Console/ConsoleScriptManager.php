@@ -26,11 +26,18 @@ declare(strict_types=1);
 namespace Inane\Cli\Console;
 
 use Inane\Config\Config;
+use Inane\Datetime\Timespan;
 use Inane\File\Path;
-use Inane\Stdlib\Array\OptionsInterface;
-use Inane\Stdlib\Options;
+use Inane\Stdlib\{
+    Array\OptionsInterface,
+    Options
+};
 
 use function class_exists;
+use function is_int;
+use function is_numeric;
+use function is_string;
+use function strtotime;
 
 use const false;
 use const true;
@@ -50,11 +57,37 @@ class ConsoleScriptManager {
      */
     protected Config $config;
     /**
+     * Default configuration values for the ConsoleScriptManager.
+     *
+     * @var array<string, mixed> $defaults Associative array containing default settings.
+     */
+    private static array $defaults = [
+        'script' => [
+            'path' => 'src-cli',
+            'notice' => [
+                'expired' => false,
+            ],
+        ],
+        'dumper' => [
+            'buffer' => false,
+            'runkit7' => false,
+        ],
+    ];
+    /**
+     * Shared instance of the CliPen used across the ConsoleScriptManager.
+     *
+     * @var CliPen
+     */
+    private static CliPen $sharedPen;
+    /**
      * The pen instance used for CLI output formatting and styling.
      *
      * @var CliPen
      */
-    protected CliPen $pen;
+    protected CliPen $pen {
+        get => isset(static::$sharedPen) ? static::$sharedPen : (static::$sharedPen = new CliPen());
+        set => static::$sharedPen = $value;
+    }
     /**
      * The directory path where console scripts are stored.
      *
@@ -108,26 +141,14 @@ class ConsoleScriptManager {
     /**
      * Configures the console script manager with the provided options.
      *
-     * @param OptionsInterface $config The configuration options to apply.
+     * @param OptionsInterface|Config $config The configuration options to apply.
      *
      * @return void
      */
     protected function configure(OptionsInterface $config): void {
         // We store the `console` section of $config
-        // First we load the default config. Then use modify to update it with user config.
-        $this->config = new Config([
-            // 'script-dir' => 'src-cli',
-            'script' => [
-                'path' => 'src-cli',
-                'notice' => [
-                    'expired' => false,
-                ],
-            ],
-            'dumper' => [
-                'buffer' => true,
-                'runkit7' => false,
-            ],
-        ])->modify($config->console)->lock();
+        // First we load the config. Then apply defaults to fill in any missing gaps.
+        $this->config = new Config()->defaults($config, new Config(static::$defaults))->lock();
 
         if (class_exists('\Inane\Dumper\Dumper')) {
             \Inane\Dumper\Dumper::$bufferOutput = $this->config->dumper->buffer;
@@ -210,8 +231,55 @@ class ConsoleScriptManager {
         if ($log && $this->scriptHasRun) $this->log();
 
         if ($this->exitAfterLastInclude) {
-            $this->pen->red->line('Exiting after last include.');
+            $this->pen->red->line('')->line('Exiting after last include.');
             exit();
         }
     }
+
+    #region Helper/Utility Methods
+    /**
+     * Creates an expiration timestamp based on the provided minimum date duration.
+     * 
+     * minDateDurr:
+     * - null: 1hr
+     * - int: minutes
+     * - string:
+     *   - tomorrow
+     *   - Saturday
+     *   - 14:00
+     *   - Sat 14:00
+     *
+     * @param null|string|Timespan|int $minDateDurr The minimum date duration. Can be null (displays prompt), a string, Timespan object, or minutes as integer (default is 60, a.k.a. 1 hour).
+     * @param bool $print Whether to print the expiration timestamp (default is true).
+     * 
+     * @return int The calculated expiration timestamp.
+     */
+    public static function createExpirationTimestamp(null|string|Timespan|int $minDateDurr = 60, bool $print = true): int {
+        if ((empty($minDateDurr) || $print) && !isset(static::$sharedPen)) static::$sharedPen = new CliPen();
+
+        if (empty($minDateDurr))
+            $minDateDurr = static::$sharedPen->cyan->prompt('Enter duration or end time?', '1hr');
+
+        if (is_string($minDateDurr) && is_numeric($minDateDurr)) $minDateDurr = (int) $minDateDurr;
+
+        $int = match (true) {
+            is_int($minDateDurr) => time() + $minDateDurr * 60,
+            $minDateDurr instanceof Timespan => time() + $minDateDurr->seconds,
+            is_string($minDateDurr) => strtotime($minDateDurr),
+        };
+
+        if ($int === false)
+            $int = \Inane\Datetime\Timespan::fromDuration($minDateDurr)->apply2Timestamp()->seconds;
+
+        if ($print) {
+            $expireTime = new \Inane\Datetime\Timestamp((int) $int);
+            $duration = $expireTime->diff($expireTime::now())->absoluteCopy()->getDuration();
+
+            static::$sharedPen->default->line("Timestamp $duration from now:");
+            static::$sharedPen->green->line("\t\$expires = $int; // " . $expireTime->format('Y-m-d H:i:s'));
+        }
+
+        return $int;
+    }
+    #endregion Helper/Utility Methods
 }

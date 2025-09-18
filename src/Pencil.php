@@ -256,6 +256,31 @@ class Pencil implements Stringable {
     }
 
     /**
+     * Displays an input prompt. If no default value is provided the prompt will
+     * continue displaying until input is received.
+     *
+     * $default:
+     * - `null`			if no input received a `null` is returned.
+     * - `false`		the prompt will continue displaying until input is received.
+     *
+     * @param string            $question The question to ask the user.
+     * @param null|false|string $default  A default value if the user provides no input.
+     * @param string            $marker   A string to append to the question and default value on display.
+     * @param boolean           $hide     If the user input should be hidden
+     *
+     * @return null|string  The users input or the default value or `null` if no input was received.
+     *
+     * @see cli\input()
+     */
+    public function prompt(string $question, null|false|string $default = null, string $marker = ': ', bool $hide = false): string|null {
+        $question = (string)$this->out($question, false);
+        $input = Streams::prompt($question, $default, $marker, $hide);
+        $this->out('', true);
+
+        return $input;
+    }
+
+    /**
      * Create a string with current format
      *
      * @since 0.2.0

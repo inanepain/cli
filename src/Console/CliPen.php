@@ -57,12 +57,28 @@ class CliPen {
         get => static::$pens->default;
     }
     /**
+     * The black pencil instance.
+     *
+     * @var Pencil
+     */
+    public Pencil $black {
+        get => static::$pens->black;
+    }
+    /**
      * The blue pencil instance.
      *
      * @var Pencil
      */
     public Pencil $blue {
         get => static::$pens->blue;
+    }
+    /**
+     * The cyan pencil instance.
+     *
+     * @var Pencil
+     */
+    public Pencil $cyan {
+        get => static::$pens->cyan;
     }
     /**
      * Represents a green pencil instance.
@@ -87,6 +103,14 @@ class CliPen {
      */
     public Pencil $red {
         get => static::$pens->red;
+    }
+    /**
+     * Represents a white pencil instance.
+     *
+     * @var Pencil $white The white pencil used in the CLI pen.
+     */
+    public Pencil $white {
+        get => static::$pens->white;
     }
     /**
      * The yellow pencil instance.
@@ -122,10 +146,13 @@ class CliPen {
         if (!isset(static::$pens)) {
             static::$pens = new Options([
                 'default' => new Pencil(),
+                'black' => new Pencil(Colour::Black),
                 'blue' => new Pencil(Colour::Blue),
+                'cyan' => new Pencil(Colour::Cyan),
                 'green' => new Pencil(Colour::Green),
                 'purple' => new Pencil(Colour::Purple),
                 'red' => new Pencil(Colour::Red),
+                'white' => new Pencil(Colour::White),
                 'yellow' => new Pencil(Colour::Yellow),
 
                 // 'divider' => fn($divider = '=') => \Inane\Cli\Cli::line(str_repeat($divider, \Inane\Cli\Shell::columns())),

@@ -273,6 +273,7 @@ class Arguments implements ArrayAccess, JSONable {
 
 		$settings += [
 			'default'     => null,
+			'stackable'   => false,
 			'description' => null,
 			'aliases'     => []
 		];
@@ -339,11 +340,11 @@ class Arguments implements ArrayAccess, JSONable {
 	/**
 	 * Get a flag by primary matcher or any defined aliases.
 	 *
-	 * @param mixed  $flag  Either a string representing the flag or an `cli\arguments\Argument` object.
+	 * @param string|Argument  $flag  Either a string representing the flag or an `cli\arguments\Argument` object.
 	 *
 	 * @return null|array
 	 */
-	public function getFlag($flag): ?array {
+	public function getFlag(string|Argument $flag): ?array {
 		if ($flag instanceof Argument) {
 			$obj  = $flag;
 			$flag = $flag->value;
@@ -399,7 +400,7 @@ class Arguments implements ArrayAccess, JSONable {
 	 * @return bool
 	 */
 	public function isStackable($flag): bool {
-		$settings = $this->getFlag($flag);
+		if (!$settings = $this->getFlag($flag)) $settings = $this->getOption($flag);
 
 		return isset($settings) && (true === $settings['stackable']);
 	}
@@ -492,14 +493,21 @@ class Arguments implements ArrayAccess, JSONable {
 				$this[$option] = $settings['default'];
 	}
 
-	private function warn($message) {
+	/**
+	 * Outputs a warning message to the user.
+	 *
+	 * @param string $message The warning message to display.
+	 * 
+	 * @return void
+	 */
+	private function warn(string $message): void {
 		trigger_error('[' . __CLASS__ . '] ' . $message, E_USER_WARNING);
 	}
 
 	/**
 	 * Parse flag
 	 *
-	 * @param mixed $argument flag options
+	 * @param Argument $argument flag options
 	 *
 	 * @return bool parse success
 	 */
@@ -509,39 +517,77 @@ class Arguments implements ArrayAccess, JSONable {
 		if ($this->isStackable($argument)) {
 			if (!isset($this[$argument])) $this[$argument->key] = 0;
 
-			$this[$argument->key] += 1;
+			$this[$argument->key]++;
 		} else $this[$argument->key] = true;
 
 		return true;
 	}
 
+	/**
+	 * Parses a single command-line option.
+	 *
+	 * This method processes the provided option string and extracts its value,
+	 * if present. It is typically used internally to handle individual options
+	 * passed to the CLI application.
+	 *
+	 * @param Argument $option The command-line option to parse.
+	 * 
+	 * @return mixed The parsed value of the option, or null if not applicable.
+	 */
 	private function parseOption($option) {
 		if (!$this->isOption($option)) return false;
 
 		// Peak ahead to make sure we get a value.
 		if ($this->lexer->end() || !$this->lexer->peek->isValue) {
 			$optionSettings = $this->getOption($option->key);
-
-			if (empty($optionSettings['default']) && $optionSettings !== 0) {
-				// Oops! Got no value and no default , throw a warning and continue.
-				$this->warn('no value given for ' . $option->raw);
-				$this[$option->key] = null;
-			} else $this[$option->key] = $optionSettings['default']; // No value and we have a default, so we set to the default
+			if ($this->isStackable($option)) {
+				if (empty($optionSettings['default']) && !is_array($this[$option->key])) {
+					if (!is_array($this[$option->key])) {
+						// Oops! Got no value and no default , throw a warning and continue.
+						$this->warn('no value given for ' . $option->raw);
+						$this[$option->key] = [];
+					} else $this[$option->key] = $optionSettings['default']; // No value and we have a default, so we set to the default
+				}
+			} else {
+				if (empty($optionSettings['default']) && $optionSettings !== 0) {
+					// Oops! Got no value and no default , throw a warning and continue.
+					$this->warn('no value given for ' . $option->raw);
+					$this[$option->key] = null;
+				} else $this[$option->key] = $optionSettings['default']; // No value and we have a default, so we set to the default
+			}
+			// if (empty($optionSettings['default']) && $this->isStackable($option) && !is_array($this[$option->key])) {
+			// 	if (!is_array($this[$option->key])) {
+			// 		// Oops! Got no value and no default , throw a warning and continue.
+			// 		$this->warn('no value given for ' . $option->raw);
+			// 		$this[$option->key] = [];
+			// 	} else $this[$option->key] = $optionSettings['default']; // No value and we have a default, so we set to the default
+			// } elseif (empty($optionSettings['default']) && $optionSettings !== 0) {
+			// 	// Oops! Got no value and no default , throw a warning and continue.
+			// 	$this->warn('no value given for ' . $option->raw);
+			// 	$this[$option->key] = null;
+			// } else $this[$option->key] = $optionSettings['default']; // No value and we have a default, so we set to the default
+			// // } else $this[$option->key] = $this->isStackable($option) ? (is_array($optionSettings['default']) ? $optionSettings['default'] : [$optionSettings['default']]) : $optionSettings['default']; // No value and we have a default, so we set to the default
 
 			return true;
 		}
 
 		// Store as array and join to string after looping for values
 		$values = [];
-
 		// Loop until we find a flag in peak-ahead
 		foreach ($this->lexer as $value) {
 			$values[] = $value->raw;
-
 			if (!$this->lexer->end() && !$this->lexer->peek->isValue) break;
 		}
 
-		$this[$option->key] = implode(' ', $values);
+		if ($this->isStackable($option)) {
+			if (!is_array($this[$option->key])) $this[$option->key] = [];
+			$temp = $this[$option->key];
+			$temp[] = implode(' ', $values);
+			$this[$option->key] = $temp;
+		} else {
+			$this[$option->key] = implode(' ', $values);
+		}
+
 		return true;
 	}
 }

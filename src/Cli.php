@@ -50,6 +50,7 @@ use const true;
 /**
  * Cli
  *
+ * TODO: version bump
  * @version 0.12.0
  */
 class Cli {
@@ -213,6 +214,8 @@ class Cli {
      * - `null`			if no input received a `null` is returned.
      * - `false`		the prompt will continue displaying until input is received.
      *
+     * @since _VERSION_
+     * 
      * @param string            $question The question to ask the user.
      * @param null|false|string $default  A default value if the user provides no input.
      * @param string            $marker   A string to append to the question and default value on display.

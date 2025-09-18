@@ -30,6 +30,7 @@ use Inane\Datetime\Timestamp;
 use Inane\File\File;
 
 use function is_int;
+use function trim;
 
 /**
  * Class CliScript
@@ -134,17 +135,24 @@ class CliScript {
      * @return self Returns the current instance of the class.
      */
     public function run(): self {
-        \Inane\View\Renderer\PhpRenderer::renderTemplate((string) $this->scriptFile, [
+        $result = \Inane\View\Renderer\PhpRenderer::renderTemplate((string) $this->scriptFile, [
             'line' => $this->pen->default->line(...),
+            'black' => $this->pen->black->line(...),
             'blue' => $this->pen->blue->line(...),
+            'cyan' => $this->pen->cyan->line(...),
+            'green' => $this->pen->green->line(...),
             'purple' => $this->pen->purple->line(...),
             'red' => $this->pen->red->line(...),
+            'white' => $this->pen->white->line(...),
+            'yellow' => $this->pen->yellow->line(...),
             'out' => $this->pen->default->out(...),
             'divider' => $this->pen->divider(...),
             'now' => static::$now,
         ], $this);
 
         if (!$this->isExpired) $this->hasRun = true;
+
+        $this->pen->default->out(trim($result));
 
         return $this;
     }
@@ -156,8 +164,8 @@ class CliScript {
      */
     public function end(): self {
         if ($this->hasRun && $this->exitWhenIncludeEnds) {
-            $this->pen->red->line('Exiting after include.');
-            exit();
+            $this->pen->red->line('')->line('Exiting after include.');
+            exit(0);
         }
 
         return $this;
