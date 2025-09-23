@@ -50,6 +50,7 @@ use const true;
  * the CLI environment.
  */
 class ConsoleScriptManager {
+    protected Config $globalConfig;
     /**
      * The configuration instance used by the ConsoleScriptManager.
      *
@@ -101,6 +102,8 @@ class ConsoleScriptManager {
      */
     private Options $scripts;
 
+    private Options $services;
+
     /**
      * Exit after all enabled cli includes have run.
      * 
@@ -138,6 +141,16 @@ class ConsoleScriptManager {
         $this->bootstrap();
     }
 
+    public function service(string $service): mixed {
+        // dd([...$this->globalConfig->redis->toArray()]);
+        // dd([...$this->globalConfig->redis]);
+        // exit;
+        if (!$this->services->has($service)) {
+            $this->services->set($service, $this->globalConfig->services->get($service)($this->globalConfig));
+        }
+        return $this->services->get($service);
+    }
+
     /**
      * Configures the console script manager with the provided options.
      *
@@ -148,7 +161,8 @@ class ConsoleScriptManager {
     protected function configure(OptionsInterface $config): void {
         // We store the `console` section of $config
         // First we load the config. Then apply defaults to fill in any missing gaps.
-        $this->config = new Config()->defaults($config, new Config(static::$defaults))->lock();
+        $this->globalConfig = new Config()->defaults($config, new Config(['console' => static::$defaults]))->lock();
+        $this->config = $this->globalConfig->console;
 
         if (class_exists('\Inane\Dumper\Dumper')) {
             \Inane\Dumper\Dumper::$bufferOutput = $this->config->dumper->buffer;
@@ -157,6 +171,7 @@ class ConsoleScriptManager {
 
         $this->scriptDir = new Path($this->config->script->path);
         $this->scripts = new Options();
+        $this->services = new Options();
     }
 
     /**
@@ -172,7 +187,7 @@ class ConsoleScriptManager {
         $this->pen = new CliPen();
 
         foreach ($this->scriptDir->getFiles('*.php') ?: [] as $file) {
-            $this->scripts->set($file->getBasename('.php'), new CliScript($file, $this->config->script));
+            $this->scripts->set($file->getBasename('.php'), new CliScript($file, $this->config->script, $this));
         }
     }
 

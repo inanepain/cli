@@ -121,10 +121,20 @@ class CliScript {
          *
          * @var Config
          */
-        private Config $config
+        private Config $config,
+        /**
+         * The Console Script Manager.
+         *
+         * @var ConsoleScriptManager
+         */
+        private ConsoleScriptManager $manager,
     ) {
         $this->pen = new CliPen();
         if (!isset(static::$now)) static::$now = new Timestamp();
+    }
+
+    protected function service(string $service): mixed {
+        return $this->manager->service($service);
     }
 
     /**
