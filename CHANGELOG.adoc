@@ -43,6 +43,10 @@ Version: $Id$ ($Date$)
 * new: `Console` Three classes that handle a directory of cli script files. Running them as templates an making range of methods available to them.
 * update: `Arguments` `options` now also support stacking.
 * update: type setting more methods.
+* update: update `CliScript` header.
+* new: `ConsoleScriptManager` got two events you can add a callable to:
+  - if no scripts triggered a custom method can be triggered
+  - after every thing is done on exit another trigger
 
 :leveloffset!:
 

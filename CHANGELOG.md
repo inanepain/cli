@@ -12,6 +12,14 @@ Version: $Id$ ($Date$)
 
 - update: type setting more methods.
 
+- update: update `CliScript` header.
+
+- new: `ConsoleScriptManager` got two events you can add a callable to:
+
+  - if no scripts triggered a custom method can be triggered
+
+  - after every thing is done on exit another trigger
+
 ## 0.12.1 (2022 Aug 11)
 
 - fix: `TextTable` `divider` ⇒ uses full column width

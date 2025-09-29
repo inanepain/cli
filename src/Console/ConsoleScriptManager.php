@@ -33,11 +33,16 @@ use Inane\Stdlib\{
     Options
 };
 
+use function array_shift;
 use function class_exists;
+use function explode;
+use function implode;
 use function is_int;
 use function is_numeric;
 use function is_string;
+use function strtolower;
 use function strtotime;
+use function ucfirst;
 
 use const false;
 use const true;
@@ -50,6 +55,7 @@ use const true;
  * the CLI environment.
  */
 class ConsoleScriptManager {
+    #region Console Properties
     protected Config $globalConfig;
     /**
      * The configuration instance used by the ConsoleScriptManager.
@@ -102,7 +108,17 @@ class ConsoleScriptManager {
      */
     private Options $scripts;
 
-    private Options $services;
+    /**
+     * @var Options $options
+     * Stores the options for the console script manager.
+     */
+    private Options $options {
+        get => isset($this->options) ? $this->options : ($this->options = new Options([
+            'exitOnNoRun' => false,
+            // 'onNoRun' => false,
+        ]));
+        set => $this->options = $value;
+    }
 
     /**
      * Exit after all enabled cli includes have run.
@@ -127,7 +143,32 @@ class ConsoleScriptManager {
         get => isset($this->scriptHasRun) ? $this->scriptHasRun : false;
         set => $this->scriptHasRun = isset($this->scriptHasRun) == true ? ($this->scriptHasRun ? true : $value) : $value;
     }
+    #endregion Console Properties
 
+    #region Services
+    /**
+     * Holds the available service options for the console script manager.
+     *
+     * @var Options $services Instance containing service options.
+     */
+    private Options $services;
+
+    /**
+     * Executes a specified service and returns its result.
+     *
+     * @param string $service The name of the service to execute.
+     * 
+     * @return mixed The result of the executed service.
+     */
+    public function service(string $service): mixed {
+        if (!$this->services->has($service)) {
+            $this->services->set($service, $this->globalConfig->services->get($service)($this->globalConfig));
+        }
+        return $this->services->get($service);
+    }
+    #endregion Services
+
+    #region Initialisation Methods
     /**
      * ConsoleScriptManager constructor.
      *
@@ -139,16 +180,6 @@ class ConsoleScriptManager {
         $this->configure($config);
 
         $this->bootstrap();
-    }
-
-    public function service(string $service): mixed {
-        // dd([...$this->globalConfig->redis->toArray()]);
-        // dd([...$this->globalConfig->redis]);
-        // exit;
-        if (!$this->services->has($service)) {
-            $this->services->set($service, $this->globalConfig->services->get($service)($this->globalConfig));
-        }
-        return $this->services->get($service);
     }
 
     /**
@@ -187,8 +218,40 @@ class ConsoleScriptManager {
         $this->pen = new CliPen();
 
         foreach ($this->scriptDir->getFiles('*.php') ?: [] as $file) {
-            $this->scripts->set($file->getBasename('.php'), new CliScript($file, $this->config->script, $this));
+            $options = new Options();
+            $options->name = $file->getBasename('.php');
+            $explode = explode('-', $options->name);
+            $options->type = ucfirst(strtolower(array_shift($explode)));
+            $options->label = implode(' ', $explode);
+
+            if ($options->type != 'Template') $this->scripts->set($options->name, new CliScript($file, $this->config->script, $options, $this));
         }
+    }
+    #endregion Initialisation Methods
+
+    #region Processing Methods
+    /**
+     * Registers a callback function to be executed when no scripts are run.
+     *
+     * @param callable $function The callback to execute when no scripts are run.
+     * 
+     * @return self Returns the current instance for method chaining.
+     */
+    public function onNoRun(callable $function): self {
+        $this->options->set('onNoRun', $function);
+        return $this;
+    }
+
+    /**
+     * Sets whether the script should exit if there is no run action.
+     *
+     * @param bool $exitOnNoRun Optional. If true, the script will exit when no run action is detected. Default is false.
+     * 
+     * @return self Returns the current instance for method chaining.
+     */
+    public function exitOnNoRun(bool $exitOnNoRun = false): self {
+        $this->options->set('exitOnNoRun', $exitOnNoRun);
+        return $this;
     }
 
     /**
@@ -244,12 +307,27 @@ class ConsoleScriptManager {
      */
     public function end(bool $log = false): void {
         if ($log && $this->scriptHasRun) $this->log();
-
-        if ($this->exitAfterLastInclude) {
-            $this->pen->red->line('')->line('Exiting after last include.');
-            exit();
+        if (!$this->scriptHasRun && $this->options->has('onNoRun')) {
+            $this->options->get('onNoRun')();
+            if ($this->options->get('exitOnNoRun')) $this->exit('Exiting after running no script event triggered.');
         }
+
+        if ($this->exitAfterLastInclude) $this->exit('Exiting after last include.');
     }
+
+    /**
+     * Exits the script with an optional message and status code.
+     *
+     * @param string|null $message Optional message to display before exiting.
+     * @param int $status Exit status code (default is 0).
+     * 
+     * @return never This method does not return; it terminates the script.
+     */
+    private function exit(?string $message = null, int $status = 0): never {
+        if ($message !== null) $this->pen->red->line('')->line($message);
+        exit($status);
+    }
+    #endregion Processing Methods
 
     #region Helper/Utility Methods
     /**

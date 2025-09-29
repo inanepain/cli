@@ -28,6 +28,7 @@ namespace Inane\Cli\Console;
 use Inane\Config\Config;
 use Inane\Datetime\Timestamp;
 use Inane\File\File;
+use Inane\Stdlib\Options;
 
 use function is_int;
 use function trim;
@@ -123,6 +124,12 @@ class CliScript {
          */
         private Config $config,
         /**
+         * CLI script options.
+         *
+         * @var Options
+         */
+        private Options $options,
+        /**
          * The Console Script Manager.
          *
          * @var ConsoleScriptManager
@@ -212,7 +219,7 @@ class CliScript {
     protected function header(): void {
         $durationLabel = $this->pen->red->format($this->isExpired ? 'Expired for ' : 'Duration left: ');
         $this->pen->divider();
-        $this->pen->red->line("\tCLI Script:\t\t" . $this->scriptFile->getBasename('.php'));
+        $this->pen->red->line("\tCLI {$this->options->type}:\t\t" . $this->options->label);
         $this->pen->divider(pencil: $this->pen->red);
         $this->pen->purple
             ->line('Expiry date  : ' . $this->expiryDate->format('Y-m-d H:i:s'))
