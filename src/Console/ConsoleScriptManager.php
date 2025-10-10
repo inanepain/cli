@@ -43,6 +43,8 @@ use function is_string;
 use function strtolower;
 use function strtotime;
 use function ucfirst;
+use function strtoupper;
+use function mb_substr;
 
 use const false;
 use const true;
@@ -222,6 +224,11 @@ class ConsoleScriptManager {
             $options->name = $file->getBasename('.php');
             $explode = explode('-', $options->name);
             $options->type = ucfirst(strtolower(array_shift($explode)));
+
+            if ($explode[0][0] == '^') $explode[0] = strtoupper(mb_substr($explode[0], 1));
+            elseif ($explode[0][0] == '_') $explode[0] = strtolower(mb_substr($explode[0], 1));
+            elseif ($explode[0][0] == '@') $explode[0] = ucfirst(strtolower(mb_substr($explode[0], 1)));
+
             $options->label = implode(' ', $explode);
 
             if ($options->type != 'Template') $this->scripts->set($options->name, new CliScript($file, $this->config->script, $options, $this));
