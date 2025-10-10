@@ -40,11 +40,11 @@ use function implode;
 use function is_int;
 use function is_numeric;
 use function is_string;
+use function mb_substr;
 use function strtolower;
 use function strtotime;
-use function ucfirst;
 use function strtoupper;
-use function mb_substr;
+use function ucfirst;
 
 use const false;
 use const true;
