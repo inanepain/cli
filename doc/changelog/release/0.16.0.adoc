@@ -1,0 +1,19 @@
+= 0.16.0 (2025 Apr 25)
+:author: Philip Michael Raab
+:email: <philip@cathedral.co.za>
+:description: Utilities to simplify working with the console.
+:keywords: inanepain, library, console, cli, utility, text-table, prompt
+:revnumber: 0.16.0
+:revdate: 2025-04-25
+:copyright: Unlicense
+:experimental:
+:hide-uri-scheme:
+:icons: font
+:source-highlighter: highlight.js
+:sectnums!:
+:toc: left
+:sectanchors:
+
+* menu  : now takes int and string values for menu index
+* update: `Pencil::pad` now has a padString argument
+* update: `Notify` improved parametar types

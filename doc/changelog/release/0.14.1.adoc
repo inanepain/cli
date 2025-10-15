@@ -1,0 +1,18 @@
+= 0.14.1 (2023 May 03)
+:author: Philip Michael Raab
+:email: <philip@cathedral.co.za>
+:description: Utilities to simplify working with the console.
+:keywords: inanepain, library, console, cli, utility, text-table, prompt
+:revnumber: 0.14.1
+:revdate: 2023-05-03
+:copyright: Unlicense
+:experimental:
+:hide-uri-scheme:
+:icons: font
+:source-highlighter: highlight.js
+:sectnums!:
+:toc: left
+:sectanchors:
+
+* new: `Cli::shellEnv` return enum Environment type: none, interactive, non-interactive
+* update: minor tweaks, improvements and updates

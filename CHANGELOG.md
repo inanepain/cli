@@ -20,6 +20,8 @@ Version: $Id$ ($Date$)
 
   - after every thing is done on exit another trigger
 
+- new: `CliScript` can have their own custom config.
+
 ## 0.12.1 (2022 Aug 11)
 
 - fix: `TextTable` `divider` ⇒ uses full column width

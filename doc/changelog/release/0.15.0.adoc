@@ -1,0 +1,25 @@
+= 0.15.0 (2025 Mar 14)
+:author: Philip Michael Raab
+:email: <philip@cathedral.co.za>
+:description: Utilities to simplify working with the console.
+:keywords: inanepain, library, console, cli, utility, text-table, prompt
+:revnumber: 0.15.0
+:revdate: 2025-03-14
+:copyright: Unlicense
+:experimental:
+:hide-uri-scheme:
+:icons: font
+:source-highlighter: highlight.js
+:sectnums!:
+:toc: left
+:sectanchors:
+
+* fix: `Lexer::unshift` return type
+* fix: `Arguments::parseFlag` not incrementing stackable flags
+* other minor updates and fixes (mainly to code comments & variable typing)
+* switch from `posix_isatty` to `stream_isatty` for better compatibility
+* windows compatibility improvements
+* update return & param types
+* update code docs
+* simplify inter-class function calls
+* improved File writing

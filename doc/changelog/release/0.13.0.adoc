@@ -1,0 +1,21 @@
+= 0.13.0 (2022 Oct 10)
+:author: Philip Michael Raab
+:email: <philip@cathedral.co.za>
+:description: Utilities to simplify working with the console.
+:keywords: inanepain, library, console, cli, utility, text-table, prompt
+:revnumber: 0.13.0
+:revdate: 2022-10-10
+:copyright: Unlicense
+:experimental:
+:hide-uri-scheme:
+:icons: font
+:source-highlighter: highlight.js
+:sectnums!:
+:toc: left
+:sectanchors:
+
+* fix: STD(OUT/IN/ERR) undefined
+* new: `Cli::isCliServer` Is PHP built-in server
+* new: `Pencil` stationary tools
+* upd: `Cli::input` new optional arg `$default` returned if non-interactive shell
+* many minor tweaks, updates and fixes

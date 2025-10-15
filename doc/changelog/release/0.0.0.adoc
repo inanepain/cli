@@ -1,0 +1,26 @@
+= 0.17.0-dev (2025 Xxx xx)
+:author: Philip Michael Raab
+:email: <philip@cathedral.co.za>
+:description: Utilities to simplify working with the console.
+:keywords: inanepain, library, console, cli, utility, text-table, prompt
+:revnumber: 0.xx.0
+:revdate: 2025-xx-xx
+:revremark: -dev
+:version-label: Unconfirmed
+:copyright: Unlicense
+:experimental:
+:hide-uri-scheme:
+:icons: font
+:source-highlighter: highlight.js
+:sectnums!:
+:toc: left
+:sectanchors:
+
+* new: `Console` Three classes that handle a directory of cli script files. Running them as templates an making range of methods available to them.
+* update: `Arguments` `options` now also support stacking.
+* update: type setting more methods.
+* update: update `CliScript` header.
+* new: `ConsoleScriptManager` got two events you can add a callable to:
+  - if no scripts triggered a custom method can be triggered
+  - after every thing is done on exit another trigger
+* new: `CliScript` can have their own custom config.

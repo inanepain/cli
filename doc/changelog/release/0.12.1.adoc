@@ -1,0 +1,19 @@
+= 0.12.1 (2022 Aug 11)
+:author: Philip Michael Raab
+:email: <philip@cathedral.co.za>
+:description: Utilities to simplify working with the console.
+:keywords: inanepain, library, console, cli, utility, text-table, prompt
+:revnumber: 0.12.1
+:revdate: 2022-08-11
+:copyright: Unlicense
+:experimental:
+:hide-uri-scheme:
+:icons: font
+:source-highlighter: highlight.js
+:sectnums!:
+:toc: left
+:sectanchors:
+
+* fix: `TextTable` `divider` => uses full column width
+* fix: `TextTable` coloured string cell width
+* fix: `Colors::length` error

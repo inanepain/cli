@@ -81,6 +81,7 @@ class ConsoleScriptManager {
             'buffer' => false,
             'runkit7' => false,
         ],
+        'config' => [],
     ];
     /**
      * Shared instance of the CliPen used across the ConsoleScriptManager.
@@ -231,7 +232,10 @@ class ConsoleScriptManager {
 
             $options->label = implode(' ', $explode);
 
-            if ($options->type != 'Template') $this->scripts->set($options->name, new CliScript($file, $this->config->script, $options, $this));
+            $cfg = $this->config->script;
+            if ($this->config->config->has($options->name)) $cfg->merge($this->config->config->get($options->name));
+
+            if ($options->type != 'Template') $this->scripts->set($options->name, new CliScript($file, $cfg, $options, $this));
         }
     }
     #endregion Initialisation Methods
