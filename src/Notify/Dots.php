@@ -65,7 +65,7 @@ class Dots extends Notify {
 	 * @see Notify::formatTime()
 	 * @see Notify::speed()
 	 */
-	public function display($finish = false) {
+	public function display($finish = false): void {
 		$repeat = $this->_dots;
 		if (! $finish) {
 			$repeat = $this->_iteration++ % $repeat;

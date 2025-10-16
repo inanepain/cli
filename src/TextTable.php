@@ -34,9 +34,7 @@ use function array_shift;
 use function array_unshift;
 use function count;
 use function implode;
-use function is_integer;
 use function is_null;
-use function is_string;
 use function substr;
 use const false;
 use const null;
@@ -101,7 +99,7 @@ class TextTable implements Stringable {
      *          'header' => '-', // header separator OR null for no header row
      *      ],
      *      'column' => [
-     *          'divider' => ' | ', // column divider char
+     *          'divider' => '|', // column divider char
      *          'definition' => [5, 20], // width of each column
      *          'rule' => \Inane\Cli\TextTable\DefinitionRule::Default,
      *      ],
@@ -154,7 +152,7 @@ class TextTable implements Stringable {
      *
      * @return void
      */
-    protected function mergeConfig(array $options = []) {
+    protected function mergeConfig(array $options = []): void {
         if (!isset($this->config)) {
             $this->config = new Options($this->defaults);
             $this->config->merge($options);
@@ -172,11 +170,11 @@ class TextTable implements Stringable {
      */
     public function setColumnDefinition(array $definition): bool {
         if (!array_is_list($definition)) return false;
-        for ($i = 0; $i < count($definition); $i++) if (!is_integer($definition[$i])) return false;
+        for ($i = 0, $iMax = count($definition); $i < $iMax; $i++) if (!is_int($definition[$i])) return false;
 
         $this->config->column->definition = $definition;
 
-        if ($this->getDefinitionRule() == DefinitionRule::Auto) $this->setDefinitionRule(DefinitionRule::Default);
+        if ($this->getDefinitionRule() === DefinitionRule::Auto) $this->setDefinitionRule(DefinitionRule::Default);
 
         return true;
     }
@@ -202,7 +200,7 @@ class TextTable implements Stringable {
     }
 
     /**
-     * Check that row and definition have same item count
+     * Check that row and definition have the same item count
      *
      * @param array $row
      * @return bool
@@ -211,7 +209,7 @@ class TextTable implements Stringable {
         $ad = $this->config->column->auto;
         $sd = $this->config->column->definition;
 
-        for ($i = 0; $i < count($row); $i++)
+        for ($i = 0, $iMax = count($row); $i < $iMax; $i++)
             if (count($ad) < ($i + 1) || (Pencil::width($row[$i]) ?? Colors::width($row[$i])) > $ad[$i]) {
                 if ($this->getDefinitionRule() == DefinitionRule::Max && (Pencil::width($row[$i]) ?? Colors::width($row[$i])) > $sd[$i]) $ad[$i] = $sd[$i];
                 else $ad[$i] = (Pencil::width($row[$i]) ?? Colors::width($row[$i]));
@@ -221,7 +219,7 @@ class TextTable implements Stringable {
     }
 
     /**
-     * GET: If if head row enabled
+     * GET: If is head row enabled
      *
      * Optionally (dis|e)nable header row
      *
@@ -232,7 +230,7 @@ class TextTable implements Stringable {
     public function hasHeader(?bool $enable = null): bool {
         if (!is_null($enable)) {
             if ($enable === false) $this->config->row->header = null;
-            else if ($enable === true && $this->config->row->header == null) $this->config->row->header = '-';
+            else if ($enable === true && $this->config->row->header === null) $this->config->row->header = '-';
         }
 
         return $this->config->row->header !== null;
@@ -241,7 +239,7 @@ class TextTable implements Stringable {
     /**
      * Adds a header row
      *
-     * If called again, current header demoted to row
+     * If called again, the current header is demoted to row
      *
      * @param array $header
      *
@@ -279,13 +277,13 @@ class TextTable implements Stringable {
         return $this->insertRow($row);
     }
 
-    /**
-     * Adds rows
-     *
-     * @param array $rows
-     *
-     * @return \Inane\Cli\TextTable|false
-     */
+	/**
+	 * Adds rows
+	 *
+	 * @param array $rows
+	 *
+	 * @return \Inane\Cli\TextTable
+	 */
     public function addRows(array $rows): self {
         foreach ($rows as $r) $this->addRow($r);
 
@@ -327,10 +325,10 @@ class TextTable implements Stringable {
         foreach ($this->rows as $r) {
             $cols = [];
 
-            if (is_string($r) && $r == 'divider')
+            if ($r === 'divider')
                 $r = $this->getDivider();
 
-            for ($i = 0; $i < count($this->getColumnDefinition()); $i++) {
+            for ($i = 0, $iMax = count($this->getColumnDefinition()); $i < $iMax; $i++) {
                 $col = Pencil::pad($r[$i], $this->getColumnDefinition()[$i]) ?? Colors::pad($r[$i], $this->getColumnDefinition()[$i]);
                 if ($this->getDefinitionRule()->truncate() && (Pencil::width($col) ?? Colors::width($col)) > $this->getColumnDefinition()[$i]) $col = substr($col, 0, $this->getColumnDefinition()[$i] - 1) . '>';
                 $cols[] = $col;
