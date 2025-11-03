@@ -22,6 +22,11 @@ Version: $Id$ ($Date$)
 
 - new: `CliScript` can have their own custom config.
 
+- update: `TextTable` no longer assumes a header only adding one on
+  `addHeader`.
+
+- update: `TextTable` example updated.
+
 ## 0.12.1 (2022 Aug 11)
 
 - fix: `TextTable` `divider` ⇒ uses full column width

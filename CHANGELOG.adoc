@@ -48,6 +48,8 @@ Version: $Id$ ($Date$)
   - if no scripts triggered a custom method can be triggered
   - after every thing is done on exit another trigger
 * new: `CliScript` can have their own custom config.
+* update: `TextTable` no longer assumes a header only adding one on `addHeader`.
+* update: `TextTable` example updated.
 
 :leveloffset!:
 

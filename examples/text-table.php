@@ -44,7 +44,29 @@ $data = [
 	['Kirestin', 'Stephens',   'Fitchburg',        'AB'],
 ];
 
-$table = new \Inane\Cli\TextTable();
+$tableConfig = [
+	'row' => [
+		'header' => '-',
+		'divider' => PHP_EOL,
+	],
+	'column' => [
+		'divider' => ' | ',
+		'definition' => [],
+		'rule' => DefinitionRule::Auto,
+		'auto' => [],
+	],
+];
+$tableConfig = [
+	'row' => [
+		'header' => null,
+	],
+	'column' => [
+		'divider' => ' ',
+	],
+];
+
+$table = new \Inane\Cli\TextTable($tableConfig);
+// $table->hasHeader(false);
 
 // 1
 // $table->setColumnDefinition([10, 10, 20, 10]);
@@ -57,4 +79,5 @@ $table = new \Inane\Cli\TextTable();
 
 $table->addHeader($headers);
 $table->addRows($data);
+// dd($table->getDefinitionRule());
 echo $table->render();

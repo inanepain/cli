@@ -58,7 +58,8 @@ class TextTable implements Stringable {
      */
     protected array $defaults = [
         'row' => [
-            'header' => '-',
+            // 'header' => '-',
+            'header' => null,
             'divider' => PHP_EOL,
         ],
         'column' => [
@@ -228,12 +229,10 @@ class TextTable implements Stringable {
      * @return bool
      */
     public function hasHeader(?bool $enable = null): bool {
-        if (!is_null($enable)) {
-            if ($enable === false) $this->config->row->header = null;
-            else if ($enable === true && $this->config->row->header === null) $this->config->row->header = '-';
-        }
+        if ($enable === false) $this->config->row->header = false;
+        else if ($enable === true && !\is_string($this->config->row->header)) $this->config->row->header = '-';
 
-        return $this->config->row->header !== null;
+        return \is_string($this->config->row->header);
     }
 
     /**
