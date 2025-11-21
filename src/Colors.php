@@ -120,7 +120,7 @@ class Colors {
 		$colors = [];
 		foreach (['color', 'style', 'background'] as $type) {
 			$code = $color[$type];
-			if (isset(static::$_colors[$type][$code]))
+			if ($code && isset(static::$_colors[$type][$code]))
 				$colors[] = static::$_colors[$type][$code];
 		}
 
