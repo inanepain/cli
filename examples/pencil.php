@@ -22,7 +22,7 @@ $g->out('green ');
 $gbg->line('bg-green');
 echo "{$g}green {$gbg}bg-green", Pencil::reset(), "\n";
 
-$r = new Pencil(style: Style::Bold);
+$r = new Pencil(Colour::Cyan, style: Style::Bold);
 $bu = new Pencil(Colour::Blue, style: Style::Underline);
 // Here a pencil method is used and another pencil added to the string to underline that section.
 $r->line("Name: {$bu}Pencil");
