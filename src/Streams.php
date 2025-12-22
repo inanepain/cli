@@ -242,7 +242,7 @@ class Streams {
 	 * Displays an input prompt. If no default value is provided the prompt will
 	 * continue displaying until input is received.
 	 *
-	 * @see cli\input()
+	 * @see input()
 	 *
 	 * $default:
 	 * - `null`			if no input received a `null` is returned.
@@ -274,7 +274,7 @@ class Streams {
 	 * Presents a user with a multiple choice question, useful for 'yes/no' type
 	 * questions (which this public static function defaults too).
 	 *
-	 * @see cli\prompt()
+	 * @see prompt()
 	 *
 	 * @param string  $question  The question to ask the user.
 	 * @param string  $choice    A string of characters allowed as a response. Case is ignored.
@@ -304,9 +304,9 @@ class Streams {
 	 * choose an option. The array must be a single dimension with either strings
 	 * or objects with a `__toString()` method.
 	 *
-	 * @see cli\line()
-	 * @see cli\input()
-	 * @see cli\err()
+	 * @see line()
+	 * @see input()
+	 * @see err()
 	 *
 	 * @param array   $items    The list of items the user can choose from.
 	 * @param int|string|false|null  $default  The index of the default item.

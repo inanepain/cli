@@ -286,7 +286,7 @@ class Pencil implements Stringable {
      *
      * @return null|string  The users input or the default value or `null` if no input was received.
      *
-     * @see cli\input()
+     * @see input()
      */
     public function prompt(string $question, null|false|string $default = null, string $marker = ': ', bool $hide = false): string|null {
         $question = (string)$this->out($question, false);
