@@ -26,3 +26,4 @@
 * new: `CliScript` can have their own custom config.
 * update: `TextTable` no longer assumes a header only adding one on `addHeader`.
 * update: `TextTable` example updated.
+* update: `Pencil::error` outputs to `STDERR`.

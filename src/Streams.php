@@ -56,6 +56,10 @@ use function trim;
 use const false;
 use const null;
 use const true;
+use const PHP_EOL;
+use const STDIN;
+use const STDOUT;
+use const STDERR;
 
 /**
  * Streams
@@ -195,7 +199,7 @@ class Streams {
 	 * @return void
 	 */
 	public static function err(string $msg = '', array|string|int ...$options): void {
-		fwrite(static::$err, static::render($msg . \PHP_EOL, ...$options));
+		fwrite(static::$err, static::render($msg . PHP_EOL, ...$options));
 	}
 
 	/**

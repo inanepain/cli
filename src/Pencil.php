@@ -33,6 +33,8 @@ use function in_array;
 use function is_null;
 use function strlen;
 use const null;
+use const PHP_EOL;
+use const STDERR;
 use const STDOUT;
 
 use Inane\Cli\Pencil\{
@@ -59,7 +61,7 @@ class Pencil implements Stringable {
      */
     private string $pencil;
 
-    private static $cache = [];
+    private static array $cache = [];
 
     /**
      * Pencil constructor
@@ -79,7 +81,7 @@ class Pencil implements Stringable {
          *
          * @var \Inane\Cli\Pencil\Colour
          */
-        private ?Colour $colour = null,
+        private ?Colour        $colour = null,
         /**
          * Pencil style
          *
@@ -87,13 +89,13 @@ class Pencil implements Stringable {
          *
          * @var \Inane\Cli\Pencil\Style
          */
-        private Style $style = Style::Plain,
+        private readonly Style $style = Style::Plain,
         /**
          * Pencil background colour
          *
          * @var \Inane\Cli\Pencil\Colour
          */
-        private ?Colour $background = null,
+        private ?Colour        $background = null,
     ) {
         if ($style == Style::Hidden && in_array($colour, [Colour::Default, null])) $this->colour = Colour::Black;
     }
@@ -227,6 +229,20 @@ class Pencil implements Stringable {
     public function line(string $text, bool $reset = true): static {
         $this->out("$text", $reset);
         fwrite(STDOUT, "\n");
+
+        return $this;
+    }
+
+    /**
+     * Outputs an error message to the standard error stream.
+     *
+     * @param string $text  The error message to be displayed. Defaults to an empty string.
+     * @param bool   $reset Whether to reset formatting after outputting the error message. Defaults to true.
+     *
+     * @return static The current instance for method chaining.
+     */
+    public function error(string $text = '', bool $reset = true): static {
+        fwrite(STDERR, $this->format($text . PHP_EOL, $reset));
 
         return $this;
     }
