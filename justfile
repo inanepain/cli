@@ -12,7 +12,7 @@ _default:
     @echo "{{project}}:"
     @just --list --list-heading ''
 
-# generate php doc
+# generate php part
 @doc:
-	mkdir -p doc/code
-	phpdoc -d src -t doc/code --title="{{project}}" --defaultpackagename="Inane"
+	mkdir -p part/code
+	phpdoc -d src -t part/code --title="{{project}}" --defaultpackagename="Inane"
