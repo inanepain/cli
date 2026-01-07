@@ -37,7 +37,7 @@ enum Style: int {
     case Italic     = 3;
     case Underline  = 4;
     case SlowBlink  = 5;
-    // case FastBlink  = 6;
+    case FastBlink  = 6;
     case Reverse    = 7;
     case Hidden     = 8;
     case CrossOut   = 9;

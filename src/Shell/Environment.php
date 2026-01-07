@@ -45,7 +45,7 @@ enum Environment: int implements CoreEnumInterface {
 	 * @return bool is shell env
 	 */
 	public function isShell(): bool {
-		return $this != static::None;
+		return $this !== static::None;
 	}
 
 	/**
@@ -56,7 +56,7 @@ enum Environment: int implements CoreEnumInterface {
 	 * @return bool is interactive shell env
 	 */
 	public function isInteractive(): bool {
-		return $this == static::Interactive;
+		return $this === static::Interactive;
 	}
 
 	/**
@@ -69,7 +69,7 @@ enum Environment: int implements CoreEnumInterface {
      */
     public static function tryFromName(string $name, bool $ignoreCase = false): ?static {
         foreach (static::cases() as $case)
-            if (($ignoreCase && strcasecmp($case->name, $name) == 0) || $case->name === $name)
+            if ($case->name === $name || ($ignoreCase && strcasecmp($case->name, $name) === 0))
                 return $case;
 
         return null;

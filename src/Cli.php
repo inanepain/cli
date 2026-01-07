@@ -59,7 +59,7 @@ class Cli {
      *
      * @var string VERSION The version number of the CLI application.
      */
-    public const VERSION = '0.12.0';
+    public const string VERSION = '0.12.0';
 
     /**
      * Get Shell Environment
@@ -72,7 +72,7 @@ class Cli {
      */
     public static function shellEnv(): ShellEnv {
         if (Streams::isTty()) return ShellEnv::Interactive;
-        else if (php_sapi_name() == 'cli') return ShellEnv::NonInteractive;
+        else if (php_sapi_name() === 'cli') return ShellEnv::NonInteractive;
 
         return ShellEnv::None;
     }
@@ -80,10 +80,13 @@ class Cli {
     /**
      * Is shell environment
      *
+     * @param bool $isInteractive - Is interactive terminal
+     *
      * @return bool
      */
-    public static function isCli(): bool {
-        return (php_sapi_name() == 'cli');
+    public static function isCli(bool $isInteractive = false): bool {
+        if ($isInteractive) return Streams::isTty();
+        return (php_sapi_name() === 'cli');
     }
 
     /**
@@ -91,7 +94,7 @@ class Cli {
      *
      * @return bool
      */
-    static public function isTty(): bool {
+public static function isTty(): bool {
         return Streams::isTty();
     }
 
@@ -103,7 +106,7 @@ class Cli {
      * @return bool
      */
     public static function isCliServer(): bool {
-        return (php_sapi_name() == 'cli-server');
+        return (php_sapi_name() === 'cli-server');
     }
 
     /**
@@ -215,7 +218,7 @@ class Cli {
      * - `false`		the prompt will continue displaying until input is received.
      *
      * @since _VERSION_
-     * 
+     *
      * @param string            $question The question to ask the user.
      * @param null|false|string $default  A default value if the user provides no input.
      * @param string            $marker   A string to append to the question and default value on display.

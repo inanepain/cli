@@ -52,7 +52,7 @@ use Inane\Cli\Pencil\{
  * @version 0.4.0
  */
 class Pencil implements Stringable {
-    public const VERSION = '0.1.0';
+    public const string VERSION = '0.1.0';
 
     /**
      * The terminal codes for the pencil
@@ -89,15 +89,15 @@ class Pencil implements Stringable {
          *
          * @var \Inane\Cli\Pencil\Style
          */
-        private readonly Style $style = Style::Plain,
+        private readonly Style   $style = Style::Plain,
         /**
          * Pencil background colour
          *
          * @var \Inane\Cli\Pencil\Colour
          */
-        private ?Colour        $background = null,
+        private readonly ?Colour $background = null,
     ) {
-        if ($style == Style::Hidden && in_array($colour, [Colour::Default, null])) $this->colour = Colour::Black;
+        if ($style === Style::Hidden && in_array($colour, [Colour::Default, null])) $this->colour = Colour::Black;
     }
 
     /**
@@ -192,7 +192,7 @@ class Pencil implements Stringable {
 
             $this->pencil = $pencil;
         }
-        return "{$this->pencil}";
+        return (string)($this->pencil);
     }
 
     /**
@@ -227,8 +227,8 @@ class Pencil implements Stringable {
      * @return \Inane\Cli\Pencil
      */
     public function line(string $text, bool $reset = true): static {
-        $this->out("$text", $reset);
-        fwrite(STDOUT, "\n");
+        $this->out((string)$text, $reset);
+        fwrite(STDOUT, PHP_EOL);
 
         return $this;
     }
@@ -291,7 +291,7 @@ class Pencil implements Stringable {
     public function prompt(string $question, null|false|string $default = null, string $marker = ': ', bool $hide = false): string|null {
         $question = (string)$this->out($question, false);
         $input = Streams::prompt($question, $default, $marker, $hide);
-        $this->out('', true);
+        $this->out('');
 
         return $input;
     }

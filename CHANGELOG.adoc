@@ -23,22 +23,10 @@ Version: $Id$ ($Date$)
 :leveloffset: +2
 
 = 0.17.0-dev (2025 Xxx xx)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:description: Utilities to simplify working with the console.
-:keywords: inanepain, library, console, cli, utility, text-table, prompt
 :revnumber: 0.xx.0
 :revdate: 2025-xx-xx
 :revremark: -dev
 :version-label: Unconfirmed
-:copyright: Unlicense
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: left
-:sectanchors:
 
 * new: `Console` Three classes that handle a directory of cli script files. Running them as templates an making range of methods available to them.
 * update: `Arguments` `options` now also support stacking.
@@ -50,6 +38,7 @@ Version: $Id$ ($Date$)
 * new: `CliScript` can have their own custom config.
 * update: `TextTable` no longer assumes a header only adding one on `addHeader`.
 * update: `TextTable` example updated.
+* update: `Pencil::error` outputs to `STDERR`.
 
 :leveloffset!:
 
