@@ -25,12 +25,15 @@ declare(strict_types=1);
 
 namespace Inane\Cli\Pencil;
 
+use Inane\Stdlib\Enum\CoreEnumInterface;
+use Inane\Stdlib\Enum\CoreEnumTrait;
+
 /**
  * Style
  *
  * @version 0.1.1
  */
-enum Style: int {
+enum Style: int implements CoreEnumInterface {
     case Plain      = 0;
     case Bold       = 1;
     case Dim        = 2;
@@ -41,4 +44,6 @@ enum Style: int {
     case Reverse    = 7;
     case Hidden     = 8;
     case CrossOut   = 9;
+
+    use CoreEnumTrait;
 }

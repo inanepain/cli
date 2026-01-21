@@ -25,12 +25,15 @@ declare(strict_types=1);
 
 namespace Inane\Cli\Pencil;
 
+use Inane\Stdlib\Enum\CoreEnumInterface;
+use Inane\Stdlib\Enum\CoreEnumTrait;
+
 /**
  * Colour
  *
  * @version 0.1.0
  */
-enum Colour: int {
+enum Colour: int implements CoreEnumInterface {
     /**
      * Default uses the environments colour
      */
@@ -43,4 +46,6 @@ enum Colour: int {
     case Purple  = 5;
     case Cyan    = 6;
     case White   = 7;
+
+    use CoreEnumTrait;
 }
