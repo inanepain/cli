@@ -10,38 +10,39 @@
  *
  * PHP version 8.4
  *
- * @author  James Logsdon <dwarf@girsbrain.org>
- * @author  Philip Michael Raab<philip@cathedral.co.za>
- * @package inanepain\cli
+ * @author   James Logsdon <dwarf@girsbrain.org>
+ * @author   Philip Michael Raab<philip@cathedral.co.za>
+ * @package  inanepain\cli
  * @category cli
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  *
  * _version_ $version
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Inane\Cli;
 
+use Inane\Cli\Pencil\{
+    Colour,
+    Style,
+    Type};
 use Stringable;
-
 use function array_key_exists;
 use function fwrite;
 use function in_array;
 use function is_null;
+use function round;
+use function str_pad;
+use function str_repeat;
 use function strlen;
 use const null;
 use const PHP_EOL;
 use const STDERR;
 use const STDOUT;
-
-use Inane\Cli\Pencil\{
-    Colour,
-    Style,
-    Type
-};
+use const STR_PAD_RIGHT;
 
 /**
  * Pencil: Output assigned a colour and style.
@@ -49,19 +50,21 @@ use Inane\Cli\Pencil\{
  * Digital crayons used to build your stationary.
  * It's worth having a look at the simple example.
  *
- * @version 0.4.0
+ * @version 0.5.0
  */
 class Pencil implements Stringable {
+    //#region Class Constants
     public const string VERSION = '0.1.0';
-
+    //#endregion Class Constants
+    //#region Properties
+    private static array $cache = [];
     /**
      * The terminal codes for the pencil
      *
      * @var string
      */
     private string $pencil;
-
-    private static array $cache = [];
+    //#endregion Properties
 
     /**
      * Pencil constructor
@@ -69,8 +72,8 @@ class Pencil implements Stringable {
      * If $colour not set, the current colour and style remains in effect.
      * $style only takes effect if a colour is set.
      *
-     * @param \Inane\Cli\Pencil\Colour $colour
-     * @param \Inane\Cli\Pencil\Style $style
+     * @param \Inane\Cli\Pencil\Colour      $colour
+     * @param \Inane\Cli\Pencil\Style       $style
      * @param null|\Inane\Cli\Pencil\Colour $background
      *
      * @return void
@@ -80,22 +83,17 @@ class Pencil implements Stringable {
          * Pencil colour
          *
          * @var \Inane\Cli\Pencil\Colour
-         */
-        private ?Colour        $colour = null,
-        /**
-         * Pencil style
-         *
-         * Only applicable if $colour is set.
-         *
-         * @var \Inane\Cli\Pencil\Style
-         */
-        private readonly Style   $style = Style::Plain,
-        /**
-         * Pencil background colour
-         *
-         * @var \Inane\Cli\Pencil\Colour
-         */
-        private readonly ?Colour $background = null,
+         */ private ?Colour      $colour = null, /**
+     * Pencil style
+     *
+     * Only applicable if $colour is set.
+     *
+     * @var \Inane\Cli\Pencil\Style
+     */ private readonly Style   $style = Style::Plain, /**
+     * Pencil background colour
+     *
+     * @var \Inane\Cli\Pencil\Colour
+     */ private readonly ?Colour $background = null,
     ) {
         if ($style === Style::Hidden && in_array($colour, [Colour::Default, null])) $this->colour = Colour::Black;
     }
@@ -111,8 +109,7 @@ class Pencil implements Stringable {
      * @return null|string uncoloured text
      */
     public static function original(string $text): ?string {
-        if (array_key_exists($text, static::$cache))
-            return static::$cache[$text];
+        if (array_key_exists($text, static::$cache)) return static::$cache[$text];
 
         return null;
     }
@@ -145,7 +142,8 @@ class Pencil implements Stringable {
      *
      * @return string
      */
-    public static function pad(string $text, int $length, string $padString = ' ', bool $pre_colourised = false, bool|string $encoding = false, int $pad_type = STR_PAD_RIGHT): ?string {
+    public static function pad(string $text, int $length, string $padString = ' ', bool $pre_colourised = false, bool|string $encoding = false, int $pad_type = STR_PAD_RIGHT,
+    ): ?string {
         $string = static::original($text);
         if (!is_null($string)) {
             $real_length = static::width($text);
@@ -159,12 +157,12 @@ class Pencil implements Stringable {
     }
 
     /**
-     * Automatic string conversion
+     * Returns the reset code, removing the pencil's styles and colours.
      *
-     * @return string text with specified colour and style
+     * @return string reset code
      */
-    public function __toString(): string {
-        return $this->getPencil();
+    public static function reset(): string {
+        return "\033[0m";
     }
 
     /**
@@ -192,27 +190,28 @@ class Pencil implements Stringable {
 
             $this->pencil = $pencil;
         }
+
         return (string)($this->pencil);
     }
 
     /**
-     * Returns the reset code, removing the pencil's styles and colours.
+     * Automatic string conversion
      *
-     * @return string reset code
+     * @return string text with specified colour and style
      */
-    public static function reset(): string {
-        return "\033[0m";
+    public function __toString(): string {
+        return $this->getPencil();
     }
 
     /**
      * Write to STDOUT ending on the same line.
      *
-     * @param string $text to write
-     * @param bool $reset reset colours after writing
+     * @param string $text  to write
+     * @param bool   $reset reset colours after writing
      *
      * @return \Inane\Cli\Pencil
      */
-    public function out(string $text, bool $reset = true): static {
+    public function out(string $text = '', bool $reset = true): static {
         fwrite(STDOUT, $this->format($text, $reset));
 
         return $this;
@@ -221,14 +220,51 @@ class Pencil implements Stringable {
     /**
      * Write to STDOUT ending on a newline.
      *
-     * @param string $text to write
-     * @param bool $reset reset colours after writing
+     * @param string $text  to write
+     * @param bool   $reset reset colours after writing
      *
      * @return \Inane\Cli\Pencil
      */
-    public function line(string $text, bool $reset = true): static {
+    public function line(string $text = '', bool $reset = true): static {
         $this->out((string)$text, $reset);
         fwrite(STDOUT, PHP_EOL);
+
+        return $this;
+    }
+
+    /**
+     * Outputs a divider line with specified options.
+     *
+     * @since 0.5.0
+     *
+     * @param string   $char    The character used to create the divider line. Defaults to '*'.
+     * @param int|null $length  The length of the divider line. If null or invalid, it defaults to the shell column width.
+     * @param int      $align   Whether to align the divider in the middle of the shell width. Defaults to false (0), 1 for center alignment and 2 for right alignment.
+     * @param bool     $newLine Whether to append a new line after the divider. Defaults to true.
+     *
+     * @return static The current instance for method chaining.
+     */
+    public function divider(string $char = '*', ?int $length = null, int $align = 0, bool $newLine = true): static {
+        if ($length === null || $length < 1 || $length > Shell::columns()) {
+            $length = Shell::columns();
+        }
+
+        //        if ($align < 0) $align = 0;
+        //        if ($align > 2) $align = 2;
+        if ($align < 0 || $align > 2) $align = 0;
+
+        if ($align !== 0 && $length < Shell::columns()) {
+            if ($align === 1) {
+                $spacer = (int)round((Shell::columns() - $length) / 2);
+                $this->out(str_repeat(' ', $spacer), false);
+            } else if ($align === 2) {
+                $spacer = Shell::columns() - $length;
+                $this->out(str_repeat(' ', $spacer), false);
+            }
+        }
+
+        $method = $newLine ? 'line' : 'out';
+        $this->$method(str_repeat($char, $length), false);
 
         return $this;
     }
@@ -255,9 +291,9 @@ class Pencil implements Stringable {
      *
      * @since 0.3.0
      *
-     * @param null|string	$format		A valid input format. See `fscanf`. If null all input to first newline as string.
-     * @param mixed			$default	Value to return if not an interactive terminal.
-     * @param bool          $reset      reset colours after reading
+     * @param null|string $format  A valid input format. See `fscanf`. If null all input to first newline as string.
+     * @param mixed       $default Value to return if not an interactive terminal.
+     * @param bool        $reset   reset colours after reading
      *
      * @return mixed
      *
@@ -276,17 +312,19 @@ class Pencil implements Stringable {
      * continue displaying until input is received.
      *
      * $default:
-     * - `null`			if no input received a `null` is returned.
-     * - `false`		the prompt will continue displaying until input is received.
+     * - `null`            if no input received a `null` is returned.
+     * - `false`        the prompt will continue displaying until input is received.
      *
-     * @param string            $question The question to ask the user.
+     * @see input()
+     *
      * @param null|false|string $default  A default value if the user provides no input.
      * @param string            $marker   A string to append to the question and default value on display.
      * @param boolean           $hide     If the user input should be hidden
      *
+     * @param string            $question The question to ask the user.
+     *
      * @return null|string  The users input or the default value or `null` if no input was received.
      *
-     * @see input()
      */
     public function prompt(string $question, null|false|string $default = null, string $marker = ': ', bool $hide = false): string|null {
         $question = (string)$this->out($question, false);
@@ -297,12 +335,30 @@ class Pencil implements Stringable {
     }
 
     /**
+     * Asks yes/no and returns a boolean
+     *
+     * @since 0.5.0
+     *
+     * @param string    $question  The question to ask the user.
+     * @param bool      $default   The default choice, `true` for *Yes* and `false` for *No*.
+     *
+     * @return bool
+     */
+    public function confirm(string $question, bool $default = false): bool {
+        $question = (string)$this->out($question, false);
+        $choice = Cli::confirm($question, $default);
+        $this->out('');
+
+        return $choice;
+    }
+
+    /**
      * Create a string with current format
      *
      * @since 0.2.0
      *
-     * @param string $text to format
-     * @param bool $reset reset colours after writing
+     * @param string $text  to format
+     * @param bool   $reset reset colours after writing
      *
      * @return string
      */

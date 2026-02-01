@@ -26,25 +26,37 @@ declare(strict_types=1);
 namespace Inane\Cli;
 
 use Inane\Cli\Shell\Environment as ShellEnv;
-
+use function array_slice;
+use function count;
+use function defined;
 use function function_exists;
 use function getenv;
 use function grapheme_strlen;
 use function grapheme_substr;
 use function implode;
 use function is_bool;
+use function max;
 use function mb_detect_encoding;
 use function mb_strlen;
+use function mb_strwidth;
+use function mb_substr;
+use function min;
 use function php_sapi_name;
+use function preg_last_error;
 use function preg_match;
 use function preg_match_all;
 use function preg_split;
+use function str_pad;
 use function strlen;
 use function strspn;
 use function substr;
 use function version_compare;
 use const false;
+use const INTL_ICU_VERSION;
 use const null;
+use const PCRE_VERSION;
+use const PREG_SPLIT_DELIM_CAPTURE;
+use const PREG_SPLIT_NO_EMPTY;
 use const true;
 
 /**
@@ -94,7 +106,7 @@ class Cli {
      *
      * @return bool
      */
-public static function isTty(): bool {
+    public static function isTty(): bool {
         return Streams::isTty();
     }
 
@@ -254,6 +266,7 @@ public static function isTty(): bool {
      *
      * @param string    $question  The question to ask the user.
      * @param bool      $default   The default choice, `true` for *Yes* and `false` for *No*.
+     *
      * @return bool
      */
     public static function confirm(string $question, bool $default = false): bool {
@@ -455,7 +468,7 @@ public static function isTty(): bool {
      */
     public static function strwidth(string $string, string|bool $encoding = false): int {
         // Set the East Asian Width and Mark regexs.
-        list($eaw_regex, $m_regex) = static::getUnicodeRegexs();
+        [$eaw_regex, $m_regex] = static::getUnicodeRegexs();
 
         // Allow for selective testings - "1" bit set tests grapheme_strlen(), "2" preg_match_all( '/\X/u' ), "4" mb_strwidth(), "other" safe_strlen().
         $test_strwidth = getenv('PHP_CLI_TOOLS_TEST_STRWIDTH');
