@@ -144,7 +144,7 @@ class Arguments implements ArrayAccess, JSONable {
      * @since 1.2.0
      */
     public function jsonSerialize(): mixed {
-        $this->toJSON();
+        return $this->toJSON();
     }
     #endregion Export
 
