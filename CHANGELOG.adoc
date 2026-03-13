@@ -22,47 +22,36 @@ Version: $Id$ ($Date$)
 
 :leveloffset: +2
 
-= 0.17.0-dev (2025 Xxx xx)
-:revnumber: 0.xx.0
-:revdate: 2025-xx-xx
+= 0.18.0-dev (2026 Xxx xx)
+:revnumber: 0.18.0
+:revdate: 2026-xx-xx
 :revremark: -dev
 :version-label: Unconfirmed
 
 * new: `Console` Three classes that handle a directory of cli script files. Running them as templates an making range of methods available to them.
-* update: `Arguments` `options` now also support stacking.
-* update: type setting more methods.
-* update: update `CliScript` header.
 * new: `ConsoleScriptManager` got two events you can add a callable to:
   - if no script is triggered, a custom method can be triggered
   - after every script has run, on exit triggers
 * new: `CliScript` can have their own custom config.
+* new: `Pencil::divider` creates a line across the screen.
+* new: `Pencil::confirm` see `Cli::confirm`.
 * update: `TextTable` no longer assumes a header only adding one on `addHeader`.
 * update: `TextTable` example updated.
 * update: `Pencil::error` outputs to `STDERR`.
-* new: `Pencil::divider` creates a line across the screen.
-* new: `Pencil::confirm` see `Cli::confirm`.
+* update: `Arguments` `options` now also support stacking.
+* update: type setting more methods.
+* update: update `CliScript` header.
 * update: `Pencil` `line` & `out` use empty string as default.
-
+* update: `Stdlib` minimum required version `0.9.0`.
+** new: `Arguments::jsonSerialize` used by `json_encode`.
 
 :leveloffset!:
 
 :leveloffset: +2
 
 = 0.12.1 (2022 Aug 11)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:description: Utilities to simplify working with the console.
-:keywords: inanepain, library, console, cli, utility, text-table, prompt
 :revnumber: 0.12.1
 :revdate: 2022-08-11
-:copyright: Unlicense
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: left
-:sectanchors:
 
 * fix: `TextTable` `divider` => uses full column width
 * fix: `TextTable` coloured string cell width
@@ -72,20 +61,8 @@ Version: $Id$ ($Date$)
 :leveloffset: +2
 
 = 0.13.0 (2022 Oct 10)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:description: Utilities to simplify working with the console.
-:keywords: inanepain, library, console, cli, utility, text-table, prompt
 :revnumber: 0.13.0
 :revdate: 2022-10-10
-:copyright: Unlicense
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: left
-:sectanchors:
 
 * fix: STD(OUT/IN/ERR) undefined
 * new: `Cli::isCliServer` Is PHP built-in server
@@ -97,20 +74,8 @@ Version: $Id$ ($Date$)
 :leveloffset: +2
 
 = 0.14.0 (2022 Dec 21)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:description: Utilities to simplify working with the console.
-:keywords: inanepain, library, console, cli, utility, text-table, prompt
 :revnumber: 0.14.0
 :revdate: 2022-12-21
-:copyright: Unlicense
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: left
-:sectanchors:
 
 * new: `Pencil::format` returns colour string without outputting it
 * new: `Pencil::input` reads terminal input
@@ -128,20 +93,8 @@ Version: $Id$ ($Date$)
 :leveloffset: +2
 
 = 0.14.1 (2023 May 03)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:description: Utilities to simplify working with the console.
-:keywords: inanepain, library, console, cli, utility, text-table, prompt
 :revnumber: 0.14.1
 :revdate: 2023-05-03
-:copyright: Unlicense
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: left
-:sectanchors:
 
 * new: `Cli::shellEnv` return enum Environment type: none, interactive, non-interactive
 * update: minor tweaks, improvements and updates
@@ -150,20 +103,8 @@ Version: $Id$ ($Date$)
 :leveloffset: +2
 
 = 0.15.0 (2025 Mar 14)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:description: Utilities to simplify working with the console.
-:keywords: inanepain, library, console, cli, utility, text-table, prompt
 :revnumber: 0.15.0
 :revdate: 2025-03-14
-:copyright: Unlicense
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: left
-:sectanchors:
 
 * fix: `Lexer::unshift` return type
 * fix: `Arguments::parseFlag` not incrementing stackable flags
@@ -179,20 +120,8 @@ Version: $Id$ ($Date$)
 :leveloffset: +2
 
 = 0.16.0 (2025 Apr 25)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:description: Utilities to simplify working with the console.
-:keywords: inanepain, library, console, cli, utility, text-table, prompt
 :revnumber: 0.16.0
 :revdate: 2025-04-25
-:copyright: Unlicense
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: left
-:sectanchors:
 
 * menu  : now takes int and string values for menu index
 * update: `Pencil::pad` now has a padString argument
