@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Inane\Cli;
 
 use Inane\Cli\Shell\Environment as ShellEnv;
+
 use function array_slice;
 use function count;
 use function defined;
@@ -51,6 +52,7 @@ use function strlen;
 use function strspn;
 use function substr;
 use function version_compare;
+
 use const false;
 use const INTL_ICU_VERSION;
 use const null;
@@ -167,7 +169,7 @@ class Cli {
      * @param array|string|int  ...$options Additional options for the output. Either scalar arguments or a single array argument.
      *
      * @return void
-     * @see cli\out()
+     * @see out()
      */
     public static function outPadded(string $msg = '', array|string|int ...$options): void {
         Streams::outPadded($msg, ...$options);
@@ -179,7 +181,7 @@ class Cli {
      * Message sent to `STDOUT` with a newline appended. See `\Inane\Cli\Cli::out` for
      * more documentation.
      *
-     * @see Cli\out()
+     * @see out()
      *
      * @param string        $msg        The message to output in `printf` format. Defaults to an empty string.
      * @param array|string|int  ...$options Additional options for the output. Either scalar arguments or a single array argument.
@@ -204,9 +206,9 @@ class Cli {
     }
 
     /**
-     * get input from terminal
+     * get input from the terminal
      *
-     * Takes input from `STDIN` in the given format. If an end of transmission
+     * Takes input from `STDIN` in the given format. If an end-of-transmission
      * character is sent (^D), an exception is thrown.
      *
      * @param null|string	$format		A valid input format. See `fscanf`. If null all input to first newline as string.
@@ -222,12 +224,25 @@ class Cli {
     }
 
     /**
-     * Displays an input prompt. If no default value is provided the prompt will
+     * Prompt the user for input using stream_select() instead of readline().
+     *
+     * @param string|null $format  A valid input format. See `fscanf`. If null all input to first newline as string.
+     * @param int|null    $timeout  Timeout in seconds (null = wait forever).
+     * @param bool        $hidden   If true, input is hidden (for passwords).
+     *
+     * @return bool|int|float|string The user's input (or true on timeout and false on error).
+     */
+    public static function inputStreamSelect(?string $format = null, ?int $timeout = null, bool $hidden = false): bool|int|float|string {
+        return Streams::inputStreamSelect(format: $format, timeout: $timeout, hidden: $hidden);
+    }
+
+    /**
+     * Displays an input prompt. If no default value is provided, the prompt will
      * continue displaying until input is received.
      *
      * $default:
-     * - `null`			if no input received a `null` is returned.
-     * - `false`		the prompt will continue displaying until input is received.
+     * - `null` if no input is received, a `null` is returned.
+     * - `false`	the prompt will continue displaying until input is received.
      *
      * @since _VERSION_
      *
@@ -238,10 +253,26 @@ class Cli {
      *
      * @return null|string  The users input or the default value or `null` if no input was received.
      *
-     * @see cli\input()
+     * @see input()
      */
     public static function prompt(string $question, null|false|string $default = null, string $marker = ': ', bool $hide = false): string|null {
         return Streams::prompt($question, $default, $marker, $hide);
+    }
+
+    /**
+     * Prompt the user for input using stream_select() instead of readline().
+     *
+     * @param string                $question The question to display to the user.
+     * @param null|int|float|string $default  Default value if user presses Enter (optional).
+     * @param string     	        $marker   A string to append to the question and default value on display.
+     * @param string|null           $format   A valid input format. See `fscanf`. If null all input to first newline as string.
+     * @param int|null              $timeout  Timeout in seconds (null = wait forever).
+     * @param bool                  $hidden   If true, input is hidden (for passwords).
+     *
+     * @return int|float|string The user's input (or default if nothing entered).
+     */
+    public static function promptStreamSelect(string $question, null|int|float|string $default = null, string $marker = ': ', ?string $format = null, ?int $timeout = null, bool $hidden = false): int|float|string {
+        return Streams::promptStreamSelect($question, $default, $marker, $format, $timeout, $hidden);
     }
 
     /**
@@ -301,12 +332,12 @@ class Cli {
      * Attempts an encoding-safe way of getting string length. If intl extension or PCRE with '\X' or mb_string extension aren't
      * available, falls back to basic strlen.
      *
-     * @param  string      $str      The string to check.
-     * @param  string|bool $encoding Optional. The encoding of the string. Default false.
+     * @param string      $str      The string to check.
+     * @param bool|string $encoding Optional. The encoding of the string. Default false.
      *
      * @return int  Numeric value that represents the string's length
      */
-    public static function safeStrlen($str, $encoding = false): int {
+    public static function safeStrlen(string $str, bool|string $encoding = false): int {
         // Allow for selective testing - "1" bit set tests grapheme_strlen(), "2" preg_match_all( '/\X/u' ), "4" mb_strlen(), "other" strlen().
         $test_safe_strlen = getenv('PHP_CLI_TOOLS_TEST_SAFE_STRLEN');
 
@@ -414,7 +445,7 @@ class Cli {
         // Set the East Asian Width regex.
         $eaw_regex = static::getUnicodeRegexs('eaw');
 
-        // If there's any East Asian double-width chars...
+        // If there are any East Asian double-width chars...
         if (preg_match($eaw_regex, $str)) {
             // Note that if the length ends in the middle of a double-width char, the char is excluded, not included.
 
@@ -423,7 +454,7 @@ class Cli {
                 // Just halve the length so (rounded down to a minimum of 1).
                 $str = mb_substr($str, 0, max((int) ($length / 2), 1), 'UTF-8');
             } else {
-                // Explode string into an array of UTF-8 chars. Based on core `_mb_substr()` in "wp-includes/compat.php".
+                // Explode a string into an array of UTF-8 chars. Based on core `_mb_substr()` in "wp-includes/compat.php".
                 $chars = preg_split('/([\x00-\x7f\xc2-\xf4][^\x00-\x7f\xc2-\xf4]*)/', $str, $length + 1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
                 $cnt = min(count($chars), $length);
                 $width = $length;

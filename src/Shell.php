@@ -39,7 +39,7 @@ class Shell {
 	 * @return int  The number of columns.
 	 * @todo Test on more systems.
 	 */
-	static public function columns(): int {
+	public static function columns(): int {
 		static $columns;
 
 		if (getenv('PHP_CLI_TOOLS_TEST_SHELL_COLUMNS_RESET'))
@@ -88,15 +88,15 @@ class Shell {
 	 * Returns true if STDOUT output is being redirected to a pipe or a file;
 	 * false if output is being sent directly to the terminal.
 	 *
-	 * If an env variable SHELL_PIPE exists, returned result depends it's value.
+	 * If an env variable SHELL_PIPE exists, a returned result depends on its value.
 	 * Strings like 1, 0, yes, no, that validate to booleans are accepted.
 	 *
-	 * To enable ASCII formatting even when shell is piped,
+	 * To enable ASCII formatting even when the shell is piped,
 	 * use the ENV variable SHELL_PIPE=0
 	 *
 	 * @return bool
 	 */
-	static public function isPiped() {
+	public static function isPiped(): bool {
 		$shellPipe = getenv('SHELL_PIPE');
 
 		if ($shellPipe !== false)
@@ -110,8 +110,8 @@ class Shell {
 	 *
 	 * @param boolean $hidden Will hide/show the next data. Defaults to true.
 	 */
-	static public function hide(bool $hidden = true): void {
-		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+	public static function hide(bool $hidden = true): void {
+		if (static::isWindows()) {
 			// TODO: Implement for Windows
 		} else {
 			system('stty ' . ($hidden ? '-echo' : 'echo'));
@@ -123,7 +123,7 @@ class Shell {
 	 *
 	 * @return bool
 	 */
-	static private function isWindows(): bool {
-		return strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+    public static function isWindows(): bool {
+        return PHP_OS_FAMILY === 'Windows';
 	}
 }

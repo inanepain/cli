@@ -4,13 +4,16 @@
 :revremark: -dev
 :version-label: Unconfirmed
 
-* new: `Console` Three classes that handle a directory of cli script files. Running them as templates an making range of methods available to them.
+* new: `Console` Three classes that handle a directory of cli script files. Running them as templates making a range of methods available to them.
 * new: `ConsoleScriptManager` got two events you can add a callable to:
   - if no script is triggered, a custom method can be triggered
   - after every script has run, on exit triggers
 * new: `CliScript` can have their own custom config.
 * new: `Pencil::divider` creates a line across the screen.
 * new: `Pencil::confirm` see `Cli::confirm`.
+* new: `Cli` & `Streams` methods:
+** `inputStreamSelect` uses stream_select to get input.
+** `promptStreamSelect` uses `inputStreamSelect` to get input.
 * update: `TextTable` no longer assumes a header only adding one on `addHeader`.
 * update: `TextTable` example updated.
 * update: `Pencil::error` outputs to `STDERR`.
