@@ -8,7 +8,7 @@
  * $Id$
  * $Date$
  *
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author  James Logsdon <dwarf@girsbrain.org>
  * @author  Philip Michael Raab<philip@cathedral.co.za>
@@ -30,8 +30,7 @@ use Inane\Datetime\Timespan;
 use Inane\File\Path;
 use Inane\Stdlib\{
     Array\OptionsInterface,
-    Options
-};
+    Options};
 
 use function array_shift;
 use function class_exists;
@@ -125,9 +124,9 @@ class ConsoleScriptManager {
 
     /**
      * Exit after all enabled cli includes have run.
-     * 
+     *
      * @see falseUntilTrue
-     * 
+     *
      * @var bool
      */
     public bool $exitAfterLastInclude {
@@ -137,9 +136,9 @@ class ConsoleScriptManager {
 
     /**
      * True if at least one script ran.
-     * 
+     *
      * @see falseUntilTrue
-     * 
+     *
      * @var bool
      */
     public bool $scriptHasRun {
@@ -160,7 +159,7 @@ class ConsoleScriptManager {
      * Executes a specified service and returns its result.
      *
      * @param string $service The name of the service to execute.
-     * 
+     *
      * @return mixed The result of the executed service.
      */
     public function service(string $service): mixed {
@@ -245,7 +244,7 @@ class ConsoleScriptManager {
      * Registers a callback function to be executed when no scripts are run.
      *
      * @param callable $function The callback to execute when no scripts are run.
-     * 
+     *
      * @return self Returns the current instance for method chaining.
      */
     public function onNoRun(callable $function): self {
@@ -257,7 +256,7 @@ class ConsoleScriptManager {
      * Sets whether the script should exit if there is no run action.
      *
      * @param bool $exitOnNoRun Optional. If true, the script will exit when no run action is detected. Default is false.
-     * 
+     *
      * @return self Returns the current instance for method chaining.
      */
     public function exitOnNoRun(bool $exitOnNoRun = false): self {
@@ -313,7 +312,7 @@ class ConsoleScriptManager {
      * Ends the current console script execution.
      *
      * @param bool $log Optional. Whether to log the end of the script. Default is false.
-     * 
+     *
      * @return void
      */
     public function end(bool $log = false): void {
@@ -331,7 +330,7 @@ class ConsoleScriptManager {
      *
      * @param string|null $message Optional message to display before exiting.
      * @param int $status Exit status code (default is 0).
-     * 
+     *
      * @return never This method does not return; it terminates the script.
      */
     private function exit(?string $message = null, int $status = 0): never {
@@ -343,7 +342,7 @@ class ConsoleScriptManager {
     #region Helper/Utility Methods
     /**
      * Creates an expiration timestamp based on the provided minimum date duration.
-     * 
+     *
      * minDateDurr:
      * - null: 1hr
      * - int: minutes
@@ -355,7 +354,7 @@ class ConsoleScriptManager {
      *
      * @param null|string|Timespan|int $minDateDurr The minimum date duration. Can be null (displays prompt), a string, Timespan object, or minutes as integer (default is 60, a.k.a. 1 hour).
      * @param bool $print Whether to print the expiration timestamp (default is true).
-     * 
+     *
      * @return int The calculated expiration timestamp.
      */
     public static function createExpirationTimestamp(null|string|Timespan|int $minDateDurr = 60, bool $print = true): int {

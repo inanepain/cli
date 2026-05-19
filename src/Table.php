@@ -5,7 +5,7 @@
  * Utilities to simplify working with the console.
  * $Id$
  * $Date$
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author   James Logsdon <dwarf@girsbrain.org>
  * @author   Philip Michael Raab<philip@cathedral.co.za>
@@ -21,12 +21,9 @@ declare(strict_types = 1);
 namespace Inane\Cli;
 
 use Inane\Cli\{
-	table\Ascii,
-	table\Renderer,
-	table\Tabular,
-	Shell,
-	Streams
-};
+    table\Ascii,
+    table\Renderer,
+    table\Tabular};
 
 /**
  * The `Table` class is used to display data in a tabular format.

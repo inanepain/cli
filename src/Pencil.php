@@ -8,7 +8,7 @@
  * $Id$
  * $Date$
  *
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author   James Logsdon <dwarf@girsbrain.org>
  * @author   Philip Michael Raab<philip@cathedral.co.za>
@@ -30,6 +30,7 @@ use Inane\Cli\Pencil\{
     Style,
     Type};
 use Stringable;
+
 use function array_key_exists;
 use function fwrite;
 use function in_array;
@@ -38,6 +39,7 @@ use function round;
 use function str_pad;
 use function str_repeat;
 use function strlen;
+
 use const null;
 use const PHP_EOL;
 use const STDERR;

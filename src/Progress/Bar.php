@@ -8,7 +8,7 @@
  * $Id$
  * $Date$
  *
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author  James Logsdon <dwarf@girsbrain.org>
  * @author  Philip Michael Raab<philip@cathedral.co.za>
@@ -25,17 +25,16 @@ declare(strict_types=1);
 
 namespace Inane\Cli\Progress;
 
-use function intval;
-use function strval;
-
 use Inane\Cli\{
     Colors,
     Notify,
     Pencil,
     Progress,
-	Shell,
-	Streams
-};
+    Shell,
+    Streams};
+
+use function intval;
+use function strval;
 
 /**
  * Displays a progress bar spanning the entire shell.

@@ -8,7 +8,7 @@
  * $Id$
  * $Date$
  *
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author  James Logsdon <dwarf@girsbrain.org>
  * @author  Philip Michael Raab<philip@cathedral.co.za>
@@ -25,12 +25,10 @@ declare(strict_types=1);
 
 namespace Inane\Cli\Console;
 
-use Inane\Stdlib\Options;
-
 use Inane\Cli\{
-    Pencil\Colour,
-    Pencil
-};
+    Pencil,
+    Pencil\Colour};
+use Inane\Stdlib\Options;
 
 use function str_repeat;
 
@@ -126,7 +124,7 @@ class CliPen {
      *
      * @param string $divider The character to use for the divider line. Defaults to '='.
      * @param Pencil|null $pencil Optional Pencil instance for output customization.
-     * 
+     *
      * @return Pencil Returns the Pencil instance used for output.
      */
     public function divider(string $divider = '=', ?Pencil $pencil = null): Pencil {

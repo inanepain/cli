@@ -8,7 +8,7 @@
  * $Id$
  * $Date$
  *
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author  James Logsdon <dwarf@girsbrain.org>
  * @author  Philip Michael Raab<philip@cathedral.co.za>
@@ -26,9 +26,8 @@ declare(strict_types=1);
 namespace Inane\Cli\Notify;
 
 use Inane\Cli\{
-	Notify,
-	Streams
-};
+    Notify,
+    Streams};
 
 /**
  * The `Spinner` Notifier displays an ASCII spinner.

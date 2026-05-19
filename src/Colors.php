@@ -8,7 +8,7 @@
  * $Id$
  * $Date$
  *
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author  James Logsdon <dwarf@girsbrain.org>
  * @author  Philip Michael Raab<philip@cathedral.co.za>
@@ -33,6 +33,7 @@ use function md5;
 use function str_pad;
 use function str_replace;
 use function strlen;
+
 use const false;
 use const null;
 use const STR_PAD_RIGHT;
