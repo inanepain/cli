@@ -1,4 +1,5 @@
 = inanepain/cli image:./icon.png[title=inanepain/cli,25]
+// tag::tagConfig[]
 :author: Philip Michael Raab
 :email: <philip@cathedral.co.za>
 :description: Utilities to simplify working with the console.
@@ -18,6 +19,7 @@
 :pkg-vendor: inanepain
 :pkg-name: cli
 :pkg-id: {pkg-vendor}/{pkg-name}
+// end::tagConfig[]
 
 == image:./icon.png[title={pkg-id},25] {pkg-id}
 
