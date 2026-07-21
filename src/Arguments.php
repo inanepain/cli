@@ -34,9 +34,10 @@ use Inane\Cli\Arguments\{
 use Inane\Stdlib\{
     Converters\JSONable,
     Json};
+use InvalidArgumentException;
 
+use function array_filter;
 use function array_key_exists;
-use function array_push;
 use function array_shift;
 use function array_slice;
 use function implode;
@@ -46,6 +47,7 @@ use function is_numeric;
 use function is_string;
 use function trigger_error;
 
+use const E_USER_WARNING;
 use const false;
 use const null;
 use const true;
@@ -139,11 +141,11 @@ class Arguments implements ArrayAccess, JSONable {
      * Specify data which should be serialized to JSON
      *
      * @link  https://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * @return string data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
      * @since 1.2.0
      */
-    public function jsonSerialize(): mixed {
+    public function jsonSerialize(): string {
         return $this->toJSON();
     }
     #endregion Export
@@ -155,7 +157,7 @@ class Arguments implements ArrayAccess, JSONable {
      *
      * @return bool
      */
-    public function offsetExists($offset): bool {
+    public function offsetExists(mixed $offset): bool {
         if ($offset instanceof Argument) $offset = $offset->key;
 
         return array_key_exists($offset, $this->getArguments());
@@ -168,7 +170,7 @@ class Arguments implements ArrayAccess, JSONable {
      *
      * @return mixed
      */
-    public function offsetGet($offset): mixed {
+    public function offsetGet(mixed $offset): mixed {
         if ($offset instanceof Argument) $offset = $offset->key;
 
         if (isset($this->getArguments()[$offset])) return $this->getArguments()[$offset];
@@ -182,7 +184,7 @@ class Arguments implements ArrayAccess, JSONable {
      * @param mixed $offset An Argument object or the name of the argument.
      * @param mixed $value  The value to set
      */
-    public function offsetSet($offset, $value): void {
+    public function offsetSet(mixed $offset, mixed $value): void {
         if ($offset instanceof Argument) $offset = $offset->key;
 
         $this->parsed[$offset] = $value;
@@ -193,7 +195,7 @@ class Arguments implements ArrayAccess, JSONable {
      *
      * @param mixed $offset An Argument object or the name of the argument.
      */
-    public function offsetUnset($offset): void {
+    public function offsetUnset(mixed $offset): void {
         if ($offset instanceof Argument) $offset = $offset->key;
 
         unset($this->parsed[$offset]);
@@ -250,7 +252,7 @@ class Arguments implements ArrayAccess, JSONable {
      *
      * @return self
      */
-    public function addFlags($flags): self {
+    public function addFlags(array $flags): self {
         foreach($flags as $flag => $settings) {
             if (is_numeric($flag)) {
                 $this->warn('No flag character given');
@@ -267,7 +269,7 @@ class Arguments implements ArrayAccess, JSONable {
      * Adds an option (string argument) to the argument list.
      *
      * @param mixed $option   A string representing the option, or an array of strings.
-     * @param array $settings An array of settings for this option.
+     * @param array|string $settings An array of settings for this option.
      *
      * @setting string  description  A description to be shown in --help.
      * @setting bool    default  The default value for this option.
@@ -275,7 +277,7 @@ class Arguments implements ArrayAccess, JSONable {
      *
      * @return self
      */
-    public function addOption($option, $settings = []): self {
+    public function addOption(mixed $option, array|string $settings = []): self {
         if (is_string($settings)) $settings = ['description' => $settings];
 
         if (is_array($option)) {
@@ -410,7 +412,7 @@ class Arguments implements ArrayAccess, JSONable {
      *
      * @return bool
      */
-    public function isFlag($argument): bool {
+    public function isFlag(mixed $argument): bool {
         return (null !== $this->getFlag($argument));
     }
 
@@ -422,7 +424,7 @@ class Arguments implements ArrayAccess, JSONable {
      *
      * @return bool
      */
-    public function isStackable($flag): bool {
+    public function isStackable(mixed $flag): bool {
         if (!$settings = $this->getFlag($flag)) $settings = $this->getOption($flag);
 
         return isset($settings) && (true === $settings['stackable']);
@@ -478,7 +480,7 @@ class Arguments implements ArrayAccess, JSONable {
      *
      * @return bool
      */
-    public function isOption($argument): bool {
+    public function isOption(mixed $argument): bool {
         return (null != $this->getOption($argument));
     }
 
@@ -496,18 +498,21 @@ class Arguments implements ArrayAccess, JSONable {
             if ($this->parseFlag($argument)) continue;
             if ($this->parseOption($argument)) continue;
 
-            array_push($this->invalid, $argument->raw);
+            $this->invalid[] = $argument->raw;
         }
 
         if ($this->strict && !empty($this->invalid)) throw new InvalidArguments($this->invalid);
     }
 
     /**
-     * This applies the default values, if any, of all of the
-     * flags and options, so that if there is a default value
-     * it will be available.
+     * Apply default values to the object properties based on predefined flags and options.
+     *
+     * This method iterates over the flags and options, setting each property to its corresponding default value.
+     * If a default value is 0, it'll be explicitly set to avoid being treated as empty.
+     *
+     * @throws InvalidArgumentException if any flag or option does not have a 'default' key in its settings.
      */
-    private function applyDefaults() {
+    private function applyDefaults(): void {
         foreach($this->flags as $flag => $settings) $this[$flag] = $settings['default'];
 
         // If the default is 0 we should still let it be set.
@@ -532,7 +537,7 @@ class Arguments implements ArrayAccess, JSONable {
      *
      * @return bool parse success
      */
-    private function parseFlag($argument): bool {
+    private function parseFlag(Argument $argument): bool {
         if (!$this->isFlag($argument)) return false;
 
         if ($this->isStackable($argument)) {
@@ -555,7 +560,7 @@ class Arguments implements ArrayAccess, JSONable {
      *
      * @return mixed The parsed value of the option, or null if not applicable.
      */
-    private function parseOption($option) {
+    private function parseOption(Argument $option): mixed {
         if (!$this->isOption($option)) return false;
 
         // Peak ahead to make sure we get a value.

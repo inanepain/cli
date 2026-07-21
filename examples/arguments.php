@@ -15,7 +15,7 @@
 
 require_once 'common.php';
 
-$strict = in_array('--strict', $_SERVER['argv']);
+$strict = in_array('--strict', $_SERVER['argv'], true);
 $arguments = new \Inane\Cli\Arguments(compact('strict'));
 
 $arguments->addFlag(['verbose', 'V'], ['description' => 'Turn on verbose output', 'stackable' => true]);

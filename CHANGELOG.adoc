@@ -126,8 +126,8 @@ Version: $Id$ ($Date$)
 :revnumber: 0.16.0
 :revdate: 2025-04-25
 
-* menu  : now takes int and string values for menu index
+* menu: it now takes int and string values for the menu index
 * update: `Pencil::pad` now has a padString argument
-* update: `Notify` improved parametar types
+* update: `Notify` improved parameter types
 
 :leveloffset!:
