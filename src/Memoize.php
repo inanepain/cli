@@ -36,27 +36,28 @@ abstract class Memoize {
 	 *
 	 * @var array
 	 */
-	protected $memoCache = [];
+	protected array $memoCache = [];
 
 	/**
 	 * Magic Getter
 	 *
-	 * @param mixed $name memo to get
+	 * @param mixed $name memo to get.
+     *
 	 * @return mixed
 	 */
-	public function __get($name) {
+	public function __get(mixed $name) {
 		if (isset($this->memoCache[$name]))
 			return $this->memoCache[$name];
 
 		// Hide probable private methods
-		if (0 == strncmp($name, '_', 1))
+		if (0 === strncmp($name, '_', 1))
 			return ($this->memoCache[$name] = null);
 
 		if (!method_exists($this, $name))
 			return ($this->memoCache[$name] = null);
 
 		$method = [$this, $name];
-		($this->memoCache[$name] = call_user_func($method));
+		($this->memoCache[$name] = $method());
 		return $this->memoCache[$name];
 	}
 
@@ -67,7 +68,7 @@ abstract class Memoize {
 	 *
 	 * @return void
 	 */
-	protected function _unmemo(string|true $name) {
+	protected function unmemorable(string|true $name): void {
 		if ($name === true)
 			$this->memoCache = [];
 		else

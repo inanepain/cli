@@ -33,6 +33,7 @@ use Inane\Cli\Arguments\{
     Lexer};
 use Inane\Stdlib\{
     Converters\JSONable,
+    Exception\JsonException,
     Json};
 use InvalidArgumentException;
 
@@ -102,7 +103,7 @@ class Arguments implements ArrayAccess, JSONable {
     /**
      * Get the Help Screen
      *
-     * @return \Inane\Cli\Arguments\HelpScreen help screen
+     * @return HelpScreen help screen
      */
     public function getHelpScreen(): HelpScreen {
         return new HelpScreen($this);
@@ -110,23 +111,29 @@ class Arguments implements ArrayAccess, JSONable {
 
     #region Export
     /**
-     * Encodes the parsed arguments as JSON.
+     * Converts the object to its JSON representation.
      *
-     * @return string
+     * This method is responsible for returning a JSON formatted string
+     * that represents the current state of the object.
+     *
+     * @return string A JSON formatted string representing the object.
+     * @throws JsonException If the object cannot be converted to JSON.
      */
     public function asJSON(): string {
         return $this->toJSON();
     }
 
     /**
-     * Encodes the parsed arguments as JSON.
+     * Converts the object to a JSON string.
      *
      * @since 1.1.0 $pretty argument
      *
-     * @param int  $flags  Bitmask consisting of JSON_HEX_QUOT, JSON_HEX_TAG, JSON_HEX_AMP, JSON_HEX_APOS, JSON_NUMERIC_CHECK, JSON_PRETTY_PRINT, JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT, JSON_UNESCAPED_UNICODE. JSON_THROW_ON_ERROR The behaviour of these constants is described on the JSON constants page.
-     * @param bool $pretty format the resulting json pretty
+     * @param int  $flags  Flags for encoding. See JSON_HEX_TAG, JSON_HEX_APOS, etc.
+     * @param bool $pretty Whether to format the output with indentation and newlines.
      *
-     * @return string
+     * @return string JSON representation of the object.
+     *
+     * @throws InvalidArgumentException|JsonException If an invalid flag is provided.
      */
     public function toJSON(int $flags = 0, bool $pretty = false): string {
         $options = [
@@ -140,10 +147,14 @@ class Arguments implements ArrayAccess, JSONable {
     /**
      * Specify data which should be serialized to JSON
      *
+     * @since 1.2.0
+     *
      * @link  https://php.net/manual/en/jsonserializable.jsonserialize.php
+     *
      * @return string data which can be serialized by <b>json_encode</b>,
      * which is a value of any type other than a resource.
-     * @since 1.2.0
+     *
+     * @throws JsonException
      */
     public function jsonSerialize(): string {
         return $this->toJSON();
@@ -212,17 +223,17 @@ class Arguments implements ArrayAccess, JSONable {
      *  - @setting bool    stackable  Whether the flag is repeatable to increase the value.
      *  - @setting array   aliases  Other ways to trigger this flag.
      *
-     * @param string|string[] $flag     A string representing the flag, or an array of strings. If array: the first item is used for checking the flag.
-     * @param string|array    $settings An array of settings for this flag.
+     * @param string|string[] $flag           A string representing the flag, or an array of strings. If array: the first item is used for checking the flag.
+     * @param string|array    $settingsOrDesc An array of settings for this flag or a description if it's a string.
      *
      * @return self
      */
-    public function addFlag(string|array $flag, string|array $settings = []): self {
-        if (is_string($settings)) $settings = ['description' => $settings];
+    public function addFlag(string|array $flag, string|array $settingsOrDesc = []): self {
+        if (is_string($settingsOrDesc)) $settingsOrDesc = ['description' => $settingsOrDesc];
 
         if (is_array($flag)) {
-            $settings['aliases'] = $flag;
-            $flag = array_shift($settings['aliases']);
+            $settingsOrDesc['aliases'] = $flag;
+            $flag = array_shift($settingsOrDesc['aliases']);
         }
 
         if (isset($this->flags[$flag])) {
@@ -231,14 +242,14 @@ class Arguments implements ArrayAccess, JSONable {
             return $this;
         }
 
-        $settings += [
+        $settingsOrDesc += [
             'default'     => false,
             'stackable'   => false,
             'description' => null,
             'aliases'     => [],
         ];
 
-        $this->flags[$flag] = $settings;
+        $this->flags[$flag] = $settingsOrDesc;
 
         return $this;
     }
@@ -255,7 +266,7 @@ class Arguments implements ArrayAccess, JSONable {
     public function addFlags(array $flags): self {
         foreach($flags as $flag => $settings) {
             if (is_numeric($flag)) {
-                $this->warn('No flag character given');
+                $this->warn('No flag character is given');
                 continue;
             }
 
@@ -321,8 +332,7 @@ class Arguments implements ArrayAccess, JSONable {
                     $settings['name'],
                     $settings['short'] ?? '',
                 ]);
-                unset($settings['name']);
-                unset($settings['short']);
+                unset($settings['name'], $settings['short']);
             } elseif (is_numeric($option)) {
                 $this->warn('No option string given');
                 continue;
@@ -339,12 +349,12 @@ class Arguments implements ArrayAccess, JSONable {
      *
      * Strict mode sets how invalid arguments should be handled.
      *
-     *  - true : invalid arguments throw `cli\arguments\InvalidArguments`
+     *  - true: invalid arguments throw `cli\arguments\InvalidArguments`
      *  - false: invalid arguments logged and retrievable with `\Inane\Cli\Arguments::getInvalidArguments()`
      *
      * @param bool $strict True to enable, false to disable.
      *
-     * @return self
+     * @return selfa
      */
     public function setStrict(bool $strict): self {
         $this->strict = $strict;
@@ -357,7 +367,7 @@ class Arguments implements ArrayAccess, JSONable {
      *
      * @return array
      */
-    public function getInvalidArguments() {
+    public function getInvalidArguments(): array {
         return $this->invalid;
     }
 
@@ -376,7 +386,7 @@ class Arguments implements ArrayAccess, JSONable {
 
         if (isset($this->flags[$flag])) return $this->flags[$flag];
 
-        foreach($this->flags as $master => $settings) if (in_array($flag, (array)$settings['aliases'])) {
+        foreach($this->flags as $master => $settings) if (in_array($flag, (array)$settings['aliases'], true)) {
             if (isset($obj)) $obj->key = $master;
 
             $cache[$flag] = &$settings;
@@ -433,7 +443,7 @@ class Arguments implements ArrayAccess, JSONable {
     /**
      * Get an option by primary matcher or any defined aliases.
      *
-     * @param \Inane\Cli\Arguments\Argument|string $option Either a string representing the option or an cli\arguments\Argument object.
+     * @param Argument|string $option Either a string representing the option or an cli\arguments\Argument object.
      *
      * @return null|array
      */
@@ -445,7 +455,7 @@ class Arguments implements ArrayAccess, JSONable {
 
         if (isset($this->options[$option])) return $this->options[$option];
 
-        foreach($this->options as $master => $settings) if (in_array($option, (array)$settings['aliases'])) {
+        foreach($this->options as $master => $settings) if (in_array($option, (array)$settings['aliases'], true)) {
             if (isset($obj)) $obj->key = $master;
 
             return $settings;
@@ -481,7 +491,7 @@ class Arguments implements ArrayAccess, JSONable {
      * @return bool
      */
     public function isOption(mixed $argument): bool {
-        return (null != $this->getOption($argument));
+        return (null !== $this->getOption($argument));
     }
 
     /**
@@ -515,7 +525,7 @@ class Arguments implements ArrayAccess, JSONable {
     private function applyDefaults(): void {
         foreach($this->flags as $flag => $settings) $this[$flag] = $settings['default'];
 
-        // If the default is 0 we should still let it be set.
+        // If the default is 0, we should still let it be set.
         foreach($this->options as $option => $settings) if (!empty($settings['default']) || $settings['default'] === 0) $this[$option] = $settings['default'];
     }
 
@@ -543,7 +553,7 @@ class Arguments implements ArrayAccess, JSONable {
         if ($this->isStackable($argument)) {
             if (!isset($this[$argument])) $this[$argument->key] = 0;
 
-            $this[$argument->key]++;
+            $this[$argument->key] += 1;
         } else $this[$argument->key] = true;
 
         return true;
@@ -558,41 +568,27 @@ class Arguments implements ArrayAccess, JSONable {
      *
      * @param Argument $option The command-line option to parse.
      *
-     * @return mixed The parsed value of the option, or null if not applicable.
+     * @return bool The parsed value of the option, or null if not applicable.
      */
-    private function parseOption(Argument $option): mixed {
+    private function parseOption(Argument $option): bool {
         if (!$this->isOption($option)) return false;
 
         // Peak ahead to make sure we get a value.
-        if ($this->lexer->end() || !$this->lexer->peek->isValue) {
+        if (!$this->lexer->peek->isValue || $this->lexer->end()) {
             $optionSettings = $this->getOption($option->key);
             if ($this->isStackable($option)) {
                 if (empty($optionSettings['default']) && !is_array($this[$option->key])) {
                     if (!is_array($this[$option->key])) {
-                        // Oops! Got no value and no default , throw a warning and continue.
+                        // Oops! Got no value and no default, throw a warning and continue.
                         $this->warn('no value given for ' . $option->raw);
                         $this[$option->key] = [];
                     } else $this[$option->key] = $optionSettings['default']; // No value and we have a default, so we set to the default
                 }
-            } else {
-                if (empty($optionSettings['default']) && $optionSettings !== 0) {
-                    // Oops! Got no value and no default , throw a warning and continue.
-                    $this->warn('no value given for ' . $option->raw);
-                    $this[$option->key] = null;
-                } else $this[$option->key] = $optionSettings['default']; // No value and we have a default, so we set to the default
-            }
-            // if (empty($optionSettings['default']) && $this->isStackable($option) && !is_array($this[$option->key])) {
-            // 	if (!is_array($this[$option->key])) {
-            // 		// Oops! Got no value and no default , throw a warning and continue.
-            // 		$this->warn('no value given for ' . $option->raw);
-            // 		$this[$option->key] = [];
-            // 	} else $this[$option->key] = $optionSettings['default']; // No value and we have a default, so we set to the default
-            // } elseif (empty($optionSettings['default']) && $optionSettings !== 0) {
-            // 	// Oops! Got no value and no default , throw a warning and continue.
-            // 	$this->warn('no value given for ' . $option->raw);
-            // 	$this[$option->key] = null;
-            // } else $this[$option->key] = $optionSettings['default']; // No value and we have a default, so we set to the default
-            // // } else $this[$option->key] = $this->isStackable($option) ? (is_array($optionSettings['default']) ? $optionSettings['default'] : [$optionSettings['default']]) : $optionSettings['default']; // No value and we have a default, so we set to the default
+            } elseif (empty($optionSettings['default']) && $optionSettings !== 0) {
+                // Oops! Got no value and no default, throw a warning and continue.
+                $this->warn('no value given for ' . $option->raw);
+                $this[$option->key] = null;
+            } else $this[$option->key] = $optionSettings['default'];
 
             return true;
         }
@@ -602,7 +598,7 @@ class Arguments implements ArrayAccess, JSONable {
         // Loop until we find a flag in peak-ahead
         foreach($this->lexer as $value) {
             $values[] = $value->raw;
-            if (!$this->lexer->end() && !$this->lexer->peek->isValue) break;
+            if (!$this->lexer->peek->isValue && !$this->lexer->end()) break;
         }
 
         if ($this->isStackable($option)) {

@@ -29,9 +29,8 @@ use Inane\Cli\Memoize;
 use Stringable;
 
 use function array_pop;
-use function array_push;
 use function strlen;
-use function strncmp;
+use function strspn;
 use function substr;
 
 /**
@@ -42,120 +41,121 @@ use function substr;
  * @version 1.0.1
  */
 class Argument extends Memoize implements Stringable {
-	/**
-	 * The canonical name of this argument, used for aliasing.
-	 *
-	 * @param string
-	 */
-	public string $key;
+    /**
+     * The raw input string to be processed.
+     */
+    private(set) string $raw;
 
-	private string $argument;
-	private string $raw;
+    /**
+     * Represents a variable or parameter being passed into a function or method.
+     */
+    private(set) string $argument;
 
-	/**
-	 * Argument Constructor
-	 *
-	 * @param null|string  $argument  The raw argument, leading dashes included.
-	 */
-	public function __construct(?string $argument) {
-		$this->raw = $argument ?? '';
+    /**
+     * The canonical name of this argument, used for aliasing.
+     *
+     * @var string
+     */
+    public string $key {
+        get => $this->argument;
+        set => $this->argument = $value;
+    }
 
-		$this->argument = match(true) {
-			$this->isLong => substr($this->raw, 2),
-			$this->isShort => substr($this->raw, 1),
-			default => $this->raw,
-		};
+    /**
+     * The formatted argument string.
+     *
+     * @var string
+     */
+    public string $value {
+        get => $this->argument;
+    }
 
-		$this->key = &$this->argument;
-	}
+    /**
+     * isShort
+     *
+     * @var bool
+     */
+    public bool $isShort {
+        get => $this->isShort ??= strspn($this->raw, '-') === 1;
+    }
 
-	/**
-	 * Returns the raw input as a string.
-	 *
-	 * @return string
-	 */
-	public function __toString(): string {
-		return $this->raw;
-	}
+    /**
+     * isLong
+     *
+     * @var bool
+     */
+    public bool $isLong {
+        get => $this->isLong ??= strspn($this->raw, '-') === 2;
+    }
 
-	/**
-	 * Returns the formatted argument string.
-	 *
-	 * @return string
-	 */
-	public function value(): string {
-		return $this->argument;
-	}
+    /**
+     * Is true if the string matches the pattern for arguments.
+     *
+     * @var bool
+     */
+    public bool $isArgument {
+        get => $this->isArgument ??= $this->isLong || $this->isShort;
+    }
 
-	/**
-	 * Returns the raw input.
-	 *
-	 * @return mixed
-	 */
-	public function raw(): mixed {
-		return $this->raw;
-	}
+    /**
+     * Determines if the string doesn't match the pattern for arguments.
+     *
+     * This property returns true if the string is neither a long nor a short argument.
+     *
+     * @var bool
+     */
+    public bool $isValue {
+        get => !$this->isArgument;
+    }
 
-	/**
-	 * Returns true if the string matches the pattern for long arguments.
-	 *
-	 * @return bool
-	 */
-	public function isLong(): bool {
-		return (0 == strncmp($this->raw, '--', 2));
-	}
+    /**
+     * Argument Constructor
+     *
+     * @param null|string  $argument  The raw argument, leading dashes included.
+     */
+    public function __construct(?string $argument) {
+        $this->raw = $argument ?? '';
 
-	/**
-	 * Returns true if the string matches the pattern for short arguments.
-	 *
-	 * @return bool
-	 */
-	public function isShort(): bool {
-		return !$this->isLong && (0 == strncmp($this->raw, '-', 1));
-	}
+        $this->argument = match(true) {
+            $this->isLong => substr($this->raw, 2),
+            $this->isShort => substr($this->raw, 1),
+            default => $this->raw,
+        };
+    }
 
-	/**
-	 * Returns true if the string matches the pattern for arguments.
-	 *
-	 * @return bool
-	 */
-	public function isArgument(): bool {
-		return $this->isShort() || $this->isLong();
-	}
+    /**
+     * Returns the raw input as a string.
+     *
+     * @return string
+     */
+    public function __toString(): string {
+        return $this->raw;
+    }
 
-	/**
-	 * Returns true if the string matches the pattern for values.
-	 *
-	 * @return bool
-	 */
-	public function isValue(): bool {
-		return !$this->isArgument;
-	}
+    /**
+     * Returns true if the argument is short but contains several characters. Each
+     * character is considered a separate argument.
+     *
+     * @return bool
+     */
+    public function canExplode(): bool {
+        return $this->isShort && strlen($this->argument) > 1;
+    }
 
-	/**
-	 * Returns true if the argument is short but contains several characters. Each
-	 * character is considered a separate argument.
-	 *
-	 * @return bool
-	 */
-	public function canExplode(): bool {
-		return $this->isShort && strlen($this->argument) > 1;
-	}
+    /**
+     * Returns all but the first character of the argument, removing them from the
+     * object representation at the same time.
+     *
+     * @return array
+     */
+    public function exploded(): array {
+        $exploded = [];
 
-	/**
-	 * Returns all but the first character of the argument, removing them from the
-	 * objects representation at the same time.
-	 *
-	 * @return array
-	 */
-	public function exploded(): array {
-		$exploded = [];
+        for ($i = strlen($this->argument); $i > 0; $i--)
+            $exploded[] = $this->argument[$i - 1];
 
-		for ($i = strlen($this->argument); $i > 0; $i--)
-			array_push($exploded, $this->argument[$i - 1]);
-
-		$this->argument = array_pop($exploded);
-		$this->raw      = '-' . $this->argument;
-		return $exploded;
-	}
+        $this->argument = array_pop($exploded);
+        $this->raw      = '-' . $this->argument;
+        return $exploded;
+    }
 }
