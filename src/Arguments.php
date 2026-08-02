@@ -36,6 +36,7 @@ use Inane\Stdlib\{
     Exception\JsonException,
     Json};
 use InvalidArgumentException;
+use Throwable;
 
 use function array_filter;
 use function array_key_exists;
@@ -104,6 +105,8 @@ class Arguments implements ArrayAccess, JSONable {
      * Get the Help Screen
      *
      * @return HelpScreen help screen
+     *
+     * @throws Throwable
      */
     public function getHelpScreen(): HelpScreen {
         return new HelpScreen($this);
@@ -354,7 +357,7 @@ class Arguments implements ArrayAccess, JSONable {
      *
      * @param bool $strict True to enable, false to disable.
      *
-     * @return selfa
+     * @return self
      */
     public function setStrict(bool $strict): self {
         $this->strict = $strict;

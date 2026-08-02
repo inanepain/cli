@@ -225,7 +225,7 @@ class Colors {
 	 * @return int
 	 */
 	static public function width($string, $pre_colourised = false, $encoding = false) {
-		return \Inane\Cli\Cli::strwidth($pre_colourised || static::shouldColorize() ? static::decolorize($string, $pre_colourised ? 1 /*keep_tokens*/ : 0) : $string, $encoding);
+		return \Inane\Cli\Cli::strWidth($pre_colourised || static::shouldColorize() ? static::decolorize($string, $pre_colourised ? 1 /*keep_tokens*/ : 0) : $string, $encoding);
 	}
 
 	/**

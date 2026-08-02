@@ -10,18 +10,18 @@
  *
  * PHP version 8.5
  *
- * @author  James Logsdon <dwarf@girsbrain.org>
- * @author  Philip Michael Raab<philip@cathedral.co.za>
- * @package inanepain\cli
+ * @author   James Logsdon <dwarf@girsbrain.org>
+ * @author   Philip Michael Raab<philip@cathedral.co.za>
+ * @package  inanepain\cli
  * @category cli
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  *
  * _version_ $version
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Inane\Cli\Arguments;
 
@@ -111,12 +111,12 @@ class Argument extends Memoize implements Stringable {
     /**
      * Argument Constructor
      *
-     * @param null|string  $argument  The raw argument, leading dashes included.
+     * @param null|string $argument The raw argument, leading dashes included.
      */
     public function __construct(?string $argument) {
         $this->raw = $argument ?? '';
 
-        $this->argument = match(true) {
+        $this->argument = match (true) {
             $this->isLong => substr($this->raw, 2),
             $this->isShort => substr($this->raw, 1),
             default => $this->raw,
@@ -151,11 +151,12 @@ class Argument extends Memoize implements Stringable {
     public function exploded(): array {
         $exploded = [];
 
-        for ($i = strlen($this->argument); $i > 0; $i--)
+        for($i = strlen($this->argument); $i > 0; $i--)
             $exploded[] = $this->argument[$i - 1];
 
         $this->argument = array_pop($exploded);
-        $this->raw      = '-' . $this->argument;
+        $this->raw = '-' . $this->argument;
+
         return $exploded;
     }
 }

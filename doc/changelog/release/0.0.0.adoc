@@ -14,7 +14,7 @@
 * new: `Cli` & `Streams` methods:
 ** `inputStreamSelect` uses stream_select to get input.
 ** `promptStreamSelect` uses `inputStreamSelect` to get input.
-* update: `TextTable` no longer assumes a header only adding one on `addHeader`.
+* update: `TextTable` no longer assumes a header, only adding one on `addHeader`.
 * update: `TextTable` example updated.
 * update: `Pencil::error` outputs to `STDERR`.
 * update: `Arguments` `options` now also support stacking.
@@ -22,4 +22,5 @@
 * update: update `CliScript` header.
 * update: `Pencil` `line` & `out` use empty string as default.
 * update: `Stdlib` minimum required version `0.9.0`.
+* update: `Lexer`, `Memoize`, `Cli`, `Stream`, `Argument` and `Arguments` improvements to code and comments.
 ** new: `Arguments::jsonSerialize` used by `json_encode`.
