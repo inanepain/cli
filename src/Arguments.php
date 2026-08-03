@@ -66,7 +66,7 @@ class Arguments implements ArrayAccess, JSONable {
     protected array $flags = [];
     protected array $options = [];
     protected array $invalid = [];
-    protected array $parsed = [];
+    protected ?array $parsed = null;
     protected Lexer $lexer;
 
     /**
