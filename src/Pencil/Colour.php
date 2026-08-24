@@ -89,7 +89,8 @@ enum Colour: int implements CoreEnumInterface {
     public function text(string $text = '', ?Style $style = null, bool $reset = true): string {
         $colour = $this->value >= 0 ? Type::Plain->value + $this->value : 0;
 
+        $text .= $reset ? Pencil::reset() : '';
         $textStyle = $style === null ? '' : "$style->value;";
-        return "\033[$textStyle{$colour}m$text" . $reset ? Pencil::reset() : '';
+        return "\033[$textStyle{$colour}m$text";
     }
 }
