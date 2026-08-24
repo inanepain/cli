@@ -25,3 +25,4 @@
 * update: `Lexer`, `Memoize`, `Cli`, `Stream`, `Argument` and `Arguments` improvements to code and comments.
 ** new: `Arguments::jsonSerialize` used by `json_encode`.
 * new: Added some PHPUnit test cases.
+* new: `Colour::text` for creating coloured text directly from the enum.
