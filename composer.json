@@ -41,9 +41,9 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=8.5",
-        "inanepain/stdlib": ">=0.9.0 || dev-master || dev-develop",
-        "ext-mbstring": "*",
+        "inanepain/stdlib": ">=0.10.0 || dev-master || dev-develop",
         "ext-intl": "*",
+        "ext-mbstring": "*",
         "ext-posix": "*"
     },
     "require-dev": {},
