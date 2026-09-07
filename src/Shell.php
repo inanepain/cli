@@ -25,7 +25,7 @@ declare(strict_types = 1);
 
 namespace Inane\Cli;
 
-use Inane\Stdlib\VerifyValue;
+use Inane\Stdlib\Value\VerifyValue;
 
 use function exec;
 use function function_exists;
@@ -40,7 +40,7 @@ use const PHP_OS_FAMILY;
 /**
  * A <strong>Shell</strong> Utility class
  *
- * Offering shell related tasks such as information on width.
+ * Offering shell-related tasks such as information on width.
  *
  * @version 1.0.0
  */
@@ -68,20 +68,13 @@ class Shell {
                         $return_var = -1;
                         $output = [];
                         exec('mode CON', $output, $return_var);
-                        if (0 === $return_var && $output) {
-                            // Look for second line ending in ": <number>" (searching for "Columns:" will fail on non-English locales).
-                            if (preg_match('/:\s*\d+\n[^:]+:\s*(\d+)\n/', implode("\n", $output), $matches))
-                                $columns = (int)$matches[1];
-                        }
+                        if (0 === $return_var && $output && preg_match('/:\s*\d+\n[^:]+:\s*(\d+)\n/', implode("\n", $output), $matches)) $columns = (int)$matches[1];
                     }
                 } elseif (!($columns = (int)getenv('COLUMNS'))) {
                     $size = exec('/usr/bin/env stty size 2>/dev/null');
                     if ('' !== $size && preg_match('/\d+ (\d+)/', $size, $matches))
                         $columns = (int)$matches[1];
-                    if (!$columns) {
-                        if (getenv('TERM'))
-                            $columns = (int)exec('/usr/bin/env tput cols 2>/dev/null');
-                    }
+                    if (!$columns && getenv('TERM')) $columns = (int)exec('/usr/bin/env tput cols 2>/dev/null');
                 }
             }
 
