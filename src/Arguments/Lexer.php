@@ -10,18 +10,18 @@
  *
  * PHP version 8.5
  *
- * @author  James Logsdon <dwarf@girsbrain.org>
- * @author  Philip Michael Raab<philip@cathedral.co.za>
- * @package inanepain\cli
+ * @author   James Logsdon <dwarf@girsbrain.org>
+ * @author   Philip Michael Raab<philip@cathedral.co.za>
+ * @package  inanepain\cli
  * @category cli
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  *
  * _version_ $version
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Inane\Cli\Arguments;
 
@@ -107,10 +107,10 @@ class Lexer extends Memoize implements Iterator {
     /**
      * Peek ahead to the next token without moving the cursor.
      *
-     * @return null|Argument
+     * @return Argument
      */
-    public function peek(): ?Argument {
-        return $this->items[$this->index + 1] ?? null;
+    public function peek(): Argument {
+        return new Argument($this->items[$this->index + 1] ?? null);
     }
 
     /**
@@ -203,7 +203,7 @@ class Lexer extends Memoize implements Iterator {
             return;
         }
 
-        foreach ($this->item->exploded as $piece)
+        foreach($this->item->exploded as $piece)
             $this->unshift('-' . $piece);
     }
 }

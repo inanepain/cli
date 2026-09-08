@@ -70,10 +70,10 @@ class Arguments implements ArrayAccess, JSONable {
     protected Lexer $lexer;
 
     /**
-     * Initializes the argument parser.
+     * Initialises the argument parser.
      *
-     * - (bool) help   [true] :
-     * - (bool) strict [false]: throws error if invalid/unhandled arguments passed
+     * - (bool) help [true] :
+     * - (bool) strict [false]: throws error if invalid/unhandled arguments are passed
      *
      * @param array $options An array of options for this parser.
      */
@@ -601,7 +601,7 @@ class Arguments implements ArrayAccess, JSONable {
         // Loop until we find a flag in peak-ahead
         foreach($this->lexer as $value) {
             $values[] = $value->raw;
-            if (!$this->lexer->peek->isValue && !$this->lexer->end()) break;
+            if ($this->lexer->peek->isValue && !$this->lexer->end()) break;
         }
 
         if ($this->isStackable($option)) {
