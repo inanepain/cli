@@ -174,7 +174,7 @@ class ConsoleScriptManager {
     /**
      * ConsoleScriptManager constructor.
      *
-     * Initializes the ConsoleScriptManager with the provided configuration options.
+     * Initialises the ConsoleScriptManager with the provided configuration options.
      *
      * @param OptionsInterface $config Configuration options for the script manager.
      */
@@ -208,7 +208,7 @@ class ConsoleScriptManager {
     }
 
     /**
-     * Initializes and sets up the necessary environment or dependencies
+     * Initialises and sets up the necessary environment or dependencies
      * required before executing the main logic of the script manager.
      *
      * This method is intended to be called internally to prepare the

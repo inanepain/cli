@@ -36,7 +36,7 @@ class Table {
 	protected $_rows = [];
 
 	/**
-	 * Initializes the `Table` class.
+	 * Initialises the `Table` class.
 	 * There are 3 ways to instantiate this class:
 	 *  1. Pass an array of strings as the first parameter for the column headers
 	 *     and a 2-dimensional array as the second parameter for the data rows.

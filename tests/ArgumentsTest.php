@@ -25,7 +25,7 @@ final class ArgumentsTest extends TestCase {
     private array $argv;
 
     /**
-     * Initializes the test environment by setting up necessary variables.
+     * Initialises the test environment by setting up necessary variables.
      *
      * This method sets the `argv` property to the command line arguments passed to the script,
      * which is typically used for testing command-line applications.

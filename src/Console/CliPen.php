@@ -138,7 +138,7 @@ class CliPen {
     /**
      * CliPen constructor.
      *
-     * Initializes a new instance of the CliPen class.
+     * Initialises a new instance of the CliPen class.
      */
     public function __construct() {
         if (!isset(static::$pens)) {
