@@ -82,11 +82,11 @@ class Colors {
 
 	static protected array $_string_cache = [];
 
-	static public function enable($force = true) {
+	public static function enable($force = true): void {
 		static::$_enabled = $force === true ? true : null;
 	}
 
-	static public function disable($force = true) {
+	public static function disable($force = true): void {
 		static::$_enabled = $force === true ? false : null;
 	}
 
@@ -95,7 +95,7 @@ class Colors {
 	 *
 	 * Only check the shell type if `Colors::$_enabled` is null and `$coloured` is null.
 	 */
-	static public function shouldColorize($coloured = null) {
+	public static function shouldColorize($coloured = null): bool {
 		return static::$_enabled === true ||
 			(static::$_enabled !== false &&
 				($coloured === true ||
@@ -105,17 +105,17 @@ class Colors {
 	/**
 	 * Set the colour.
 	 *
-	 * @param string  $color  The name of the colour or style to set.
+	 * @param array|string $color The name of the colour or style to set.
 	 *
 	 * @return string
 	 */
-	static public function color($color) {
+	public static function color(array|string $color): string {
 		if (!is_array($color))
 			$color = compact('color');
 
 		$color += ['color' => null, 'style' => null, 'background' => null];
 
-		if ($color['color'] == 'reset')
+		if ($color['color'] === 'reset')
 			return "\033[0m";
 
 		$colors = [];
@@ -135,12 +135,12 @@ class Colors {
 	 * Colourise a string using helpful string formatters. If the `Streams::$out` points to a TTY colouring will be enabled,
 	 * otherwise disabled. You can control this check with the `$coloured` parameter.
 	 *
-	 * @param string   $string
-	 * @param boolean  $coloured  Force enable or disable the colourised output. If left as `null` the TTY will control colouring.
+	 * @param string       $string
+	 * @param null|boolean $coloured Force enable or disable the colourised output. If left as `null` the TTY will control colouring.
 	 *
 	 * @return string
 	 */
-	static public function colorize($string, $coloured = null) {
+	public static function colorize(string $string, ?bool $coloured = null): string {
 		$passed = $string;
 
 		if (!static::shouldColorize($coloured)) {
@@ -172,10 +172,10 @@ class Colors {
 	 *
 	 * @return string A string with colour information removed.
 	 */
-	static public function decolorize($string, $keep = 0) {
+	public static function decolorize(string $string, int $keep = 0): string {
 		if (!($keep & 1)) {
 			// Get rid of colour tokens if they exist
-			$string = str_replace('%%', '%¾', "$string");
+			$string = str_replace('%%', '%¾', (string)$string);
 			$string = str_replace(array_keys(static::getColors()), '', $string);
 			$string = str_replace('%¾', '%', $string);
 		}
@@ -192,11 +192,11 @@ class Colors {
 	/**
 	 * Cache the original, colourised, and de-colourised versions of a string.
 	 *
-	 * @param string $passed     The original string before colourisation.
-	 * @param string $colourised The string after running through static::colorize.
-	 * @param string $deprecated Optional. Not used. Default null.
+	 * @param string      $passed     The original string before colourisation.
+	 * @param string      $colourised The string after running through static::colorize.
+	 * @param null|string $deprecated Optional. Not used. Default null.
 	 */
-	static public function cacheString($passed, $colourised, $deprecated = null) {
+	public static function cacheString(string $passed, string $colourised, ?string $deprecated = null): void {
 		static::$_string_cache[md5($passed)] = [
 			'passed'      => $passed,
 			'colorized'   => $colourised,
@@ -207,11 +207,11 @@ class Colors {
 	/**
 	 * Return the length of the string without colour codes.
 	 *
-	 * @param string  $string  the string to measure
+	 * @param string $string the string to measure
 	 *
 	 * @return int
 	 */
-	static public function length($string) {
+	public static function length(string $string): int {
 		return Cli::safeStrlen(static::decolorize($string));
 	}
 
@@ -220,11 +220,11 @@ class Colors {
 	 *
 	 * @param string      $string         The string to measure.
 	 * @param bool        $pre_colourised Optional. Set if the string is pre-colourised. Default false.
-	 * @param string|bool $encoding       Optional. The encoding of the string. Default false.
+	 * @param bool|string $encoding       Optional. The encoding of the string. Default false.
 	 *
 	 * @return int
 	 */
-	static public function width($string, $pre_colourised = false, $encoding = false) {
+	public static function width(string $string, bool $pre_colourised = false, bool|string $encoding = false): int {
 		return \Inane\Cli\Cli::strWidth($pre_colourised || static::shouldColorize() ? static::decolorize($string, $pre_colourised ? 1 /*keep_tokens*/ : 0) : $string, $encoding);
 	}
 
@@ -234,12 +234,12 @@ class Colors {
 	 * @param string      $string         The string to pad.
 	 * @param int         $length         The display length.
 	 * @param bool        $pre_colourised Optional. Set if the string is pre-colourised. Default false.
-	 * @param string|bool $encoding       Optional. The encoding of the string. Default false.
+	 * @param bool|string $encoding       Optional. The encoding of the string. Default false.
 	 * @param int         $pad_type       Optional. Can be STR_PAD_RIGHT, STR_PAD_LEFT, or STR_PAD_BOTH. If pad_type is not specified it is assumed to be STR_PAD_RIGHT.
 	 *
 	 * @return string
 	 */
-	static public function pad($string, $length, $pre_colourised = false, $encoding = false, $pad_type = STR_PAD_RIGHT) {
+	public static function pad(string $string, int $length, bool $pre_colourised = false, bool|string $encoding = false, int $pad_type = STR_PAD_RIGHT): string {
 		$real_length = static::width($string, $pre_colourised, $encoding);
 		$diff = strlen("$string") - $real_length;
 		$length += $diff;
@@ -252,7 +252,7 @@ class Colors {
 	 *
 	 * @return array Array of colour tokens mapped to colours and styles.
 	 */
-	static public function getColors() {
+	public static function getColors(): array {
 		return [
 			'%y' => ['color' => 'yellow'],
 			'%g' => ['color' => 'green'],
@@ -295,14 +295,14 @@ class Colors {
 	 *
 	 * @return array The cached string values.
 	 */
-	static public function getStringCache() {
+	public static function getStringCache(): array {
 		return static::$_string_cache;
 	}
 
 	/**
 	 * Clear the string cache.
 	 */
-	static public function clearStringCache() {
+	public static function clearStringCache(): void {
 		static::$_string_cache = [];
 	}
 }
