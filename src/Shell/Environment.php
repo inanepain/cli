@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Inane\Cli\Shell;
 
 use Inane\Stdlib\Enum\CoreEnumInterface;
+use Inane\Stdlib\Enum\CoreEnumTrait;
 
 /**
  * Shell Type
@@ -36,6 +37,8 @@ enum Environment: int implements CoreEnumInterface {
     case None			= 1 << 0;
     case NonInteractive	= 1 << 1;
     case Interactive	= 1 << 2;
+
+    use CoreEnumTrait;
 
 	/**
 	 * is Shell Environment
@@ -58,20 +61,4 @@ enum Environment: int implements CoreEnumInterface {
 	public function isInteractive(): bool {
 		return $this === static::Interactive;
 	}
-
-	/**
-     * Try get enum from name
-     *
-     * @param string $name
-     * @param bool   $ignoreCase case insensitive option
-     *
-     * @return null|static enum
-     */
-    public static function tryFromName(string $name, bool $ignoreCase = false): ?static {
-        foreach (static::cases() as $case)
-            if ($case->name === $name || ($ignoreCase && strcasecmp($case->name, $name) === 0))
-                return $case;
-
-        return null;
-    }
 }
