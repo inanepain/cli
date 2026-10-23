@@ -8,27 +8,28 @@
  * $Id$
  * $Date$
  *
- * PHP version 8.4
+ * PHP version 8.5
  *
- * @author  James Logsdon <dwarf@girsbrain.org>
- * @author  Philip Michael Raab<philip@cathedral.co.za>
- * @package inanepain\cli
+ * @author   James Logsdon <dwarf@girsbrain.org>
+ * @author   Philip Michael Raab<philip@cathedral.co.za>
+ * @package  inanepain\cli
  * @category cli
  *
- * @license UNLICENSE
- * @license https://unlicense.org/UNLICENSE UNLICENSE
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
  *
  * _version_ $version
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Inane\Cli\Arguments;
 
 use Inane\Cli\Arguments;
+use Inane\Cli\Shell;
 use Stringable;
+use Throwable;
 
-use function array_push;
 use function array_shift;
 use function implode;
 use function max;
@@ -40,125 +41,209 @@ use function strlen;
 use const PHP_EOL;
 
 /**
- * HelpScreen
- *
- * Arguments help screen renderer
+ * Renders formatted help text for command-line argument flags and options.
  *
  * @version 1.0.3
  */
 class HelpScreen implements Stringable {
-	protected array $flags = [];
-	protected int $maxFlag = 0;
-	protected array $options = [];
-	protected int $maxOption = 0;
-	protected int $flagMax = 0;
-	protected int $optionMax = 0;
+    /**
+     * Formatted flag names indexed by their display name.
+     *
+     * @var array<string, array{aliases: array<int, string>, description: string, default: mixed}>
+     */
+    protected array $flags = [];
 
-	public function __construct(Arguments $arguments) {
-		$this->setArguments($arguments);
-	}
+    /**
+     * Reserved maximum width for a flag name.
+     */
+    protected int $maxFlag = 0;
 
-	public function __toString(): string {
-		return $this->render();
-	}
+    /**
+     * Formatted option names indexed by their display name.
+     *
+     * @var array<string, array{aliases: array<int, string>, description: string, default: mixed}>
+     */
+    protected array $options = [];
 
-	public function setArguments(Arguments $arguments): void {
-		$this->consumeArgumentFlags($arguments);
-		$this->consumeArgumentOptions($arguments);
-	}
+    /**
+     * Reserved maximum width for an option name.
+     */
+    protected int $maxOption = 0;
 
-	public function consumeArgumentFlags(Arguments $arguments): void {
-		$data = $this->consume($arguments->getFlags());
+    /**
+     * Maximum display width of the available flag names.
+     */
+    protected int $flagMax = 0;
 
-		$this->flags = $data[0];
-		$this->flagMax = $data[1];
-	}
+    /**
+     * Maximum display width of the available option names.
+     */
+    protected int $optionMax = 0;
 
-	public function consumeArgumentOptions(Arguments $arguments): void {
-		$data = $this->consume($arguments->getOptions());
+    /**
+     * Creates a help-screen renderer for the supplied arguments.
+     *
+     * @param Arguments $arguments The argument definitions to render.
+     *
+     * @throws Throwable If the argument metadata cannot be consumed.
+     */
+    public function __construct(Arguments $arguments) {
+        $this->setArguments($arguments);
+    }
 
-		$this->options = $data[0];
-		$this->optionMax = $data[1];
-	}
+    /**
+     * Renders the help screen as a string.
+     *
+     * @return string The formatted help screen.
+     *
+     * @throws Throwable If the argument metadata cannot be rendered.
+     */
+    public function __toString(): string {
+        return $this->render();
+    }
 
-	public function render(): string {
-		$help = [];
+    /**
+     * Replaces the argument definitions used by the renderer.
+     *
+     * @param Arguments $arguments The argument definitions to consume.
+     *
+     * @throws Throwable If the argument metadata cannot be consumed.
+     */
+    public function setArguments(Arguments $arguments): void {
+        $this->consumeArgumentFlags($arguments);
+        $this->consumeArgumentOptions($arguments);
+    }
 
-		array_push($help, $this->renderFlags());
-		array_push($help, $this->renderOptions());
+    /**
+     * Consumes and formats the available argument flags.
+     *
+     * @param Arguments $arguments The argument definitions that provide flags.
+     *
+     * @throws Throwable If a flag definition contains invalid metadata.
+     */
+    public function consumeArgumentFlags(Arguments $arguments): void {
+        $data = $this->consume($arguments->getFlags());
 
-		return implode(PHP_EOL . PHP_EOL, $help);
-	}
+        $this->flags = $data[0];
+        $this->flagMax = $data[1];
+    }
 
-	private function renderFlags(): ?string {
-		if (empty($this->flags))
-			return null;
+    /**
+     * Consumes and formats the available argument options.
+     *
+     * @param Arguments $arguments The argument definitions that provide options.
+     *
+     * @throws Throwable If an option definition contains invalid metadata.
+     */
+    public function consumeArgumentOptions(Arguments $arguments): void {
+        $data = $this->consume($arguments->getOptions());
 
-		return 'Flags' . PHP_EOL . $this->renderScreen($this->flags, $this->flagMax);
-	}
+        $this->options = $data[0];
+        $this->optionMax = $data[1];
+    }
 
-	private function renderOptions(): ?string {
-		if (empty($this->options))
-			return null;
+    /**
+     * Renders the flag and option sections of the help screen.
+     *
+     * @return string The formatted help screen.
+     *
+     * @throws Throwable If the argument metadata cannot be rendered.
+     */
+    public function render(): string {
+        $help = [];
 
-		return 'Options' . PHP_EOL . $this->renderScreen($this->options, $this->optionMax);
-	}
+        $help[] = $this->renderFlags();
+        $help[] = $this->renderOptions();
 
-	/**
-	 * Renders the help screen for the CLI with the provided options.
-	 *
-	 * @param array $options An array of available command-line options to display.
-	 * @param int $max The maximum width for formatting the output.
-	 * 
-	 * @return string The formatted help screen as a string.
-	 */
-	private function renderScreen(array $options, int $max): string {
-		$help = [];
-		$maxCol = \Inane\Cli\Shell::columns() < 120 ? \Inane\Cli\Shell::columns() : 120;
-		foreach ($options as $option => $settings) {
-			$formatted = '  ' . str_pad($option, $max);
-			$description = str_split($settings['description'], $maxCol - 4 - $max);
-			$formatted .= '  ' . array_shift($description);
+        return implode(PHP_EOL . PHP_EOL, $help);
+    }
 
-			if ($settings['default'])
-				$formatted .= ' [default: ' . $settings['default'] . ']';
+    /**
+     * Renders the flags section when flags are available.
+     *
+     * @return null|string The formatted flags section, or `null` when no flags exist.
+     *
+     * @throws Throwable If a flag definition cannot be rendered.
+     */
+    private function renderFlags(): ?string {
+        if (empty($this->flags))
+            return null;
 
-			$pad = str_repeat(' ', $max + 3);
-			while ($desc = array_shift($description))
-				$formatted .= PHP_EOL . "{$pad}{$desc}";
+        return 'Flags' . PHP_EOL . $this->renderScreen($this->flags, $this->flagMax);
+    }
 
-			array_push($help, $formatted);
-		}
+    /**
+     * Renders the options section when options are available.
+     *
+     * @return null|string The formatted options section, or `null` when no options exist.
+     *
+     * @throws Throwable If an option definition cannot be rendered.
+     */
+    private function renderOptions(): ?string {
+        if (empty($this->options))
+            return null;
 
-		return implode(PHP_EOL, $help);
-	}
+        return 'Options' . PHP_EOL . $this->renderScreen($this->options, $this->optionMax);
+    }
 
-	/**
-	 * Processes and consumes the provided options array.
-	 *
-	 * Iterates through the given options, handling each according to the
-	 * internal logic of the method. Returns an array representing the
-	 * processed or remaining options after consumption.
-	 *
-	 * @param array $options The array of options to be consumed.
-	 * 
-	 * @return array The resulting array after processing the options.
-	 */
-	private function consume(array $options): array {
-		$max = 0;
-		$out = [];
+    /**
+     * Renders a formatted help-screen section for the supplied definitions.
+     *
+     * @param array<string, array{aliases: array<int, string>, description: string, default: mixed}> $options The definitions to display.
+     * @param int                                                                                    $max     The maximum display width of an option name.
+     *
+     * @return string The formatted help-screen section.
+     *
+     * @throws Throwable If a definition contains invalid metadata.
+     */
+    private function renderScreen(array $options, int $max): string {
+        $help = [];
+        $maxCol = Shell::columns() < 120 ? Shell::columns() : 120;
+        foreach($options as $option => $settings) {
+            $formatted = '  ' . str_pad($option, $max);
+            $description = str_split($settings['description'], $maxCol - 4 - $max);
+            $formatted .= '  ' . array_shift($description);
 
-		foreach ($options as $option => $settings) {
-			$names = ['--' . $option];
+            if ($settings['default'])
+                $formatted .= ' [default: ' . $settings['default'] . ']';
 
-			foreach ($settings['aliases'] as $alias)
-				array_push($names, '-' . $alias);
+            $pad = str_repeat(' ', $max + 3);
+            while($desc = array_shift($description))
+                $formatted .= PHP_EOL . "$pad$desc";
 
-			$names = implode(', ', $names);
-			$max = max(strlen($names), $max);
-			$out[$names] = $settings;
-		}
+            $help[] = $formatted;
+        }
 
-		return [$out, $max];
-	}
+        return implode(PHP_EOL, $help);
+    }
+
+    /**
+     * Formats argument definitions and calculates their maximum display width.
+     *
+     * @param array<string, array{aliases: array<int, string>, description: string, default: mixed}> $options The definitions to format.
+     *
+     * @return array{0: array<string, array{aliases: array<int, string>, description: string, default: mixed}>, 1: int} Formatted definitions and their maximum name width.
+     *
+     * @throws Throwable If a definition contains invalid metadata.
+     */
+    private function consume(array $options): array {
+        $max = 0;
+        $out = [];
+
+        foreach($options as $option => $settings) {
+            $names = ['--' . $option];
+
+            foreach($settings['aliases'] as $alias)
+                $names[] = '-' . $alias;
+
+            $names = implode(', ', $names);
+            $max = max(strlen($names), $max);
+            $out[$names] = $settings;
+        }
+
+        return [
+            $out,
+            $max,
+        ];
+    }
 }

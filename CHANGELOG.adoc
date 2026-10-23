@@ -3,8 +3,8 @@
 :email: <philip@cathedral.co.za>
 :description: Utilities to simplify working with the console.
 :keywords: inanepain, library, console, cli, utility, text-table, prompt
-:revnumber: 0.18.0
-:revdate: 2025-xx-xx
+:revnumber: 26.10.0
+:revdate: 2026-Oct-23
 :revremark: -dev
 :version-label: Unconfirmed
 :copyright: Unlicense
@@ -15,61 +15,42 @@
 :sectnums!:
 :toc: left
 :sectanchors:
-
-== History
-
-Version: $Id$ ($Date$)
 
 :leveloffset: +2
 
-= 0.17.0-dev (2025 Xxx xx)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:description: Utilities to simplify working with the console.
-:keywords: inanepain, library, console, cli, utility, text-table, prompt
-:revnumber: 0.xx.0
-:revdate: 2025-xx-xx
-:revremark: -dev
-:version-label: Unconfirmed
-:copyright: Unlicense
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: left
-:sectanchors:
+= 26.10.0 (2026 Oct 23)
+:revnumber: 26.10.0
+:revdate: 2026-Oct-23
 
-* new: `Console` Three classes that handle a directory of cli script files. Running them as templates an making range of methods available to them.
+* new: `Console` Three classes that handle a directory of cli script files. Running them as templates making a range of methods available to them.
+* new: `ConsoleScriptManager` got two events you can add a callable to:
+  - if no script is triggered, a custom method can be triggered
+  - after every script has run, on exit triggers
+* new: `CliScript` can have their own custom config.
+* new: `Pencil::divider` creates a line across the screen.
+* new: `Pencil::confirm` see `Cli::confirm`.
+* new: `Cli` & `Streams` methods:
+** `inputStreamSelect` uses stream_select to get input.
+** `promptStreamSelect` uses `inputStreamSelect` to get input.
+* update: `TextTable` no longer assumes a header, only adding one on `addHeader`.
+* update: `TextTable` example updated.
+* update: `Pencil::error` outputs to `STDERR`.
 * update: `Arguments` `options` now also support stacking.
 * update: type setting more methods.
 * update: update `CliScript` header.
-* new: `ConsoleScriptManager` got two events you can add a callable to:
-  - if no scripts triggered a custom method can be triggered
-  - after every thing is done on exit another trigger
-* new: `CliScript` can have their own custom config.
-* update: `TextTable` no longer assumes a header only adding one on `addHeader`.
-* update: `TextTable` example updated.
+* update: `Pencil` `line` & `out` use empty string as default.
+* update: `Stdlib` minimum required version `0.9.0`.
+* update: `Lexer`, `Memoize`, `Cli`, `Stream`, `Argument` and `Arguments` improvements to code and comments.
+** new: `Arguments::jsonSerialize` used by `json_encode`.
+* new: Added some PHPUnit test cases.
+* new: `Colour::text` for creating coloured text directly from the enum.
 
 :leveloffset!:
-
 :leveloffset: +2
 
 = 0.12.1 (2022 Aug 11)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:description: Utilities to simplify working with the console.
-:keywords: inanepain, library, console, cli, utility, text-table, prompt
 :revnumber: 0.12.1
 :revdate: 2022-08-11
-:copyright: Unlicense
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: left
-:sectanchors:
 
 * fix: `TextTable` `divider` => uses full column width
 * fix: `TextTable` coloured string cell width
@@ -79,20 +60,8 @@ Version: $Id$ ($Date$)
 :leveloffset: +2
 
 = 0.13.0 (2022 Oct 10)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:description: Utilities to simplify working with the console.
-:keywords: inanepain, library, console, cli, utility, text-table, prompt
 :revnumber: 0.13.0
 :revdate: 2022-10-10
-:copyright: Unlicense
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: left
-:sectanchors:
 
 * fix: STD(OUT/IN/ERR) undefined
 * new: `Cli::isCliServer` Is PHP built-in server
@@ -104,20 +73,8 @@ Version: $Id$ ($Date$)
 :leveloffset: +2
 
 = 0.14.0 (2022 Dec 21)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:description: Utilities to simplify working with the console.
-:keywords: inanepain, library, console, cli, utility, text-table, prompt
 :revnumber: 0.14.0
 :revdate: 2022-12-21
-:copyright: Unlicense
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: left
-:sectanchors:
 
 * new: `Pencil::format` returns colour string without outputting it
 * new: `Pencil::input` reads terminal input
@@ -135,20 +92,8 @@ Version: $Id$ ($Date$)
 :leveloffset: +2
 
 = 0.14.1 (2023 May 03)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:description: Utilities to simplify working with the console.
-:keywords: inanepain, library, console, cli, utility, text-table, prompt
 :revnumber: 0.14.1
 :revdate: 2023-05-03
-:copyright: Unlicense
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: left
-:sectanchors:
 
 * new: `Cli::shellEnv` return enum Environment type: none, interactive, non-interactive
 * update: minor tweaks, improvements and updates
@@ -157,20 +102,8 @@ Version: $Id$ ($Date$)
 :leveloffset: +2
 
 = 0.15.0 (2025 Mar 14)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:description: Utilities to simplify working with the console.
-:keywords: inanepain, library, console, cli, utility, text-table, prompt
 :revnumber: 0.15.0
 :revdate: 2025-03-14
-:copyright: Unlicense
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: left
-:sectanchors:
 
 * fix: `Lexer::unshift` return type
 * fix: `Arguments::parseFlag` not incrementing stackable flags
@@ -186,23 +119,11 @@ Version: $Id$ ($Date$)
 :leveloffset: +2
 
 = 0.16.0 (2025 Apr 25)
-:author: Philip Michael Raab
-:email: <philip@cathedral.co.za>
-:description: Utilities to simplify working with the console.
-:keywords: inanepain, library, console, cli, utility, text-table, prompt
 :revnumber: 0.16.0
 :revdate: 2025-04-25
-:copyright: Unlicense
-:experimental:
-:hide-uri-scheme:
-:icons: font
-:source-highlighter: highlight.js
-:sectnums!:
-:toc: left
-:sectanchors:
 
-* menu  : now takes int and string values for menu index
+* menu: it now takes int and string values for the menu index
 * update: `Pencil::pad` now has a padString argument
-* update: `Notify` improved parametar types
+* update: `Notify` improved parameter types
 
 :leveloffset!:

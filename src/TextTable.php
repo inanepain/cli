@@ -8,7 +8,7 @@
  * $Id$
  * $Date$
  *
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author  James Logsdon <dwarf@girsbrain.org>
  * @author  Philip Michael Raab<philip@cathedral.co.za>
@@ -34,8 +34,8 @@ use function array_shift;
 use function array_unshift;
 use function count;
 use function implode;
-use function is_null;
 use function substr;
+
 use const false;
 use const null;
 use const PHP_EOL;

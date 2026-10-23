@@ -8,7 +8,7 @@
  * $Id$
  * $Date$
  *
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author  James Logsdon <dwarf@girsbrain.org>
  * @author  Philip Michael Raab<philip@cathedral.co.za>
@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace Inane\Cli\Shell;
 
 use Inane\Stdlib\Enum\CoreEnumInterface;
+use Inane\Stdlib\Enum\CoreEnumTrait;
 
 /**
  * Shell Type
@@ -37,6 +38,8 @@ enum Environment: int implements CoreEnumInterface {
     case NonInteractive	= 1 << 1;
     case Interactive	= 1 << 2;
 
+    use CoreEnumTrait;
+
 	/**
 	 * is Shell Environment
 	 *
@@ -45,7 +48,7 @@ enum Environment: int implements CoreEnumInterface {
 	 * @return bool is shell env
 	 */
 	public function isShell(): bool {
-		return $this != static::None;
+		return $this !== static::None;
 	}
 
 	/**
@@ -56,22 +59,6 @@ enum Environment: int implements CoreEnumInterface {
 	 * @return bool is interactive shell env
 	 */
 	public function isInteractive(): bool {
-		return $this == static::Interactive;
+		return $this === static::Interactive;
 	}
-
-	/**
-     * Try get enum from name
-     *
-     * @param string $name
-     * @param bool   $ignoreCase case insensitive option
-     *
-     * @return null|static enum
-     */
-    public static function tryFromName(string $name, bool $ignoreCase = false): ?static {
-        foreach (static::cases() as $case)
-            if (($ignoreCase && strcasecmp($case->name, $name) == 0) || $case->name === $name)
-                return $case;
-
-        return null;
-    }
 }

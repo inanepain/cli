@@ -8,7 +8,7 @@
  * $Id$
  * $Date$
  *
- * PHP version 8.4
+ * PHP version 8.5
  *
  * @author  James Logsdon <dwarf@girsbrain.org>
  * @author  Philip Michael Raab<philip@cathedral.co.za>
@@ -25,20 +25,25 @@ declare(strict_types=1);
 
 namespace Inane\Cli\Pencil;
 
+use Inane\Stdlib\Enum\CoreEnumInterface;
+use Inane\Stdlib\Enum\CoreEnumTrait;
+
 /**
  * Style
  *
  * @version 0.1.1
  */
-enum Style: int {
+enum Style: int implements CoreEnumInterface {
     case Plain      = 0;
     case Bold       = 1;
     case Dim        = 2;
     case Italic     = 3;
     case Underline  = 4;
     case SlowBlink  = 5;
-    // case FastBlink  = 6;
+    case FastBlink  = 6;
     case Reverse    = 7;
     case Hidden     = 8;
     case CrossOut   = 9;
+
+    use CoreEnumTrait;
 }

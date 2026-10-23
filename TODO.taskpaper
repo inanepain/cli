@@ -1,5 +1,6 @@
 inanepain/cli:
 	Utilities to simplify working with the console.
+	- git-attributes
 	Console:
 		- move inanepain/console (componets that use cli) @priority(low)
 		- static createExpire(durr, print = false) @today
