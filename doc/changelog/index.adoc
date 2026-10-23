@@ -3,8 +3,8 @@
 :email: <philip@cathedral.co.za>
 :description: Utilities to simplify working with the console.
 :keywords: inanepain, library, console, cli, utility, text-table, prompt
-:revnumber: 26.10.0
-:revdate: 2026-Oct-23
+:revnumber: 26.XX.X-dev
+:revdate: 2026-Xxx-xx
 :revremark: -dev
 :version-label: Unconfirmed
 :copyright: Unlicense
@@ -16,6 +16,7 @@
 :toc: left
 :sectanchors:
 
+include::./release/0.0.0.adoc[leveloffset=+2]
 include::./release/26.10.0.adoc[leveloffset=+2]
 include::./release/0.12.1.adoc[leveloffset=+2]
 include::./release/0.13.0.adoc[leveloffset=+2]

@@ -6,8 +6,8 @@
 :keywords: inanepain, library, console, cli, utility, text-table, prompt
 :homepage: https://github.com/inanepain/cli
 :copyright: Unlicense
-:revnumber: 26.10.0
-:revdate: 2026-Oct-23
+:revnumber: 26.XX.X-dev
+:revdate: 2026-Xxx-xx
 :experimental:
 :hide-uri-scheme:
 :icons: font
