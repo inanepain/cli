@@ -3,8 +3,8 @@
 :email: <philip@cathedral.co.za>
 :description: Utilities to simplify working with the console.
 :keywords: inanepain, library, console, cli, utility, text-table, prompt
-:revnumber: 0.18.0
-:revdate: 2025-xx-xx
+:revnumber: 26.10.0
+:revdate: 2026-Oct-23
 :revremark: -dev
 :version-label: Unconfirmed
 :copyright: Unlicense
@@ -16,17 +16,11 @@
 :toc: left
 :sectanchors:
 
-== History
-
-Version: $Id$ ($Date$)
-
 :leveloffset: +2
 
-= 26.8.0-dev (2026 Xxx xx)
-:revnumber: 26.8.0
-:revdate: 2026-xx-xx
-:revremark: -dev
-:version-label: Unconfirmed
+= 26.10.0 (2026 Oct 23)
+:revnumber: 26.10.0
+:revdate: 2026-Oct-23
 
 * new: `Console` Three classes that handle a directory of cli script files. Running them as templates making a range of methods available to them.
 * new: `ConsoleScriptManager` got two events you can add a callable to:
@@ -52,7 +46,6 @@ Version: $Id$ ($Date$)
 * new: `Colour::text` for creating coloured text directly from the enum.
 
 :leveloffset!:
-
 :leveloffset: +2
 
 = 0.12.1 (2022 Aug 11)
