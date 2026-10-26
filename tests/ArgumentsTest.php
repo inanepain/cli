@@ -1,5 +1,25 @@
 <?php
 
+/**
+ * ArgumentsTest
+ *
+ * Inane Library
+ *
+ * $Id$
+ * $Date$
+ *
+ * PHP version 8.5
+ *
+ * @author   Philip Michael Raab <philip@cathedral.co.za>
+ * @package  inanepain\cli
+ * @category cli
+ *
+ * @license  UNLICENSE
+ * @license  https://unlicense.org/UNLICENSE UNLICENSE
+ *
+ * _version_ $version
+ */
+
 declare(strict_types=1);
 
 namespace Inane\Cli\Tests;
@@ -7,8 +27,10 @@ namespace Inane\Cli\Tests;
 use Exception;
 use Inane\Cli\Arguments;
 use Inane\Cli\Arguments\InvalidArguments;
+use Inane\Stdlib\Exception\JsonException;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 /**
  * Tests the functionality of the Arguments class.
@@ -115,5 +137,49 @@ final class ArgumentsTest extends TestCase {
 
         $this->expectException(InvalidArguments::class);
         $arguments->parse();
+    }
+
+    /**
+     * Tests the argument parsing functionality and ensures the resultant JSON output matches the expected format.
+     *
+     * This method simulates command-line input, configures argument rules including flags and options,
+     * invokes the parsing mechanism, and asserts that the outputted JSON matches the expected structure.
+     *
+     * @return void
+     *
+     * @throws InvalidArgumentException If invalid options or arguments are provided during parsing.
+     * @throws RuntimeException|JsonException If parsing fails due to an internal error.
+     */
+    public function testParseArgumentsReturnsExpectedJson(): void {
+        $_SERVER['argv'] = ['test', '-n', 'aria', '-a', 'close'];
+        $arguments = new Arguments([
+            'flags' => [
+                'monitor' => [
+                    'description' => 'Monitor connection, exit only if closed.',
+                    'aliases'     => ['m'],
+                    'default' => true,
+                ],
+            ],
+            'options' => [
+                'name' => [
+                    'description' => 'Connection name.',
+                    'aliases'     => ['n'],
+                    'default'   => 'xdebug',
+                ],
+                'action' => [
+                    'description' => 'Action to take (open/close).',
+                    'aliases'     => ['a'],
+                    'default'   => 'open',
+                ],
+                'interval' => [
+                    'description' => 'Monitor interval.',
+                    'aliases'     => ['i'],
+                    'default'   => 5,
+                ],
+            ],
+        ]);
+
+        $arguments->parse();
+        self::assertSame('{"monitor":true,"name":"aria","action":"close","interval":5}', $arguments->asJSON(), 'Expected JSON output does not match');
     }
 }

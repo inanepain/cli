@@ -62,20 +62,31 @@ use const true;
  * @version 1.2.0
  */
 class Arguments implements ArrayAccess, JSONable {
+    /** Whether invalid arguments cause parsing to throw an exception. */
     protected bool $strict = false;
+
+    /** @var array<string, array<string, mixed>> Registered flag definitions. */
     protected array $flags = [];
+
+    /** @var array<string, array<string, mixed>> Registered option definitions. */
     protected array $options = [];
+
+    /** @var list<string> Raw arguments that did not match a definition. */
     protected array $invalid = [];
+
+    /** @var array<string, mixed>|null Parsed argument values, populated on demand. */
     protected ?array $parsed = null;
+
+    /** Lexer for the command-line arguments supplied to this parser. */
     protected Lexer $lexer;
 
     /**
      * Initialises the argument parser.
      *
-     * - (bool) help [true] :
-     * - (bool) strict [false]: throws error if invalid/unhandled arguments are passed
+     * The `strict` setting controls whether unrecognised arguments raise an exception.
+     * `flags` and `options` provide the definitions to register with the parser.
      *
-     * @param array $options An array of options for this parser.
+     * @param array<string, mixed> $options Parser settings, including `strict`, `flags` and `options`.
      */
     public function __construct(array $options = []) {
         $options += [
@@ -93,7 +104,9 @@ class Arguments implements ArrayAccess, JSONable {
     /**
      * Get the list of arguments found by the defined definitions.
      *
-     * @return array
+     * @return array<string, mixed> Parsed values keyed by argument name.
+     *
+     * @throws InvalidArguments If strict mode is enabled and an unrecognised argument is found.
      */
     public function getArguments(): array {
         if (!isset($this->parsed)) $this->parse();
@@ -104,7 +117,7 @@ class Arguments implements ArrayAccess, JSONable {
     /**
      * Get the Help Screen
      *
-     * @return HelpScreen help screen
+     * @return HelpScreen Help screen for this parser.
      *
      * @throws Throwable
      */
@@ -113,6 +126,7 @@ class Arguments implements ArrayAccess, JSONable {
     }
 
     #region Export
+
     /**
      * Converts the object to its JSON representation.
      *
@@ -120,7 +134,10 @@ class Arguments implements ArrayAccess, JSONable {
      * that represents the current state of the object.
      *
      * @return string A JSON formatted string representing the object.
+     *
+     * @throws InvalidArgumentException If an invalid encoding flag is provided.
      * @throws JsonException If the object cannot be converted to JSON.
+     * @throws InvalidArguments If strict mode is enabled and an unrecognised argument is found.
      */
     public function asJSON(): string {
         return $this->toJSON();
@@ -136,7 +153,9 @@ class Arguments implements ArrayAccess, JSONable {
      *
      * @return string JSON representation of the object.
      *
-     * @throws InvalidArgumentException|JsonException If an invalid flag is provided.
+     * @throws InvalidArgumentException If an invalid encoding flag is provided.
+     * @throws JsonException If the object cannot be converted to JSON.
+     * @throws InvalidArguments If strict mode is enabled and an unrecognised argument is found.
      */
     public function toJSON(int $flags = 0, bool $pretty = false): string {
         $options = [
@@ -148,16 +167,16 @@ class Arguments implements ArrayAccess, JSONable {
     }
 
     /**
-     * Specify data which should be serialized to JSON
+     * Specify data, which should be serialized to JSON
      *
      * @since 1.2.0
      *
      * @link  https://php.net/manual/en/jsonserializable.jsonserialize.php
      *
-     * @return string data which can be serialized by <b>json_encode</b>,
-     * which is a value of any type other than a resource.
+     * @return string JSON representation of the parsed argument values.
      *
      * @throws JsonException
+     * @throws InvalidArguments If strict mode is enabled and an unrecognised argument is found.
      */
     public function jsonSerialize(): string {
         return $this->toJSON();
@@ -169,7 +188,9 @@ class Arguments implements ArrayAccess, JSONable {
      *
      * @param mixed $offset An Argument object or the name of the argument.
      *
-     * @return bool
+     * @return bool Whether the argument exists in the parsed values.
+     *
+     * @throws InvalidArguments If strict mode is enabled and an unrecognised argument is found.
      */
     public function offsetExists(mixed $offset): bool {
         if ($offset instanceof Argument) $offset = $offset->key;
@@ -182,7 +203,9 @@ class Arguments implements ArrayAccess, JSONable {
      *
      * @param mixed $offset An Argument object or the name of the argument.
      *
-     * @return mixed
+     * @return mixed The parsed value, or null when the argument is absent.
+     *
+     * @throws InvalidArguments If strict mode is enabled and an unrecognised argument is found.
      */
     public function offsetGet(mixed $offset): mixed {
         if ($offset instanceof Argument) $offset = $offset->key;
@@ -196,7 +219,7 @@ class Arguments implements ArrayAccess, JSONable {
      * Sets the value of a parsed argument.
      *
      * @param mixed $offset An Argument object or the name of the argument.
-     * @param mixed $value  The value to set
+     * @param mixed $value  The value to assign to the argument.
      */
     public function offsetSet(mixed $offset, mixed $value): void {
         if ($offset instanceof Argument) $offset = $offset->key;
@@ -220,14 +243,14 @@ class Arguments implements ArrayAccess, JSONable {
      *
      * Adds a flag (boolean argument) to the argument list.
      *
-     * SETTINGS:
+     * Settings:
      *  - @setting string  description  A description to be shown in --help.
      *  - @setting bool    default  The default value for this flag.
      *  - @setting bool    stackable  Whether the flag is repeatable to increase the value.
      *  - @setting array   aliases  Other ways to trigger this flag.
      *
-     * @param string|string[] $flag           A string representing the flag, or an array of strings. If array: the first item is used for checking the flag.
-     * @param string|array    $settingsOrDesc An array of settings for this flag or a description if it's a string.
+     * @param string|array<string> $flag           The primary flag name, or names with the primary name first.
+     * @param string|array<string, mixed> $settingsOrDesc Settings for the flag, or its description.
      *
      * @return self
      */
@@ -262,7 +285,7 @@ class Arguments implements ArrayAccess, JSONable {
      * primary flag character, and the values should be the settings array
      * used by {addFlag}.
      *
-     * @param array $flags An array of flags to add
+     * @param array<string, string|array<string, mixed>> $flags Flags keyed by their primary names.
      *
      * @return self
      */
@@ -282,11 +305,11 @@ class Arguments implements ArrayAccess, JSONable {
     /**
      * Adds an option (string argument) to the argument list.
      *
-     * @param mixed $option   A string representing the option, or an array of strings.
-     * @param array|string $settings An array of settings for this option.
+     * @param string|array<string> $option The primary option name, or names with the primary name first.
+     * @param array<string, mixed>|string $settings Settings for this option, or its description.
      *
      * @setting string  description  A description to be shown in --help.
-     * @setting bool    default  The default value for this option.
+     * @setting mixed   default  The default value for this option.
      * @setting array   aliases  Other ways to trigger this option.
      *
      * @return self
@@ -324,7 +347,7 @@ class Arguments implements ArrayAccess, JSONable {
      * primary option string, and the values should be the settings array
      * used by {addOption}.
      *
-     * @param array $options An array of options to add
+     * @param array<string, array<string, mixed>> $options Options keyed by their primary names or described by settings.
      *
      * @return self
      */
@@ -348,7 +371,7 @@ class Arguments implements ArrayAccess, JSONable {
     }
 
     /**
-     * Enable or disable strict mode.
+     * Enable or disable the strict mode.
      *
      * Strict mode sets how invalid arguments should be handled.
      *
@@ -368,18 +391,18 @@ class Arguments implements ArrayAccess, JSONable {
     /**
      * Get the list of invalid arguments the parser found.
      *
-     * @return array
+     * @return list<string> Raw values of arguments that did not match a definition.
      */
     public function getInvalidArguments(): array {
         return $this->invalid;
     }
 
     /**
-     * Get a flag by primary matcher or any defined aliases.
+     * Get a flag by the primary matcher or any defined aliases.
      *
-     * @param string|Argument $flag Either a string representing the flag or an `cli\arguments\Argument` object.
+     * @param string|Argument $flag Flag name or argument object to resolve.
      *
-     * @return null|array
+     * @return array<string, mixed>|null Flag settings, or null when no definition matches.
      */
     public function getFlag(string|Argument $flag): ?array {
         if ($flag instanceof Argument) {
@@ -390,6 +413,7 @@ class Arguments implements ArrayAccess, JSONable {
         if (isset($this->flags[$flag])) return $this->flags[$flag];
 
         foreach($this->flags as $master => $settings) if (in_array($flag, (array)$settings['aliases'], true)) {
+            // Keep the argument object's key aligned with the primary definition name.
             if (isset($obj)) $obj->key = $master;
 
             $cache[$flag] = &$settings;
@@ -403,7 +427,7 @@ class Arguments implements ArrayAccess, JSONable {
     /**
      * Get Flags
      *
-     * @return array flags
+     * @return array<string, array<string, mixed>> Registered flag definitions.
      */
     public function getFlags(): array {
         return $this->flags;
@@ -421,9 +445,9 @@ class Arguments implements ArrayAccess, JSONable {
     /**
      * Returns true if the given argument is defined as a flag.
      *
-     * @param mixed $argument Either a string representing the flag or an `cli\arguments\Argument` object.
+     * @param mixed $argument Flag name or argument object to check.
      *
-     * @return bool
+     * @return bool Whether a matching flag definition exists.
      */
     public function isFlag(mixed $argument): bool {
         return (null !== $this->getFlag($argument));
@@ -432,10 +456,9 @@ class Arguments implements ArrayAccess, JSONable {
     /**
      * Returns true if the given flag is stackable.
      *
-     * @param mixed $flag   Either a string representing the flag or an
-     *                      cli\arguments\Argument object.
+     * @param mixed $flag Flag or option name, or argument object to check.
      *
-     * @return bool
+     * @return bool Whether the matching flag or option is stackable.
      */
     public function isStackable(mixed $flag): bool {
         if (!$settings = $this->getFlag($flag)) $settings = $this->getOption($flag);
@@ -444,11 +467,11 @@ class Arguments implements ArrayAccess, JSONable {
     }
 
     /**
-     * Get an option by primary matcher or any defined aliases.
+     * Get an option by the primary matcher or any defined aliases.
      *
-     * @param Argument|string $option Either a string representing the option or an cli\arguments\Argument object.
+     * @param Argument|string $option Option name or argument object to resolve.
      *
-     * @return null|array
+     * @return array<string, mixed>|null Option settings, or null when no definition matches.
      */
     public function getOption(Argument|string $option): ?array {
         if ($option instanceof Argument) {
@@ -459,6 +482,7 @@ class Arguments implements ArrayAccess, JSONable {
         if (isset($this->options[$option])) return $this->options[$option];
 
         foreach($this->options as $master => $settings) if (in_array($option, (array)$settings['aliases'], true)) {
+            // Keep the argument object's key aligned with the primary definition name.
             if (isset($obj)) $obj->key = $master;
 
             return $settings;
@@ -470,7 +494,7 @@ class Arguments implements ArrayAccess, JSONable {
     /**
      * Get defined options
      *
-     * @return array options
+     * @return array<string, array<string, mixed>> Registered option definitions.
      */
     public function getOptions(): array {
         return $this->options;
@@ -479,7 +503,7 @@ class Arguments implements ArrayAccess, JSONable {
     /**
      * Tests if any options defined
      *
-     * @return bool True if any defined options
+     * @return bool Whether any options are defined.
      */
     public function hasOptions(): bool {
         return !empty($this->options);
@@ -488,21 +512,22 @@ class Arguments implements ArrayAccess, JSONable {
     /**
      * Returns true if the given argument is defined as an option.
      *
-     * @param mixed $argument   Either a string representing the option or an
-     *                          cli\arguments\Argument object.
+     * @param mixed $argument Option name or argument object to check.
      *
-     * @return bool
+     * @return bool Whether a matching option definition exists.
      */
     public function isOption(mixed $argument): bool {
         return (null !== $this->getOption($argument));
     }
 
     /**
-     * Parses arguments
+     * Parses the command-line arguments against the registered definitions.
+     *
+     * Unmatched arguments are recorded; strict mode causes them to be rejected.
      *
      * @return void
      *
-     * @throws arguments\InvalidArguments
+     * @throws InvalidArguments If strict mode is enabled and unmatched arguments are found.
      */
     public function parse(): void {
         $this->applyDefaults();
@@ -518,12 +543,11 @@ class Arguments implements ArrayAccess, JSONable {
     }
 
     /**
-     * Apply default values to the object properties based on predefined flags and options.
+     * Applies default values to parsed flags and options.
      *
-     * This method iterates over the flags and options, setting each property to its corresponding default value.
-     * If a default value is 0, it'll be explicitly set to avoid being treated as empty.
+     * Flags always receive their default; options receive a default only when it's non-empty or zero.
      *
-     * @throws InvalidArgumentException if any flag or option does not have a 'default' key in its settings.
+     * @return void
      */
     private function applyDefaults(): void {
         foreach($this->flags as $flag => $settings) $this[$flag] = $settings['default'];
@@ -546,9 +570,9 @@ class Arguments implements ArrayAccess, JSONable {
     /**
      * Parse flag
      *
-     * @param Argument $argument flag options
+     * @param Argument $argument Flag token to match and record.
      *
-     * @return bool parse success
+     * @return bool Whether the token matched a flag definition.
      */
     private function parseFlag(Argument $argument): bool {
         if (!$this->isFlag($argument)) return false;
@@ -565,18 +589,16 @@ class Arguments implements ArrayAccess, JSONable {
     /**
      * Parses a single command-line option.
      *
-     * This method processes the provided option string and extracts its value,
-     * if present. It is typically used internally to handle individual options
-     * passed to the CLI application.
+     * Consumes the option's following value tokens and stores the resulting value.
      *
      * @param Argument $option The command-line option to parse.
      *
-     * @return bool The parsed value of the option, or null if not applicable.
+     * @return bool Whether the token matched an option definition.
      */
     private function parseOption(Argument $option): bool {
         if (!$this->isOption($option)) return false;
 
-        // Peak ahead to make sure we get a value.
+        // Peek ahead to make sure we get a value.
         if (!$this->lexer->peek->isValue || $this->lexer->end()) {
             $optionSettings = $this->getOption($option->key);
             if ($this->isStackable($option)) {
@@ -585,7 +607,7 @@ class Arguments implements ArrayAccess, JSONable {
                         // Oops! Got no value and no default, throw a warning and continue.
                         $this->warn('no value given for ' . $option->raw);
                         $this[$option->key] = [];
-                    } else $this[$option->key] = $optionSettings['default']; // No value and we have a default, so we set to the default
+                    } else $this[$option->key] = $optionSettings['default']; // No value and we have a default, so we set to the default.
                 }
             } elseif (empty($optionSettings['default']) && $optionSettings !== 0) {
                 // Oops! Got no value and no default, throw a warning and continue.
@@ -596,12 +618,12 @@ class Arguments implements ArrayAccess, JSONable {
             return true;
         }
 
-        // Store as array and join to string after looping for values
+        // Collect value tokens first, then join them into one string.
         $values = [];
-        // Loop until we find a flag in peak-ahead
+        // Read value tokens from the lexer before joining them into a string.
         foreach($this->lexer as $value) {
             $values[] = $value->raw;
-            if ($this->lexer->peek->isValue && !$this->lexer->end()) break;
+            if (!$this->lexer->peek->isValue) break;
         }
 
         if ($this->isStackable($option)) {
