@@ -6,8 +6,8 @@
 :keywords: inanepain, library, console, cli, utility, text-table, prompt
 :homepage: https://github.com/inanepain/cli
 :copyright: Unlicense
-:revnumber: 26.XX.X-dev
-:revdate: 2026-Xxx-xx
+:revnumber: 26.10.1
+:revdate: 2026-Oct-26
 :experimental:
 :hide-uri-scheme:
 :icons: font
@@ -31,7 +31,7 @@
 
 Requirements
 
-* PHP >= 8.4
+* PHP >= 8.5
 
 Suggested PHP extensions
 

@@ -3,10 +3,8 @@
 :email: <philip@cathedral.co.za>
 :description: Utilities to simplify working with the console.
 :keywords: inanepain, library, console, cli, utility, text-table, prompt
-:revnumber: 26.XX.X-dev
-:revdate: 2026-Xxx-xx
-:revremark: -dev
-:version-label: Unconfirmed
+:revnumber: 26.10.1
+:revdate: 2026-Oct-26
 :copyright: Unlicense
 :experimental:
 :hide-uri-scheme:
@@ -18,13 +16,12 @@
 
 :leveloffset: +1
 
-= 26.xx.x-dev (2026 Xxx xx)
-:revnumber: 26.XX.X-dev
-:revdate: 2026-Xxx-xx
-:revremark: -dev
-:version-label: Unconfirmed
+= 26.10.1 (2026 Oct 26)
+:revnumber: 26.10.1
+:revdate: 2026-Oct-26
 
 * Fix: Parsing arguments.
+* New: PHPUnit test for argument person.
 
 :leveloffset!:
 :leveloffset: +1
