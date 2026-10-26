@@ -29,6 +29,7 @@ use Inane\Cli\Memoize;
 use InvalidArgumentException;
 use Iterator;
 
+use function array_first;
 use function array_shift;
 use function array_unshift;
 use function count;
@@ -110,7 +111,7 @@ class Lexer extends Memoize implements Iterator {
      * @return Argument
      */
     public function peek(): Argument {
-        return new Argument($this->items[$this->index + 1] ?? null);
+        return new Argument(array_first($this->items) ?? null);
     }
 
     /**

@@ -19,7 +19,7 @@ use Inane\Cli\Arguments;
 
 require_once 'common.php';
 
-$_SERVER['argv'] = ['test', '-n', 'aria', '-a', 'open'];
+$_SERVER['argv'] = ['test', '-n', 'aria', '-a', 'close'];
 
 $args = new Arguments([
     'flags' => [

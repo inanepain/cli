@@ -32,7 +32,7 @@ use function count;
 use function implode;
 
 /**
- * Thrown when undefined arguments are detected in strict mode.
+ * Thrown when undefined arguments are detected in the strict mode.
  *
  * @version 1.0.1
  */
