@@ -1,0 +1,6 @@
+= 26.10.1 (2026 Oct 26)
+:revnumber: 26.10.1
+:revdate: 2026-Oct-26
+
+* Fix: Parsing arguments.
+* New: PHPUnit test for argument person.
