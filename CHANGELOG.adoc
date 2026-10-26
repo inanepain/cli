@@ -16,7 +16,7 @@
 :toc: left
 :sectanchors:
 
-:leveloffset: +2
+:leveloffset: +1
 
 = 26.xx.x-dev (2026 Xxx xx)
 :revnumber: 26.XX.X-dev
@@ -24,8 +24,10 @@
 :revremark: -dev
 :version-label: Unconfirmed
 
+* Fix: Parsing arguments.
+
 :leveloffset!:
-:leveloffset: +2
+:leveloffset: +1
 
 = 26.10.0 (2026 Oct 23)
 :revnumber: 26.10.0
@@ -55,7 +57,7 @@
 * new: `Colour::text` for creating coloured text directly from the enum.
 
 :leveloffset!:
-:leveloffset: +2
+:leveloffset: +1
 
 = 0.12.1 (2022 Aug 11)
 :revnumber: 0.12.1
@@ -66,7 +68,7 @@
 * fix: `Colors::length` error
 
 :leveloffset!:
-:leveloffset: +2
+:leveloffset: +1
 
 = 0.13.0 (2022 Oct 10)
 :revnumber: 0.13.0
@@ -79,7 +81,7 @@
 * many minor tweaks, updates and fixes
 
 :leveloffset!:
-:leveloffset: +2
+:leveloffset: +1
 
 = 0.14.0 (2022 Dec 21)
 :revnumber: 0.14.0
@@ -98,7 +100,7 @@
 * update: **inanepain/stdlib** requirement bumped to **0.4.0**
 
 :leveloffset!:
-:leveloffset: +2
+:leveloffset: +1
 
 = 0.14.1 (2023 May 03)
 :revnumber: 0.14.1
@@ -108,7 +110,7 @@
 * update: minor tweaks, improvements and updates
 
 :leveloffset!:
-:leveloffset: +2
+:leveloffset: +1
 
 = 0.15.0 (2025 Mar 14)
 :revnumber: 0.15.0
@@ -125,7 +127,7 @@
 * improved File writing
 
 :leveloffset!:
-:leveloffset: +2
+:leveloffset: +1
 
 = 0.16.0 (2025 Apr 25)
 :revnumber: 0.16.0

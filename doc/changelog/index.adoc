@@ -16,11 +16,11 @@
 :toc: left
 :sectanchors:
 
-include::./release/0.0.0.adoc[leveloffset=+2]
-include::./release/26.10.0.adoc[leveloffset=+2]
-include::./release/0.12.1.adoc[leveloffset=+2]
-include::./release/0.13.0.adoc[leveloffset=+2]
-include::./release/0.14.0.adoc[leveloffset=+2]
-include::./release/0.14.1.adoc[leveloffset=+2]
-include::./release/0.15.0.adoc[leveloffset=+2]
-include::./release/0.16.0.adoc[leveloffset=+2]
+include::./release/0.0.0.adoc[leveloffset=+1]
+include::./release/26.10.0.adoc[leveloffset=+1]
+include::./release/0.12.1.adoc[leveloffset=+1]
+include::./release/0.13.0.adoc[leveloffset=+1]
+include::./release/0.14.0.adoc[leveloffset=+1]
+include::./release/0.14.1.adoc[leveloffset=+1]
+include::./release/0.15.0.adoc[leveloffset=+1]
+include::./release/0.16.0.adoc[leveloffset=+1]
