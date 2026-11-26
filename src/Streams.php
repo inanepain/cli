@@ -385,8 +385,8 @@ class Streams {
         $choice = str_ireplace($default, strtoupper($default), strtolower($choice));
         // Separate each choice with a forward-slash
         $choices = preg_split('//', $choice)
-                |> (static fn($x) => implode('/', $x))
-                |> (static fn($x) => trim($x, '/'));
+                |> implode('/', ?)
+                |> trim(?, '/');
 
         while(true) {
             $line = static::prompt(sprintf('%s? [%s]', $question, $choices), $default, '');
